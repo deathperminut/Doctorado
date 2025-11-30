@@ -1,0 +1,96 @@
+# ========================
+# LaTeX Temporales
+# ========================
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+*.dvi
+*.ps
+*.fdb_latexmk
+
+# ========================
+# Datos Grandes (van en Kaggle/Drive)
+# ========================
+datos/*.csv
+datos/*.xlsx
+datos/*.h5
+datos/*.parquet
+datos/*.pkl
+datos/*.json
+datos/*.db
+*.zip
+*.tar.gz
+*.rar
+
+# Mantener el directorio datos con un README
+!datos/README.md
+!datos/*.py
+
+# ========================
+# PDFs (van en Google Drive)
+# ========================
+referencias/pdfs/
+*.pdf
+# Excepto si explicitamente queremos incluir alguno
+!papers/**/figures/*.pdf
+
+# ========================
+# Python / Jupyter
+# ========================
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# ========================
+# Obsidian
+# ========================
+.obsidian/workspace
+.obsidian/workspace.json
+.trash/
+
+# ========================
+# VS Code
+# ========================
+.vscode/
+*.code-workspace
+
+# ========================
+# MacOS
+# ========================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ========================
+# Credenciales y Secretos
+# ========================
+.env
+*.key
+*.pem
+kaggle.json
+credentials.json
+
+# ========================
+# Otros
+# ========================
+*.swp
+*.swo
+*~
+.Trash-*
