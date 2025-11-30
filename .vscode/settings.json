@@ -1,0 +1,97 @@
+{
+  // ===========================
+  // LaTeX Workshop
+  // ===========================
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.outDir": "%DIR%/build",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.latex.clean.fileTypes": [
+    "*.aux",
+    "*.bbl",
+    "*.blg",
+    "*.idx",
+    "*.ind",
+    "*.lof",
+    "*.lot",
+    "*.out",
+    "*.toc",
+    "*.acn",
+    "*.acr",
+    "*.alg",
+    "*.glg",
+    "*.glo",
+    "*.gls",
+    "*.fls",
+    "*.log",
+    "*.fdb_latexmk",
+    "*.snm",
+    "*.synctex.gz",
+    "*.nav"
+  ],
+
+  // ===========================
+  // Python
+  // ===========================
+  "python.defaultInterpreterPath": "/usr/bin/python3",
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-python.python"
+  },
+
+  // ===========================
+  // Jupyter
+  // ===========================
+  "jupyter.askForKernelRestart": false,
+  "jupyter.widgetScriptSources": ["jsdelivr.com", "unpkg.com"],
+
+  // ===========================
+  // Markdown (Obsidian/Foam)
+  // ===========================
+  "[markdown]": {
+    "editor.formatOnSave": false,
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": false
+    }
+  },
+  "foam.openDailyNote.directory": "notas/daily-notes",
+  "foam.openDailyNote.filenameFormat": "yyyy-mm-dd",
+
+  // ===========================
+  // Git
+  // ===========================
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "gitlens.hovers.currentLine.over": "line",
+
+  // ===========================
+  // GitHub Copilot
+  // ===========================
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": true,
+    "latex": true,
+    "python": true
+  },
+
+  // ===========================
+  // General
+  // ===========================
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/__pycache__": true,
+    "**/.ipynb_checkpoints": true
+  },
+  "files.watcherExclude": {
+    "**/datos/**": true,
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true
+  },
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": true,
+  "workbench.startupEditor": "readme"
+}

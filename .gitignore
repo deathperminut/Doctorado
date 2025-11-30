@@ -67,7 +67,9 @@ ENV/
 # ========================
 # VS Code
 # ========================
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 *.code-workspace
 
 # ========================
