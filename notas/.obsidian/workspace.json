@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "8fbdac590c797a59",
+        "id": "b216f87ab3346201",
         "type": "tabs",
         "children": [
           {
-            "id": "79ea8f733b5165d4",
+            "id": "d6f75224374204f1",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "templates/meeting.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "meeting"
+              "title": "New tab"
             }
           }
         ]
@@ -94,7 +90,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "templates/meeting.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +99,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for meeting"
+              "title": "Backlinks"
             }
           },
           {
@@ -113,12 +108,11 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "templates/meeting.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from meeting"
+              "title": "Outgoing links"
             }
           },
           {
@@ -156,13 +150,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "templates/meeting.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of meeting"
+              "title": "Outline"
             }
           }
         ]
@@ -183,15 +176,15 @@
       "bases:Create new base": false
     }
   },
-  "active": "79ea8f733b5165d4",
+  "active": "d6f75224374204f1",
   "lastOpenFiles": [
-    "templates/literatura.md",
-    "literatura/ejemplo-paper.md",
-    "templates/idea.md",
     "templates/daily-note.md",
+    "templates/idea.md",
+    "templates/literatura.md",
     "00-INICIO-AQUI.md",
-    "README.md",
     "templates/meeting.md",
+    "literatura/ejemplo-paper.md",
+    "README.md",
     "templates"
   ]
 }
