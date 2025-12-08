@@ -37,6 +37,7 @@
         "-synctex=1",
         "-interaction=nonstopmode",
         "-file-line-error",
+        "-shell-escape",
         "%DOC%"
       ]
     },
@@ -65,6 +66,10 @@
       ]
     }
   ],
+  "[latex]": {
+    "editor.formatOnSave": false,
+    "editor.wordWrap": "on"
+  },
 
   // ===========================
   // Python
