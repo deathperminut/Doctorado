@@ -3,8 +3,9 @@
   // LaTeX Workshop
   // ===========================
   "latex-workshop.latex.autoBuild.run": "onSave",
-  "latex-workshop.latex.outDir": "%DIR%/build",
+  "latex-workshop.latex.outDir": "%DIR%",
   "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.formatting.latex": "none",
   "latex-workshop.latex.clean.fileTypes": [
     "*.aux",
     "*.bbl",
@@ -27,6 +28,42 @@
     "*.snm",
     "*.synctex.gz",
     "*.nav"
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "bibtex",
+      "command": "bibtex",
+      "args": [
+        "%DOCFILE%"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "pdflatex",
+      "tools": [
+        "pdflatex"
+      ]
+    },
+    {
+      "name": "pdflatex → bibtex → pdflatex × 2",
+      "tools": [
+        "pdflatex",
+        "bibtex",
+        "pdflatex",
+        "pdflatex"
+      ]
+    }
   ],
 
   // ===========================
