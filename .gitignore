@@ -27,6 +27,7 @@ datos/*.parquet
 datos/*.pkl
 datos/*.json
 datos/*.db
+*.npz
 *.zip
 *.tar.gz
 *.rar
