@@ -74,7 +74,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 515.5
   },
   "right": {
     "id": "8bbd7ae9fe300797",
@@ -150,12 +150,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "literatura/StateArt/ProblemStatement3 - Interpretability and Physical Consistency.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of ProblemStatement3 - Interpretability and Physical Consistency"
             }
           }
         ]
@@ -176,15 +177,33 @@
       "bases:Create new base": false
     }
   },
-  "active": "d6f75224374204f1",
+  "active": "3819c4dc44f91cb4",
   "lastOpenFiles": [
+    "literatura/StateArt/ProblemStatement2 - Low Quality Data Mitigation.md",
+    "literatura/StateArt/ProblemStatement1 - Non-Uniqueness in Magnetic Domains.md",
+    "literatura/StateArt/ProblemStatement3 - Interpretability and Physical Consistency.md",
+    "literatura/StateArt/ProblemStatement3 - Interpretability and Physical Consistency_ES.md",
+    "literatura/StateArt/ProblemStatement2 - Low Quality Data Mitigation_ES.md",
+    "literatura/StateArt/ProblemStatement1 - Non-Uniqueness in Magnetic Domains_ES.md",
+    "literatura/StateArt/Problem Statement 3.md",
+    "literatura/StateArt/Problem Statement 2.md",
+    "daily-notes/Tareas Pendientes.md",
+    "ideas/Dudas e inquietudes.md",
+    "literatura/StateArt/README.md",
+    "literatura/StateArt/Problems Statement 1.md",
     "templates/daily-note.md",
+    "literatura/Problem Statement - Non-Uniqueness in Magnetic Domains.md",
+    "daily-notes/Reuniones.md",
+    "literatura/ejemplo-paper.md",
+    "literatura/Bayesian Physics-Informed Neural Networks.md",
+    "literatura/StateArt",
+    "literatura/Bayesian Optimization.md",
+    "literatura/Figures",
     "templates/idea.md",
     "templates/literatura.md",
-    "00-INICIO-AQUI.md",
     "templates/meeting.md",
-    "literatura/ejemplo-paper.md",
     "README.md",
+    "00-INICIO-AQUI.md",
     "templates"
   ]
 }
