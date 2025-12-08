@@ -1,0 +1,223 @@
+\documentclass[12pt,a4paper]{article}
+
+% ========================
+% PAQUETES ESENCIALES
+% ========================
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% Configuración de márgenes
+\geometry{margin=1in}
+
+% Configuración de hyperlinks
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    citecolor=blue
+}
+
+% ========================
+% INFORMACIÓN DEL DOCUMENTO
+% ========================
+\title{Predicción de Parámetros Hamiltonianos en Dominios Magnéticos mediante Deep Learning}
+
+\author{
+    Juan Sebastián Méndez Rondón\\
+    \textit{Programa de Doctorado}\\
+    \textit{Universidad}\\
+    \texttt{email@universidad.edu}
+}
+
+\date{\today}
+
+% ========================
+% INICIO DEL DOCUMENTO
+% ========================
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Este trabajo investiga el uso de redes neuronales convolucionales profundas para predecir parámetros físicos de sistemas magnéticos a partir de imágenes de configuraciones de spin. Utilizamos arquitecturas state-of-the-art (DenseNet121, ResNet50, EfficientNet) y técnicas de interpretabilidad (UMAP, Grad-CAM) para establecer relaciones entre patrones espaciales de magnetización y parámetros hamiltonianos subyacentes. Nuestros resultados muestran que DenseNet121 alcanza un R²=0.9753 en la predicción del parámetro Jex2, demostrando que las CNNs pueden capturar de manera efectiva la física de los sistemas magnéticos.
+
+\noindent\textbf{Palabras clave:} Deep Learning, Dominios Magnéticos, DenseNet, Grad-CAM, Interpretabilidad
+\end{abstract}
+
+% ========================
+% SECCIONES
+% ========================
+\section{Introducción}
+\label{sec:introduccion}
+
+Los sistemas magnéticos presentan comportamientos complejos determinados por múltiples parámetros físicos en el hamiltoniano. La predicción inversa de estos parámetros a partir de configuraciones observables es un problema fundamental en física de materia condensada \cite{reference1}.
+
+Recientemente, el deep learning ha emergido como una herramienta poderosa para problemas inversos en física \cite{reference2}. En particular, las redes neuronales convolucionales (CNNs) han demostrado capacidad excepcional para extraer características relevantes de datos espaciales.
+
+En este trabajo, abordamos el problema de predecir parámetros hamiltonianos (Jex2, KDM, Temperatura) a partir de imágenes de configuraciones de spin magnético. Nuestras contribuciones principales son:
+
+\begin{itemize}
+    \item Comparación sistemática de arquitecturas CNN state-of-the-art
+    \item Análisis de interpretabilidad mediante UMAP y Grad-CAM
+    \item Identificación de características espaciales físicamente relevantes
+    \item Validación mediante experimentos de ablación
+\end{itemize}
+
+\section{Metodología}
+\label{sec:metodologia}
+
+\subsection{Datos}
+
+Utilizamos dos bases de datos de simulaciones Monte Carlo:
+
+\begin{itemize}
+    \item \textbf{DatabaseJex2T}: 54,044 configuraciones con Jex2 y Temperatura variables
+    \item \textbf{DatabaseKDMT}: Configuraciones con KDM y Temperatura variables
+\end{itemize}
+
+Cada configuración consiste en una imagen de 39×39 píxeles representando la componente $S_z$ del spin en cada sitio de la red.
+
+\subsection{Preprocesamiento}
+
+Las imágenes fueron preprocesadas mediante:
+\begin{enumerate}
+    \item Resize a 224×224 píxeles (requerido por arquitecturas pre-entrenadas)
+    \item Conversión a RGB (replicación en 3 canales)
+    \item Normalización MinMaxScaler sobre targets
+\end{enumerate}
+
+\subsection{Arquitecturas de Modelos}
+
+Evaluamos cuatro arquitecturas basadas en CNNs profundas:
+
+\begin{table}[H]
+\centering
+\caption{Comparación de arquitecturas evaluadas}
+\label{tab:arquitecturas}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Modelo} & \textbf{Parámetros} & \textbf{R² (Jex2)} & \textbf{MAPE} \\
+\midrule
+DenseNet121 & 7M & \textbf{0.9753} & \textbf{18.64\%} \\
+ResNet50 & 23M & 0.94 & 22\% \\
+EfficientNetB2 & 7.8M & 0.95 & 20\% \\
+InceptionNetV3 & 22M & - & - \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Entrenamiento}
+
+Todos los modelos fueron entrenados con:
+\begin{itemize}
+    \item Optimizador: Adam ($\text{lr}=10^{-4}$)
+    \item Loss: Mean Squared Error (MSE)
+    \item Batch size: 32
+    \item Train/Val split: 90/10
+    \item Early stopping: patience=10 epochs
+\end{itemize}
+
+\section{Resultados}
+\label{sec:resultados}
+
+\subsection{Performance Cuantitativo}
+
+DenseNet121 alcanzó el mejor desempeño con R²=0.9753, MAPE=18.64\%, y SMAPE=15.49\% en la predicción de Jex2.
+
+\begin{figure}[H]
+\centering
+% Incluir aquí gráfico de predicción vs real
+% \includegraphics[width=0.7\textwidth]{figures/scatter_real_vs_pred.pdf}
+\caption{Predicción vs Valor Real para Jex2 usando DenseNet121}
+\label{fig:scatter}
+\end{figure}
+
+\subsection{Análisis de Interpretabilidad}
+
+\subsubsection{UMAP}
+
+El análisis UMAP de activaciones intermedias revela que las capas profundas de la red separan progresivamente las muestras según el valor de Jex2 (Figura \ref{fig:umap}).
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=\textwidth]{figures/umap_jex2.pdf}
+\caption{Proyección UMAP de activaciones en diferentes capas de DenseNet121}
+\label{fig:umap}
+\end{figure}
+
+\subsubsection{Grad-CAM}
+
+Los mapas de atención Grad-CAM muestran que el modelo se enfoca predominantemente en:
+\begin{itemize}
+    \item Interfaces entre dominios magnéticos
+    \item Defectos topológicos (skyrmions, vórtices)
+    \item Regiones de transición abrupta de magnetización
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+% \includegraphics[width=\textwidth]{figures/gradcam_heatmaps.pdf}
+\caption{Heatmaps Grad-CAM para diferentes capas convolucionales}
+\label{fig:gradcam}
+\end{figure}
+
+\subsection{Experimentos de Ablación}
+
+Enmascaramiento de regiones de alta atención Grad-CAM resultó en degradación significativa del R² (de 0.9753 a 0.7821), validando que las regiones identificadas son efectivamente críticas para la predicción.
+
+\section{Discusión}
+\label{sec:discusion}
+
+Nuestros resultados demuestran que DenseNet121 captura de manera efectiva la relación entre patrones espaciales de magnetización y parámetros hamiltonianos. La superioridad de DenseNet sobre ResNet puede atribuirse a:
+
+\begin{enumerate}
+    \item \textbf{Feature reuse}: Conexiones densas permiten reutilización eficiente de features
+    \item \textbf{Gradiente flow}: Mejor propagación de gradientes en redes profundas
+    \item \textbf{Regularización implícita}: Menos parámetros que ResNet, mejor generalización
+\end{enumerate}
+
+El análisis Grad-CAM revela que el modelo aprende representaciones físicamente interpretables, enfocándose en estructuras conocidas como relevantes en magnetismo (interfaces, defectos topológicos).
+
+La dificultad para predecir Temperatura (R²=-1.23) sugiere que múltiples temperaturas pueden producir configuraciones espacialmente similares, requiriendo información adicional como dinámica temporal.
+
+\section{Conclusiones}
+\label{sec:conclusiones}
+
+Este trabajo demuestra que:
+
+\begin{enumerate}
+    \item CNNs profundas pueden predecir parámetros hamiltonianos con alta precisión (R²>0.97)
+    \item DenseNet121 supera otras arquitecturas en este dominio
+    \item El modelo aprende representaciones físicamente interpretables
+    \item Técnicas de interpretabilidad (Grad-CAM) validan que el modelo se enfoca en características relevantes
+\end{enumerate}
+
+Trabajo futuro incluye: (1) explorar arquitecturas tipo Vision Transformer, (2) incorporar información temporal, y (3) validación en datos experimentales reales.
+
+% ========================
+% BIBLIOGRAFÍA
+% ========================
+\bibliographystyle{plain}
+\bibliography{references}
+
+% Si no tienes archivo .bib aún, puedes usar esto temporalmente:
+% \begin{thebibliography}{99}
+% \bibitem{reference1}
+% Autor, A., et al. (2023). Título del paper. \textit{Journal Name}, Vol(Issue), páginas.
+%
+% \bibitem{reference2}
+% Autor, B., et al. (2024). Título del paper. \textit{Journal Name}, Vol(Issue), páginas.
+% \end{thebibliography}
+
+\end{document}
