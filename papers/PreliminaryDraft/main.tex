@@ -1,0 +1,138 @@
+\documentclass[11pt,a4paper]{article}
+
+% ========================
+% PAQUETES BÁSICOS
+% ========================
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{booktabs}
+
+% Configuración
+\geometry{margin=1in}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=cyan,
+    citecolor=blue
+}
+
+% ========================
+% INFORMACIÓN
+% ========================
+\title{Borrador Preliminar\\
+\large Análisis de Dominios Magnéticos con CNNs}
+
+\author{
+    Juan Sebastián Méndez Rondón
+}
+
+\date{\today}
+
+% ========================
+% DOCUMENTO
+% ========================
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Este borrador preliminar presenta los avances iniciales en la aplicación de redes neuronales convolucionales para el análisis de dominios magnéticos. Se exploran diferentes arquitecturas y metodologías para la predicción de parámetros físicos.
+\end{abstract}
+
+\section{Introducción}
+
+Este documento sirve como borrador preliminar para organizar ideas y resultados iniciales del proyecto de doctorado.
+
+\subsection{Objetivos}
+
+\begin{itemize}
+    \item Explorar arquitecturas CNN para dominios magnéticos
+    \item Validar metodología de preprocesamiento
+    \item Establecer baseline de performance
+\end{itemize}
+
+\section{Metodología Preliminar}
+
+\subsection{Datos}
+
+Trabajamos con configuraciones de spin de simulaciones Monte Carlo:
+\begin{itemize}
+    \item Database Jex2T: 54,044 configuraciones
+    \item Database KDMT: En construcción
+\end{itemize}
+
+\subsection{Modelos Explorados}
+
+\begin{table}[H]
+\centering
+\caption{Modelos evaluados hasta ahora}
+\begin{tabular}{lc}
+\toprule
+\textbf{Arquitectura} & \textbf{Estado} \\
+\midrule
+DenseNet121 & En progreso \\
+ResNet50 & Planeado \\
+EfficientNet & Planeado \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Resultados Preliminares}
+
+\textit{[Sección en construcción]}
+
+% Espacio para figuras
+\begin{figure}[H]
+\centering
+% \includegraphics[width=0.6\textwidth]{figures/placeholder.pdf}
+\caption{Placeholder para resultados iniciales}
+\end{figure}
+
+\section{Próximos Pasos}
+
+\begin{enumerate}
+    \item Completar entrenamiento de DenseNet
+    \item Implementar análisis UMAP
+    \item Generar visualizaciones Grad-CAM
+    \item Escribir sección de resultados completa
+\end{enumerate}
+
+\section{Notas y Observaciones}
+
+\textit{[Espacio para notas durante el desarrollo]}
+
+\subsection{Ideas}
+
+\begin{itemize}
+    \item Probar data augmentation
+    \item Explorar diferentes tamaños de imagen
+    \item Considerar ensemble methods
+\end{itemize}
+
+\subsection{Dudas}
+
+\begin{itemize}
+    \item ¿Mejor métrica para evaluar: R², MAPE, o ambas?
+    \item ¿Cómo manejar el desbalance en temperatura?
+\end{itemize}
+
+\section{Referencias Temporales}
+
+\textit{[Añadir referencias según avance el trabajo]}
+
+\begin{itemize}
+    \item Huang et al. - DenseNet paper
+    \item Selvaraju et al. - Grad-CAM paper
+    \item McInnes et al. - UMAP paper
+\end{itemize}
+
+% Bibliografía (opcional para borrador)
+% \bibliographystyle{plain}
+% \bibliography{references}
+
+\end{document}
