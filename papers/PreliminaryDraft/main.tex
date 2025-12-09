@@ -986,23 +986,274 @@ Probabilistic / disentangled models & Quantifies uncertainty and multimodality; 
 
 
 
+\section{Research Question}
+
+The challenges outlined in the previous sections—parameter degeneracy, data quality degradation, and lack of interpretability—converge to define a critical gap in the state of the art for nanoscale magnetic domain characterization. Current approaches struggle to simultaneously address the non-uniqueness of the inverse mapping, the prevalence of low-quality experimental data, and the opacity of data-driven models. This confluence of limitations motivates the central research question of this work:
+
+\begin{center}
+\textit{How can physics-informed deep learning frameworks be designed to simultaneously mitigate parameter degeneracy, enhance the quality of generated magnetic configurations, and ensure physical interpretability in the forward and inverse modeling of nanoscale magnetic domain states?}
+\end{center}
+
+This question is inherently multifaceted, requiring the integration of regularization strategies that respect the underlying Hamiltonian structure, generative methodologies capable of sampling physically plausible multimodal solutions, and interpretability mechanisms that expose the relationship between learned representations and observable physical quantities. Addressing this research question requires moving beyond purely data-driven approaches toward hybrid frameworks that embed physical constraints while maintaining computational tractability and generalization capacity across experimental and simulated magnetic imaging modalities.
+
+
 \section{Objectives}
 
-MENCIONAMOS LOS OBJETIVOS -> CONSTRUIMOS EL DIAGRAMA ESQUEMA BASE DE CADA UNO 
+To address the research question formulated above, this work pursues three complementary objectives that tackle the core challenges of degeneracy, data quality, and interpretability in the modeling of nanoscale magnetic domain states:
 
-EL QUE YA ESTA Y LA VERSIÓN QUE TENGO PARA USAR.
+\begin{enumerate}
+    \item Develop a regularized deep learning framework based on Hamiltonian modeling refinement and transfer learning methodology to mitigate the effect of magnetic state degeneracy when performing a configuration estimation task.
 
-MATEMATICA MAS IMPORTANTE.
+    \item Develop a regularized deep learning framework based on generative models, employing diffusion strategies to enhance the quality of magnetic states generated from a related physical condition in a task of generating nanoscale magnetic domain states.
 
-EXPLICADO.
-
-COMO ESTA PROYECTANDO DATOS NUEVOS AL UMAP
-YA NO TIENE TRANSFORMACIÒN DIRECTA.
-
-
-COMO DESARROLLAR.....?
+    \item Develop interpretability methodologies for deep learning models that take into account the underlying physical conditions that generated the analyzed magnetic domain states.
+\end{enumerate}
 
 \section{Methodology}\label{sec:Material_methods}
+
+
+This section describes the methodological framework adopted to address the first research objective: mitigating the effects of magnetic state degeneracy when estimating nanoscale magnetic configurations from physical parameters. The methodology integrates (i) a Hamiltonian-based atomistic simulation pipeline for generating synthetic datasets, and (ii) a physically informed deep learning framework based on conditional variational autoencoders (cVAEs) enhanced with physics-based regularization and cycle-consistent modeling strategies.
+
+\subsection{Hamiltonian-Based Dataset Generation}
+
+The construction of the synthetic dataset is based on an atomistic Hamiltonian model that captures the main magnetic interactions governing nanoscale spin configurations. The total energy of the system is described by:
+
+\begin{equation}
+H = 
+- \sum_{i=1}^{N} \sum_{j \in nn} J \left( \mathbf{S}_i \cdot \mathbf{S}_j \right)
++ \sum_{i=1}^{N} \sum_{j \in nn} \mathbf{D}_{ij} \cdot \left( \mathbf{S}_i \times \mathbf{S}_j \right)
+- \sum_{i=1}^{N} \mathbf{h}_{\mathrm{ext}} \cdot \mathbf{S}_i
++ \sum_{i=1}^{N} K 
+\left(
+\alpha_{i1}^2 \alpha_{i2}^2 +
+\alpha_{i2}^2 \alpha_{i3}^2 +
+\alpha_{i3}^2 \alpha_{i1}^2
+\right).
+\label{eq:H_full}
+\end{equation}
+
+This Hamiltonian incorporates four fundamental contributions, each governing a distinct physical mechanism:
+
+\paragraph{Exchange interaction.}
+\[
+H_{\mathrm{ex}} = - \sum_{i=1}^{N} \sum_{j \in nn} J \left( \mathbf{S}_i \cdot \mathbf{S}_j \right)
+\]
+The exchange constant $J$ controls the tendency of nearest-neighbor spins to align. Positive values favor ferromagnetic ordering, while negative values favor antiferromagnetic alignment. This term stabilizes smooth, low-energy magnetic domains.
+
+\paragraph{Dzyaloshinskii--Moriya interaction (DMI).}
+\[
+H_{\mathrm{DMI}} = 
+\sum_{i=1}^{N} \sum_{j \in nn} 
+\mathbf{D}_{ij} \cdot \left( \mathbf{S}_i \times \mathbf{S}_j \right)
+\]
+The vector $\mathbf{D}_{ij}$ introduces chirality due to broken inversion symmetry, favoring non-collinear textures such as helices, Néel-type domain walls, and skyrmions.
+
+\paragraph{Zeeman interaction.}
+\[
+H_{\mathrm{Z}} = 
+- \sum_{i=1}^{N} \mathbf{h}_{\mathrm{ext}} \cdot \mathbf{S}_i
+\]
+The external field $\mathbf{h}_{\mathrm{ext}}$ couples to the spin orientations, tending to align the magnetization with the applied field direction.
+
+\paragraph{Magnetocrystalline anisotropy.}
+\[
+H_{\mathrm{ani}} = 
+\sum_{i=1}^{N} K 
+\left(
+\alpha_{i1}^2 \alpha_{i2}^2 +
+\alpha_{i2}^2 \alpha_{i3}^2 +
+\alpha_{i3}^2 \alpha_{i1}^2
+\right)
+\]
+Here, $K$ denotes the anisotropy constant, and the components $\alpha_{ik}$ represent the direction cosines of the local spin orientation relative to the crystallographic axes. This term governs the preferred magnetization direction (easy or hard axes) and significantly influences domain morphology.
+
+\vspace{0.3cm}
+Together, these contributions enable exploration of a broad variety of magnetic textures, including vortices, stripes, labyrinth domains, helical states, and skyrmions.
+
+\subsubsection*{Simulation Procedure}
+
+Spin configurations are generated using the Metropolis Monte Carlo method, which ensures statistical sampling according to Boltzmann probabilities. Systematic sweeps of temperature, exchange constants, anisotropy parameters, DMI strength, and external magnetic fields define the parameter space. Each simulation produces:
+
+\begin{itemize}
+    \item a geometry file describing lattice coordinates of the nanodot,
+    \item multiple state files encoding the spin orientations for each parameter combination.
+\end{itemize}
+
+\subsubsection*{Image Construction Pipeline}
+
+The raw spin states are transformed into image-based representations through a structured preprocessing pipeline:
+
+\begin{enumerate}
+    \item \textbf{Geometry parsing:} lattice coordinates are loaded and masked to enforce the nanodot shape.
+    \item \textbf{Spin mapping:} the $S_z$ component is assigned to each lattice site to reconstruct magnetization fields.
+    \item \textbf{Image rendering:} a red--blue colormap encodes opposite out-of-plane spin orientations on a fixed $39 \times 39$ grid.
+    \item \textbf{Normalization:} pixel intensities are scaled to either $[-1,1]$ or $[0,1]$.
+    \item \textbf{Dataset storage:} each entry is saved as a NumPy array containing the image and the corresponding Hamiltonian parameter vector.
+\end{enumerate}
+
+The resulting dataset contains tens of thousands of labeled images spanning a wide range of physical regimes, from fully ordered low-temperature states to disordered high-temperature configurations. This dataset constitutes the controlled foundation for training deep learning architectures in both forward and inverse modeling tasks.
+
+
+\subsection{Physically Informed Conditional Variational Autoencoder}
+
+A physically informed conditional variational autoencoder (cVAE) framework is adopted to address the degeneracy inherent to the forward problem, where multiple magnetic textures can arise from similar Hamiltonian parameters. The model learns a conditional distribution over domain configurations given a physical parameter vector $\mathbf{c}$, enforcing physical coherence through the latent structure and the learning objective.
+
+The cVAE consists of an encoder $q_{\phi}(\mathbf{z}|\mathbf{x},\mathbf{c})$ producing a Gaussian latent embedding with mean $\mu_{\phi}(\mathbf{x},\mathbf{c})$ and variance $\sigma^2_{\phi}(\mathbf{x},\mathbf{c})$, and a decoder $p_{\theta}(\mathbf{x}|\mathbf{z},\mathbf{c})$ reconstructing the magnetic configuration. Conditioning is performed by mapping the Hamiltonian parameters into a physically informed latent prior $p_{\theta}(\mathbf{z}|\mathbf{c})$ through a parametric network, following formulations used in physics-guided variational inference frameworks \cite{lee2021hamiltonianVAE, hermans2024cvai}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\textwidth]{Figures/pcVae.png}
+    \caption{Conditional VAE architecture with physics-guided parameter conditioning.}
+    \label{fig:pcvae_architecture}
+\end{figure}
+
+The total training objective is defined as:
+\begin{equation}
+\mathcal{L}_{\mathrm{total}} 
+= 
+\mathcal{L}_{\mathrm{rec}}
++ \beta \mathcal{L}_{\mathrm{KL}}
++ \gamma \mathcal{L}_{\mathrm{phys}},
+\end{equation}
+where each component targets a specific aspect of physical or statistical consistency.
+
+\subsubsection{Conditional KL Divergence}
+
+The KL divergence regularizes the posterior distribution by enforcing proximity to a parameter-dependent latent prior:
+\begin{equation}
+\mathcal{L}_{\mathrm{KL}}
+=
+D_{\mathrm{KL}}
+\left(
+q_{\phi}(\mathbf{z}|\mathbf{x},\mathbf{c})
+\;\|\;
+p_{\theta}(\mathbf{z}|\mathbf{c})
+\right).
+\end{equation}
+
+Unlike classical VAEs—which impose a fixed standard normal prior $p(\mathbf{z}) = \mathcal{N}(0, I)$—the conditional prior $p_{\theta}(\mathbf{z}|\mathbf{c})$ introduces a physics-shaped structure into the latent space. This prior is implemented as:
+\begin{equation}
+p_{\theta}(\mathbf{z}|\mathbf{c}) 
+=
+\mathcal{N}
+\big(
+\mu_{\theta}(\mathbf{c}),\;
+\Sigma_{\theta}(\mathbf{c})
+\big),
+\end{equation}
+where $\mu_{\theta}$ and $\Sigma_{\theta}$ are neural networks that learn a latent distribution consistent with the Hamiltonian's parameter space.
+
+This formulation prevents the model from collapsing physically distinct regimes into overlapping latent regions, reducing degeneracy by enforcing that different parameter vectors induce distinct latent priors. Consequently, the latent geometry reflects the topology of the physical system.
+
+\subsubsection{Physics-Guided Energy Penalties}
+
+The physics-based term $\mathcal{L}_{\mathrm{phys}}$ constrains the decoder to produce configurations consistent with low-energy magnetic states. Given the Hamiltonian:
+\begin{equation}
+H(\mathbf{x};\mathbf{c}) 
+=
+H_{\mathrm{ex}} + H_{\mathrm{DMI}} + H_{\mathrm{Z}} + H_{\mathrm{ani}},
+\end{equation}
+each component can be used to penalize deviations from expected energetics:
+\begin{align}
+H_{\mathrm{ex}} &= 
+- J \sum_{i} \sum_{j \in nn} 
+(\mathbf{S}_i \cdot \mathbf{S}_j), \\
+H_{\mathrm{DMI}} &= 
+\sum_{i} \sum_{j \in nn} 
+\mathbf{D}_{ij} \cdot (\mathbf{S}_i \times \mathbf{S}_j), \\
+H_{\mathrm{Z}} &= 
+- \sum_{i} \mathbf{h}_{\mathrm{ext}} \cdot \mathbf{S}_i, \\
+H_{\mathrm{ani}} &= 
+\sum_{i} 
+K (\alpha_{i1}^2 \alpha_{i2}^2 + \alpha_{i2}^2 \alpha_{i3}^2 + \alpha_{i3}^2 \alpha_{i1}^2).
+\end{align}
+
+A general physics penalty can be expressed as:
+\begin{equation}
+\mathcal{L}_{\mathrm{phys}}
+=
+\lambda_{\mathrm{E}}
+\left(
+H(\hat{\mathbf{x}};\mathbf{c})
+-
+H_{\mathrm{ref}}(\mathbf{c})
+\right)^2
++
+\sum_{k}
+\lambda_k \, \Psi_k(\hat{\mathbf{x}},\mathbf{c}),
+\end{equation}
+where:
+
+- $\hat{\mathbf{x}}$ is the reconstructed or generated configuration,
+- $H_{\mathrm{ref}}(\mathbf{c})$ is a reference or minimum-energy estimate for the given parameters,
+- $\Psi_k$ are optional additional constraints such as:
+  - chiral consistency for DMI systems,
+  - topological charge regularization for skyrmion textures,
+  - divergence penalties for enforcing $\|\nabla \cdot \mathbf{m}\| \approx 0$ where applicable.
+
+Examples include:
+\begin{align}
+\Psi_{\mathrm{chirality}}
+&=
+\left\|
+(\mathbf{S}_i \times \mathbf{S}_j)\cdot \hat{\mathbf{D}}_{ij}
+-
+\chi_{\mathrm{target}}(\mathbf{c})
+\right\|^2,
+\\[4pt]
+\Psi_{\mathrm{topo}}
+&=
+\left(
+Q(\hat{\mathbf{x}}) - Q_{\mathrm{expected}}(\mathbf{c})
+\right)^2,
+\end{align}
+where $Q$ denotes the skyrmion number.
+
+These penalties restrict the learned manifold to physically meaningful magnetic textures, mitigating degeneracy by discarding energetically unstable or symmetry-inconsistent solutions that would otherwise satisfy the reconstruction objective.
+
+
+Once the model has been trained, inference proceeds by conditioning the generative process on the physical parameter vector associated with the target magnetic regime. The parameter vector is first processed through a multilayer perceptron (MLP) that constructs the conditional latent prior distribution. A latent sample is then drawn by combining the prior mean and variance with a stochastic perturbation sampled from a standard normal distribution, producing the latent representation used during generation. This latent code is subsequently merged with a secondary conditioning network that injects the physical parameters into the generative pathway, ensuring consistency with the Hamiltonian-defined regime. Finally, the decoder maps the conditioned latent vector into a magnetic domain configuration, yielding an image that is statistically coherent, physically plausible, and aligned with the specified material and interaction parameters. This prediction-stage pipeline enables the model to infer nanoscale magnetic states directly from physical conditions while preserving physical regularity learned during training.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\textwidth]{Figures/inference.png}
+    \caption{Prediction Phase}
+    \label{fig:pcvae_architecture}
+\end{figure}
+
+\subsection{Cycle-Consistent Forward--Inverse Framework}
+
+To further constrain the solution manifold and exploit learned representations from the forward model, a cycle-consistent framework is adopted. A complementary inverse model is trained to map generated images back into their corresponding Hamiltonian parameters. The cycle consists of:
+
+\begin{enumerate}
+    \item A forward generator $G_\theta$: $(\mathbf{p}) \rightarrow (\hat{X})$ mapping parameters to images.
+    \item An inverse encoder $F_\phi$: $(\hat{X}) \rightarrow (\hat{\mathbf{p}})$ recovering the parameter vector.
+\end{enumerate}
+
+Cycle consistency is enforced through a constraint of the form:
+\begin{equation}
+\mathcal{L}_{\mathrm{cycle}} = \left\| F_\phi(G_\theta(\mathbf{p})) - \mathbf{p} \right\|_2^2,
+\end{equation}
+ensuring that reconstructed parameters remain consistent with the physical conditions initially used to generate the synthetic image. This mechanism reduces ambiguity and improves identifiability under degeneracy, leveraging the shared latent structure between forward and inverse models.
+
+\subsection{Bayesian Hyperparameter Optimization}
+
+To maximize model robustness and ensure reliable convergence under multimodal image distributions, Bayesian optimization is used to tune key hyperparameters such as $\beta$, $\gamma$, latent dimensionality, learning rates, and conditioning network depth. This optimization strategy provides a principled approach to exploring the hyperparameter space under uncertainty, improving performance while minimizing empirical trial-and-error.
+
+\subsection{Methodology Summary}
+
+The methodology combines:
+\begin{itemize}
+    \item physics-based synthetic data generation via atomistic Hamiltonian simulations,
+    \item a conditional VAE model informed by Hamiltonian priors,
+    \item explicit physical regularization through Hamiltonian-derived energy terms,
+    \item cycle consistency between forward and inverse mappings, and
+    \item Bayesian optimization for selecting optimal model configurations.
+\end{itemize}
+
+This integrated framework establishes a physically grounded approach for mitigating magnetic state degeneracy in nanoscale magnetic imaging tasks.
+
+
 
 
 
