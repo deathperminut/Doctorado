@@ -1576,17 +1576,216 @@ physical principles, enabling reliable and transparent use in scientific domains
 involving magnetic microstructure analysis.
 
 
+\section{Experimental Set Up} \label{sec:Exp}
 
+\subsection{Tested Dataset}\label{sec:Data}
 
+To evaluate the proposed model, we employed two public datasets available on Kaggle: \textbf{KDM DATABASE SPINERS}\footnote{\url{https://www.kaggle.com/datasets/deathperminut/kdm-database-spiners}} and \textbf{MATERIAL SPINNERS DATA}\footnote{\url{https://www.kaggle.com/datasets/deathperminut/material-spinners-data}}. The \textbf{KDM DATABASE SPINERS} dataset, which serves as our primary benchmark, contains a total of 164,212 grayscale images of $39 \times 39$ pixels, stored in \texttt{.npy} format. Each image is associated with a set of Hamiltonian parameters, focusing particularly on temperature (T) and a derived parameter (KDM) that combines anisotropy and Dzyaloshinskii–Moriya interactions. This dataset was synthetically generated to simulate realistic spin textures under thermal variations, offering a comprehensive representation of temperature-driven domain configurations.
 
+The secondary dataset, \textbf{MATERIAL SPINNERS DATA}, complements the first by exploring different physical regimes. It consists of 54,404 images of the same resolution and format, but varies key exchange interaction parameters along with temperature. This configuration enables the analysis of more intricate spin behaviors and nonlinear interactions among physical constants, enhancing the generalization capabilities of the model. Both datasets share a common labeling scheme, facilitating model training and transferability while covering distinct portions of the Hamiltonian parameter space.
 
+The structure of the dataset follows a Python dictionary format, where each key represents a parameter name and its value corresponds to an array of data. The available variables are:
 
+\begin{longtable}{ll}
+\caption{Description of dataset variables.} \label{tab:variables} \\
+\hline
+\textbf{Variable} & \textbf{Description} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Variable} & \textbf{Description} \\
+\hline
+\endhead
+\texttt{MS}   & Set of images \\
+\texttt{Nest} & State number \\
+\texttt{L}    & Sample thickness \\
+\texttt{rd}   & Sample radius \\
+\texttt{So}   & Spin \\
+\texttt{T}    & Temperature \\
+\texttt{Jex}  & First-neighbor exchange interaction \\
+\texttt{Jex2} & Second-neighbor exchange interaction \\
+\texttt{Jex3} & Third-neighbor exchange interaction \\
+\texttt{Jex4} & Fourth-neighbor exchange interaction \\
+\texttt{Kan1} & First magnetocrystalline anisotropy constant \\
+\texttt{Kan2} & Second magnetocrystalline anisotropy constant \\
+\texttt{KanS} & Surface anisotropy constant \\
+\texttt{Hex}  & External magnetic field \\
+\texttt{kd}   & Dipolar constant \\
+\texttt{KDM}  & Dzyaloshinskii--Moriya interaction \\
+\hline
+\end{longtable}
 
-\section{Results} \label{sec:Exp}
+Spin configurations based on the Heisenberg model were implemented to reproduce various magnetic structures such as patterns, vortices, helical distributions, and other experimentally observed formations. A nanodisk geometry was selected to extract additional information on edge effects. A radius of 18.3~nm was considered to ensure the occurrence of the second-order magnetic phase transition in magnetization as a function of temperature. The loss of the 2D transition under the Heisenberg model is well known.
 
+Here, $\mathbf{S}$ represents the spin vector, which was set to 1 for normalization. $J_{Nn}$ denotes the exchange constant, where $N = 1, 2, 3, 4$ corresponds to the first to fourth nearest neighbors. $K_{DM_{ij}}^z$ the Dzyaloshinskii-Moriya (DM) constant with interaction up to third neighbors, $h_{\text{Ex}}$ is the external magnetic field, and $K_{\text{An}}$ is the magnetocrystalline anisotropy constant. The variables $\alpha_1$, $\alpha_2$, and $\alpha_3$ denote the direction cosines along the three Cartesian axes. Given the sample geometry, only the in-plane contribution of the Dzyaloshinskii–Moriya (DM) interaction was considered, up to second-nearest neighbors. $J_1$ was fixed at 1~meV per spin pair to define a reference energy scale. The Curie temperature—corresponding to the second-order transition from paramagnetic to ferromagnetic behavior—was set at 15.3~K, assuming no other competing parameters. The remaining interaction strengths were randomly assigned values between $-0.5$ and $0.5$~meV, consistent with values reported in DFT studies for various materials.
 
+Simulations began from randomly initialized spin configurations. The temperature was decreased from 20~K to 0.1~K in steps of 0.1~K. The system was evolved using the Metropolis algorithm and the Monte Carlo method, with 20,000 steps per temperature and the last 10,000 used for statistical averaging. For each simulation, 100 runs were executed under similar parameters, each starting from a different random spin configuration.
 
+Some of the physical parameters in the dataset were fixed across the simulations to simplify the experimental setup and reduce the complexity of the modeling task. In particular, variables such as Jex, Jex2, Jex3, Jex4, and kd were kept constant in many of the samples, which is reflected by their near-zero variance. This decision was motivated by the aim of focusing the learning process on more influential or variable quantities such as T, KDM, and the anisotropy constants (Kan1, KanS).
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Figures/imagenes_grid.pdf}
+    \caption{Representative examples of magnetic domain configurations from the KDM DATABASE SPINERS dataset. Each image shows a $39 \times 39$ pixel nanodisk spin texture, illustrating the variety of domain patterns (vortices, helical structures, and labyrinthine domains) generated under different combinations of temperature and KDM parameters.}
+    \label{fig:kdm_dataset}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Figures/imagenes_grid2.pdf}
+    \caption{Representative examples of magnetic domain configurations from the MATERIAL SPINNERS DATA dataset. These samples demonstrate spin textures generated under variations in exchange interaction parameters (Jex2) and temperature, exhibiting distinct magnetic morphologies and domain structures.}
+    \label{fig:spinner_dataset}
+\end{figure}
+
+The distribution of each parameter present in the datasets is shown in Figures~\ref{fig:distribution_kdm} and~\ref{fig:distribution_jex2}. Parameters with nearly uniform distributions across ranges (e.g., \texttt{Kan1}, \texttt{Hex}) indicate that they were sampled broadly, while others with sharp peaks or narrow ranges (e.g., \texttt{rd}, \texttt{kd}) reflect fixed or constrained simulation settings.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Figures/distribuciones_parametrosKDM.pdf}
+    \caption{Parameter distribution across the full KDM DATABASE SPINERS dataset. Histograms show the frequency distribution of each physical variable, revealing which parameters were varied during simulation (uniform or multimodal distributions) and which were held constant (sharp peaks).}
+    \label{fig:distribution_kdm}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Figures/distribuciones_parametrosTJex2.pdf}
+    \caption{Parameter distribution across the full MATERIAL SPINNERS DATA dataset. The distributions highlight the exploration of exchange interaction parameter space (Jex2) along with temperature variations, showing the coverage of the Hamiltonian parameter space in this complementary dataset.}
+    \label{fig:distribution_jex2}
+\end{figure}
+
+\subsection{Proof of Concept: Conditional Variational Autoencoder with Physics-Guided Conditioning}
+
+To address the first research objective—mitigating the effect of magnetic state degeneracy in configuration estimation tasks—we developed and evaluated a proof-of-concept implementation of a Conditional Variational Autoencoder (cVAE) with physics-guided parameter conditioning. This initial exploration focuses on establishing the baseline generative capabilities of the architecture before incorporating explicit physical constraints.
+
+The proposed architecture, illustrated in Figure~\ref{fig:cvae_architecture}, implements a learned conditional prior $p_\theta(z|c)$ that depends on physical parameters $c$ (temperature $T$ and the derived KDM parameter combining anisotropy and Dzyaloshinskii–Moriya interactions), rather than imposing a fixed standard normal prior as in classical VAEs. This design choice aims to structure the latent space according to the underlying Hamiltonian parameter space, thereby reducing ambiguities arising from parameter degeneracy.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Figures/cVae.png}
+    \caption{Conditional VAE architecture with physics-guided parameter conditioning. The encoder $Q_\phi$ maps input magnetic configurations $x$ to a latent distribution $q_\phi(z|x,c)$ conditioned on physical parameters $c$. The prior network $P_\psi$ learns a parameter-dependent latent prior $p_\psi(z|c)$, while the decoder $G_\theta$ reconstructs magnetic configurations from sampled latent codes and conditions.}
+    \label{fig:cvae_architecture}
+\end{figure}
+
+\subsubsection{Architecture Design}
+
+The model comprises three main components: an encoder $Q_\phi$, a decoder $G_\theta$, and a prior network $P_\psi$, all conditioned on the physical parameter vector $c \in \mathbb{R}^2$ (temperature and KDM).
+
+\paragraph{Encoder Architecture.}
+The encoder $Q_\phi$ projects the input image $x \in \mathbb{R}^{39 \times 39}$ to a low-dimensional latent space $z \in \mathbb{R}^d$, conditioned by $c$. The architecture follows a hybrid design:
+
+\begin{itemize}
+    \item \textbf{Visual Processing}: The image passes through a series of convolutional blocks (Conv2D) responsible for spatial feature extraction. Each block reduces spatial dimensionality while increasing the depth of feature maps.
+    \item \textbf{Condition Fusion}: The vector $c$ is processed via a linear layer and concatenated with the flattened visual feature vector resulting from the convolutions.
+    \item \textbf{Latent Projection}: The fused vector feeds two separate linear layers that predict the mean $\mu_{\text{enc}}$ and the logarithm of the variance $\log(\sigma^2_{\text{enc}})$ of the approximate posterior distribution $q_\phi(z|x,c)$.
+\end{itemize}
+
+During training, the reparameterization trick is used to sample $z$:
+\begin{equation}
+z = \mu_{\text{enc}} + \sigma_{\text{enc}} \cdot \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, I).
+\end{equation}
+
+\paragraph{Decoder Architecture.}
+The decoder $G_\theta$ acts as the system generator, performing the inverse operation to the encoder:
+
+\begin{itemize}
+    \item \textbf{Input}: Receives the sampled latent vector $z$ concatenated with the condition vector $c$, ensuring that generation respects physical constraints at each step.
+    \item \textbf{Upsampling}: The fused input is projected via a dense layer and reshaped to form an initial spatial tensor.
+    \item \textbf{Reconstruction}: A series of transposed convolution layers (ConvTranspose2D) progressively increase the spatial dimension until recovering the original size of $39 \times 39$ pixels.
+    \item \textbf{Output Activation}: The final layer uses a sigmoid activation function to guarantee that output pixel values $\hat{x}$ are bounded in the range $[0, 1]$, consistent with the input data normalization.
+\end{itemize}
+
+\paragraph{Prior Network.}
+Unlike standard VAEs that impose a fixed $p(z) = \mathcal{N}(0, I)$, the conditional prior $p_\psi(z|c)$ introduces a physics-shaped structure into the latent space:
+\begin{equation}
+p_\psi(z|c) = \mathcal{N}\left(\mu_\psi(c), \Sigma_\psi(c)\right),
+\end{equation}
+where $\mu_\psi$ and $\Sigma_\psi$ are neural networks that learn a latent distribution consistent with the Hamiltonian's parameter space. This formulation prevents the model from collapsing physically distinct regimes into overlapping latent regions, reducing degeneracy by enforcing that different parameter vectors induce distinct latent priors.
+
+\subsubsection{Loss Function Implementation}
+
+For this proof of concept, we implemented a simplified loss function without explicit physical constraints, focusing on reconstruction fidelity and latent space regularization. The total loss $\mathcal{L}$ minimized during training is:
+\begin{equation}
+\mathcal{L} = \mathcal{L}_{\text{recon}}(x, \hat{x}) + \beta \cdot D_{\text{KL}}\left(q_\phi(z|x,c) \,\|\, p_\psi(z|c)\right),
+\end{equation}
+where:
+
+\paragraph{Reconstruction Loss.}
+Mean Squared Error (MSE) measures pixel-to-pixel fidelity between the original and generated image:
+\begin{equation}
+\mathcal{L}_{\text{recon}} = \frac{1}{N} \sum_{i=1}^{N} \|x_i - \hat{x}_i\|^2.
+\end{equation}
+
+\paragraph{Conditional KL Divergence.}
+The KL divergence regularizes the posterior distribution by enforcing proximity to a parameter-dependent latent prior:
+\begin{equation}
+\mathcal{L}_{\text{KL}} = D_{\text{KL}}\left(q_\phi(z|x,c) \,\|\, p_\psi(z|c)\right).
+\end{equation}
+
+Unlike classical VAEs, the conditional prior $p_\psi(z|c)$ introduces a physics-shaped structure into the latent space. Since both the encoder posterior $q_\phi(z|x,c) = \mathcal{N}(\mu_1, \sigma_1^2)$ and the prior $p_\psi(z|c) = \mathcal{N}(\mu_2, \sigma_2^2)$ are Gaussian, the KL divergence admits an analytical solution:
+\begin{equation}
+D_{\text{KL}} = \frac{1}{2} \sum_{j=1}^{d} \left[ \log\frac{\sigma_{2,j}^2}{\sigma_{1,j}^2} + \frac{\sigma_{1,j}^2 + (\mu_{1,j} - \mu_{2,j})^2}{\sigma_{2,j}^2} - 1 \right],
+\end{equation}
+where $(\mu_1, \sigma_1)$ come from the encoder $q(z|x,c)$, $(\mu_2, \sigma_2)$ come from the prior network $p(z|c)$, and $d$ is the dimension of the latent space. The hyperparameter $\beta$ (Beta-VAE) controls the regularization weight, allowing a balance between reconstruction quality and latent space structure.
+
+\subsubsection{Experimental Setup and Results}
+
+For this proof of concept, we trained the cVAE exclusively on the KDM DATABASE SPINERS dataset, focusing on two physical parameters: temperature $T$ and the derived KDM parameter. The model was trained without explicit physics-based regularization ($\mathcal{L}_{\text{phys}} = 0$) to establish baseline generative performance and evaluate the intrinsic capability of the conditional prior to structure the latent space according to physical parameters.
+
+\paragraph{Latent Space Organization.}
+To assess whether the learned latent space encodes physically meaningful structure, we applied UMAP (Uniform Manifold Approximation and Projection) dimensionality reduction to the latent representations $z$ of the test set. Figures~\ref{fig:umap_tkdm} and~\ref{fig:umap_images} visualize the resulting two-dimensional embeddings, colored by temperature and KDM values, and overlaid with representative magnetic domain configurations, respectively.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{Figures/UmapDirectTKDM.png}
+    \caption{UMAP projection of the latent space learned by the conditional VAE, colored by physical parameters. Left: temperature $T$; Right: KDM parameter. The visualization reveals that the latent space exhibits smooth gradients corresponding to variations in physical parameters, indicating that the conditional prior successfully structures the latent manifold according to the underlying Hamiltonian parameter space.}
+    \label{fig:umap_tkdm}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{Figures/UmapDirect.png}
+    \caption{UMAP projection of the latent space with representative magnetic domain configurations overlaid on their corresponding latent positions. The spatial organization of domain morphologies (vortices, helical structures, labyrinthine patterns) suggests that the model has learned to cluster physically similar configurations in nearby latent regions, even without explicit physics-based constraints.}
+    \label{fig:umap_images}
+\end{figure}
+
+The UMAP projections demonstrate that the conditional prior successfully induces a physically meaningful latent geometry. Despite the absence of explicit physical regularization, the latent space exhibits smooth gradients aligned with variations in temperature and KDM, and morphologically similar magnetic configurations cluster together. This result suggests that the parameter-conditioned prior $p_\psi(z|c)$ effectively reduces latent degeneracy by enforcing that distinct physical conditions correspond to distinct latent distributions.
+
+\paragraph{Generative Quality.}
+To evaluate the reconstruction and generative fidelity of the model, we compared ground-truth magnetic configurations from the test set with their reconstructions produced by the cVAE. Figure~\ref{fig:generation} presents a qualitative comparison across a range of physical conditions.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{Figures/Generation.png}
+    \caption{Comparison between ground-truth magnetic domain configurations (top rows) and their reconstructions generated by the conditional VAE (bottom rows). The model successfully captures the main topological features of the magnetic textures—including vortex cores, domain wall structures, and edge effects—demonstrating that the architecture achieves high-fidelity reconstruction even without explicit physics-based constraints. Minor discrepancies in fine-scale details suggest opportunities for further improvement through physics-informed regularization.}
+    \label{fig:generation}
+\end{figure}
+
+The reconstructions exhibit high qualitative fidelity, capturing the primary topological features of magnetic domain structures, including vortex cores, domain walls, and edge-induced patterns. Minor deviations in fine-scale details are observed, particularly in regions with complex spin textures, indicating that while the baseline cVAE achieves strong generative performance, the incorporation of explicit physics-based constraints (such as energy penalties or LLG residuals) may further improve physical consistency and reduce reconstruction artifacts.
+
+\paragraph{Discussion.}
+This proof-of-concept evaluation demonstrates that the conditional VAE with learned physics-guided priors provides a promising foundation for addressing magnetic state degeneracy. The key findings are:
+
+\begin{itemize}
+    \item \textbf{Latent Space Structure}: The parameter-conditioned prior $p_\psi(z|c)$ successfully organizes the latent space according to physical parameters, as evidenced by smooth UMAP gradients and physically coherent clustering, even in the absence of explicit energy or dynamics constraints.
+    \item \textbf{Reconstruction Fidelity}: The model achieves high-quality reconstructions of complex magnetic textures, capturing essential topological features while maintaining pixel-level accuracy suitable for downstream tasks.
+    \item \textbf{Baseline for Physics-Informed Extensions}: The results establish a baseline against which future enhancements—including Hamiltonian energy penalties, cycle-consistency constraints, and transfer learning to experimental data—can be systematically evaluated.
+\end{itemize}
+
+\paragraph{Identified Limitations and Future Refinements.}
+Despite these encouraging results, this proof-of-concept implementation reveals critical methodological challenges that must be addressed before deployment:
+
+\begin{itemize}
+    \item \textbf{Hyperparameter Optimization}: The current architecture was trained with manually selected hyperparameters. To fully exploit the model's capacity, a systematic Bayesian optimization procedure (e.g., using Optuna~\cite{Optuna2022}) must be conducted to identify optimal values for $\beta$, latent dimensionality $d$, learning rates, and network depth. The baseline performance reported here likely underestimates the architecture's true potential.
+
+    \item \textbf{Pixel-Level Metrics and Geometric Invariance}: A fundamental limitation emerged during evaluation: magnetic domain configurations are inherently invariant to spatial transformations (rotations, translations, and reflections). Two configurations that differ only by a rigid transformation are \textit{physically equivalent}, yet pixel-wise metrics such as MSE assign them high dissimilarity. This misalignment between the evaluation metric and the physical equivalence relation leads to systematically underestimated generative quality. Figure~\ref{fig:generation} qualitatively demonstrates that the model can produce physically coherent states, but quantitative assessment via MSE penalizes geometrically transformed yet physically valid outputs. Alternative evaluation strategies must be explored, including:
+    \begin{itemize}
+        \item \textit{Rotation- and translation-invariant metrics} based on topological descriptors (e.g., skyrmion number, vorticity fields, or Betti numbers).
+        \item \textit{Energy-based metrics} that assess the physical consistency of generated states through micromagnetic energy functionals rather than pixel-level comparisons.
+        \item \textit{Structural similarity measures} (e.g., Fréchet Inception Distance adapted to magnetic textures) that capture perceptual and physical similarity beyond pixel alignment.
+    \end{itemize}
+\end{itemize}
+
+These findings validate the feasibility of the proposed architecture and motivate the subsequent integration of physics-informed regularization to further reduce degeneracy, improve generalization to unseen parameter regimes, and ensure strict adherence to micromagnetic principles. Moreover, they highlight the necessity of developing evaluation protocols that respect the geometric symmetries inherent to magnetic domain structures.
 
 
 \section{Conclusions} \label{sec:Conclusions}
