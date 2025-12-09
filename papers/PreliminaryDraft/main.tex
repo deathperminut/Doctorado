@@ -251,12 +251,7 @@ enforce physical consistency—such as energy minimization or Hamiltonian symmet
 for predictive materials discovery \cite{Ronne2024, Park2024}.
 
 
-This work proposes a unified deep learning framework for direct and inverse estimation of magnetic
-Hamiltonian parameters and textures. The approach integrates physics-informed generative architectures—
-such as conditional diffusion models guided by Hamiltonian-based embeddings or energy priors—
-with interpretable regression models in a cycle-consistent physical loop that enforces coherence in
-both directions. Bayesian hyperparameter optimization will be used to explore architectures efficiently
-and enhance robustness \cite{Sparks2024, Optuna2022}.
+This work proposes a unified deep learning framework for the direct and inverse estimation of magnetic Hamiltonian parameters and nanoscale domain configurations. Instead of relying on a fixed generative architecture, the framework will explore families of regularized and variational deep learning methodologies capable of integrating physical priors—such as Hamiltonian constraints, energy-based consistency, or symmetry-aware embeddings—to enhance robustness under degeneracy and low-quality data conditions. \cite{Sparks2024, Optuna2022}.
 
 
 \section{Motivation}
@@ -454,16 +449,7 @@ Overall, the study of magnetic nanodots is constrained by three fundamental chal
 \vspace{0.5cm}
 
 \subsection{Degeneracy of Magnetic States}
-%% ACORTAR EL TITULO DEL PROBLEM STATEMTN --CHECK
-%% INTERPRETABILIDAD INCLUYENDO RESTRICCIONES FISICAS.
 
-%% MODELO FISICO PARA SOPORTAR POCOS DATOS
-%% TEMATICO DE RUIDO.
-
-%% QUESTIÓN.  CON EL TITULO Y EL OBJETIVO GENERAL
-%% DEBE QUEDAR CLARO LA PALABRA O MAXIMO 2 PALABRAS CLAVE DE LOS 3 PROBLEMAS.
-
-%% MIRAR EL VIERNES
 
 \vspace{0.5cm}
 
@@ -487,6 +473,17 @@ In nanoscale magnetic systems, the relationship between the Hamiltonian paramete
     \label{fig:degeneracy_problem}
 \end{figure}
 
+In addition to energy-based degeneracy, a second source of non-uniqueness stems from the geometric symmetries intrinsic to many spin Hamiltonians. For systems where the magnetic energy is invariant (or nearly invariant) under in-plane rotations and translations, distinct domain configurations obtained by rotating or shifting the spin texture may represent the same physical state. Recent works exploiting equivariant neural-network architectures have shown that incorporating these Euclidean symmetries (rotational and translational) into the learning model significantly improves generalization and ensures physically consistent predictions across symmetry-related configurations \cite{Zhong2023EquivariantMagnetic, Yuan2024MagNet}. Consequently, image-based states differing only by rigid motions should be considered equivalent under the symmetry group, adding a geometric layer to the degeneracy beyond parameter compensation.
+
+
+For data-driven approaches to forward (parameters → texture) or inverse (texture → parameters) mapping, neglecting geometric degeneracy can lead to spurious variability: models may reproduce correct energies but output textures that are rotated or translated versions of the 'reference', or misassign parameters to physically equivalent but geometrically different inputs. Equivariant models (i.e., models whose architecture respects the underlying symmetry group) or preprocessing steps that canonicalize orientation/position of textures have been demonstrated to significantly reduce such artifacts while preserving physical fidelity \cite{Miyazaki2023EquivariantSpinNN, Zhong2023EquivariantMagnetic}. Therefore, explicitly accounting for geometric symmetries is crucial to disentangle true degeneracy in parameters from trivial degeneracy due to spatial transformations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figures/GeometricDegeneracy.png}
+    \caption{Geometric Degeneracy Effect}
+    \label{fig:degeneracy_problem}
+\end{figure}
 
 \subsection{Low Quality Data}
 Magnetic domain imaging and modeling face intrinsic limitations that affect the quality
@@ -858,9 +855,6 @@ COMO DESARROLLAR.....?
 \section{Experimental Set-Up and Results on Image Data} \label{sec:Exp}
 
 
-
-
-\section{Limitations}\label{sec:limitations}
 
 
 
