@@ -935,17 +935,30 @@ Recent work (2020–2025) addressing interpretability in physics-informed learni
 \paragraph{Post-hoc attribution and local explainers.}
 Classical explainability methods---such as saliency maps, occlusion tests, Gradient-weighted Class Activation Mapping (Grad-CAM), Integrated Gradients, and perturbation analyses---have been adapted to materials microstructure problems and magnetization textures \cite{Oviedo2022}. These tools highlight image regions most strongly influencing model predictions, enabling researchers to verify that regressors attend to physically meaningful structures (domain walls, skyrmion cores, vortex centers) rather than spurious artefacts or background noise. Their advantages are simplicity, model-agnostic applicability, and utility as diagnostic screening tools. However, they provide only descriptive explanations rather than causal or physically grounded insight, and attribution maps can be unstable to small perturbations or architectural changes \cite{Li2023}.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{Figures/Cams.png}
+    \caption{ Post-hoc attribution }
+    \label{fig:experimental_limitations}
+\end{figure}
+
 \paragraph{Architectures aligned with physics.}
 A growing body of work embeds physical structure directly into model architectures. Examples include Hamiltonian- and energy-preserving networks, equivariant architectures for magnetic and electronic structure, operator-aware convolutions, and graph-based models for spin lattices \cite{Mattheakis2022, Li2023, Moradi2023}. Such models improve traceability by making internal components correspond to energy terms or symmetry representations; they enable per-term energy decomposition, sensitivity analysis, and physically meaningful extrapolation. Their main limitation is the need to predefine relevant physical terms and symmetries, which can reduce flexibility when unknown or emergent interactions are present.
 
 \paragraph{Cycle-consistency, energy penalties, and hybrid forward--inverse training.}
 Cycle-consistent frameworks pair a forward operator (parameters $\rightarrow$ texture) with an inverse model (texture $\rightarrow$ parameters) and enforce reconstruction and energy-based coherence \cite{Huang2023, DeepSPIN2023}. When the forward operator is a physics-informed simulator or a calibrated differentiable surrogate, cycle consistency acts as an interpretability constraint: predicted parameters must regenerate the input texture under the forward physics model. Additional energy penalties (differences in Hamiltonian energy between predicted and observed states) further restrict non-physical solutions. These methods have been used for uncertainty quantification and robust inversion in inverse-imaging and geophysical applications, and are beginning to be adapted to micromagnetic tasks. Their main weakness remains the fidelity of the forward module: surrogate bias can be propagated and reinforced.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{Figures/Penalties.png}
+    \caption{ Post-hoc attribution }
+    \label{fig:experimental_limitations}
+\end{figure}
+
 \paragraph{Probabilistic models, uncertainty quantification, and disentangled latent spaces.}
 Probabilistic generative models—normalizing flows, variational inference, and Bayesian neural networks—provide full posterior descriptions and explicit multimodality, making degeneracy and non-identifiability observable in the posterior landscape \cite{Wei2022, Jacobsen2022}. Disentanglement methods (e.g., $\beta$-VAE variations) have been adapted to physical fields to align latent axes with generative factors, aiding interpretability and enabling targeted interventions in latent space \cite{Jacobsen2022}. Normalizing flows and flow-based variational methods have also been integrated with iterative solvers for inverse problems to produce calibrated posteriors and actionable uncertainty estimates \cite{Wei2022}. These probabilistic approaches are computationally demanding and require careful prior and likelihood modeling, but they offer the most principled route to exposing degeneracy.
 
-\paragraph{Evaluation protocols and interpretability metrics.}
-A persistent deficiency is the lack of standardized interpretability metrics tailored to physics. Common image-similarity metrics (SSIM, PSNR) do not capture physical fidelity. Promising evaluation practices include per-term Hamiltonian residuals, domain-feature localization error (e.g., domain-wall shift), calibrated parameter-recovery metrics with coverage probabilities, and counterfactual consistency tests (modify a parameter and verify that the predicted change in texture matches the simulator). Combining qualitative attribution with these physics-aware quantitative metrics increases confidence in interpretability claims \cite{Oviedo2022, Li2023}.
+
 
 
 
