@@ -1223,41 +1223,265 @@ Once the model has been trained, inference proceeds by conditioning the generati
 
 \subsection{Cycle-Consistent Forward--Inverse Framework}
 
-To further constrain the solution manifold and exploit learned representations from the forward model, a cycle-consistent framework is adopted. A complementary inverse model is trained to map generated images back into their corresponding Hamiltonian parameters. The cycle consists of:
+To reduce parameter degeneracy and reinforce physical identifiability, a cycle-consistent framework is incorporated on top of the physically informed conditional generative model. The core idea is to exploit the structure learned by the forward generator to regularize the inverse mapping, enforcing that parameter estimates remain consistent with the physical conditions that originally produced each magnetic configuration.
 
-\begin{enumerate}
-    \item A forward generator $G_\theta$: $(\mathbf{p}) \rightarrow (\hat{X})$ mapping parameters to images.
-    \item An inverse encoder $F_\phi$: $(\hat{X}) \rightarrow (\hat{\mathbf{p}})$ recovering the parameter vector.
-\end{enumerate}
-
-Cycle consistency is enforced through a constraint of the form:
+\subsubsection{Forward Model}
+The forward model corresponds to the conditional generator $G_{\theta}$ already trained through the physically informed cVAE framework. Given a Hamiltonian parameter vector $\mathbf{p}$, the generator produces a corresponding magnetic configuration:
 \begin{equation}
-\mathcal{L}_{\mathrm{cycle}} = \left\| F_\phi(G_\theta(\mathbf{p})) - \mathbf{p} \right\|_2^2,
+\hat{\mathbf{x}} = G_{\theta}(\mathbf{p}, \mathbf{z}),
 \end{equation}
-ensuring that reconstructed parameters remain consistent with the physical conditions initially used to generate the synthetic image. This mechanism reduces ambiguity and improves identifiability under degeneracy, leveraging the shared latent structure between forward and inverse models.
+where $\mathbf{z}$ is sampled from the conditional latent prior. The generator has already been optimized using:
+\begin{equation}
+\mathcal{L}_{\mathrm{forward}} 
+= \mathcal{L}_{\mathrm{rec}}
++ \beta \mathcal{L}_{\mathrm{KL}}
++ \gamma \mathcal{L}_{\mathrm{phys}}.
+\end{equation}
+
+\subsubsection{Inverse Model}
+A complementary inverse estimator $F_{\phi}$ is introduced to recover the Hamiltonian parameters from generated or real images:
+\begin{equation}
+\hat{\mathbf{p}} = F_{\phi}(\mathbf{x}).
+\end{equation}
+The inverse model is trained with a supervised regression loss over the synthetic dataset:
+\begin{equation}
+\mathcal{L}_{\mathrm{inv}} = 
+\left\| F_{\phi}(\mathbf{x}) - \mathbf{p} \right\|_{2}^{2}.
+\end{equation}
+
+\subsubsection{Cycle Consistency Constraint}
+The forward and inverse models are coupled through cycle consistency. The cycle ensures that parameters reconstructed after a forward--inverse pass remain close to the original ones:
+\begin{equation}
+\mathbf{p} \xrightarrow{G_{\theta}} \hat{\mathbf{x}} 
+\xrightarrow{F_{\phi}} \hat{\mathbf{p}}.
+\end{equation}
+
+The cycle-consistency penalty is defined as:
+\begin{equation}
+\mathcal{L}_{\mathrm{cycle}}
+= \left\| F_{\phi}\left( G_{\theta}(\mathbf{p}, \mathbf{z}) \right) - \mathbf{p} \right\|_{2}^{2}.
+\end{equation}
+
+This term forces the inverse model to be consistent with the learned physics of the generator and simultaneously restricts the generator to produce parameter-identifiable magnetic states.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\textwidth]{Figures/Cycle.png}
+    \caption{Cycle Consistency Constraint}
+    \label{fig:pcvae_architecture}
+\end{figure}
+
+\subsubsection{Closed-Loop Joint Objective}
+
+During joint training, the generator and the inverse estimator are optimized under a combined loss:
+\begin{equation}
+\mathcal{L}_{\mathrm{joint}}
+= \mathcal{L}_{\mathrm{forward}}
++ \lambda_{\mathrm{inv}} \mathcal{L}_{\mathrm{inv}}
++ \lambda_{\mathrm{cycle}} \mathcal{L}_{\mathrm{cycle}}.
+\end{equation}
+
+\paragraph{Interpretation of Each Term.}
+\begin{itemize}
+    \item $\mathcal{L}_{\mathrm{forward}}$ enforces physical plausibility and accurate magnetic configuration synthesis.
+    \item $\mathcal{L}_{\mathrm{inv}}$ trains the inverse model to regress Hamiltonian parameters from images.
+    \item $\mathcal{L}_{\mathrm{cycle}}$ enforces round-trip (parameter $\rightarrow$ image $\rightarrow$ parameter) consistency.
+\end{itemize}
+
+\subsubsection{Training Strategy}
+Training proceeds in two stages:
+
+\paragraph{Stage 1: Pretraining the Forward Model.}
+Only the cVAE-based generator is trained using the physically informed forward loss. This stabilizes the latent space and ensures physically coherent sampling.
+
+\paragraph{Stage 2: Cycle-Consistent Joint Training.}
+The forward generator $G_{\theta}$ and the inverse estimator $F_{\phi}$ are co-optimized. The update rules are:
+\begin{align}
+\theta &\leftarrow \theta - \eta_{\theta} 
+\nabla_{\theta} \left(
+\mathcal{L}_{\mathrm{forward}}
++ \lambda_{\mathrm{cycle}} \mathcal{L}_{\mathrm{cycle}}
+\right), \\
+\phi &\leftarrow \phi - \eta_{\phi}
+\nabla_{\phi} \left(
+\lambda_{\mathrm{inv}} \mathcal{L}_{\mathrm{inv}} 
++ \lambda_{\mathrm{cycle}} \mathcal{L}_{\mathrm{cycle}}
+\right).
+\end{align}
+
+Note that the forward loss does not directly update the inverse model, whereas cycle loss updates both networks simultaneously, enforcing bidirectional consistency.
+
+\subsubsection{Hyperparameters of the Full Framework}
+The complete system introduces several interpretable hyperparameters:
+\begin{itemize}
+    \item $\beta$: KL divergence weight (latent regularization).
+    \item $\gamma$: physical-energy penalty weight.
+    \item $\lambda_{\mathrm{inv}}$: strength of the inverse-regression term.
+    \item $\lambda_{\mathrm{cycle}}$: strength of the cycle-consistency constraint.
+    \item $\eta_{\theta}$, $\eta_{\phi}$: learning rates of forward and inverse models.
+\end{itemize}
+
+These hyperparameters govern the trade-offs between reconstruction fidelity, latent regularization, physical consistency, inverse accuracy, and closed-loop identifiability. Proper selection enables the framework to perform robust forward synthesis and stable parameter inference despite degeneracy in the image space.
+
+
 
 \subsection{Bayesian Hyperparameter Optimization}
 
-To maximize model robustness and ensure reliable convergence under multimodal image distributions, Bayesian optimization is used to tune key hyperparameters such as $\beta$, $\gamma$, latent dimensionality, learning rates, and conditioning network depth. This optimization strategy provides a principled approach to exploring the hyperparameter space under uncertainty, improving performance while minimizing empirical trial-and-error.
+The full training pipeline introduces several interacting hyperparameters  
+that govern regularization strength, latent dimensionality, cycle constraints, and learning dynamics.  
+Because the loss landscape is highly non-convex and the model exhibits multimodal behaviors arising from magnetic degeneracy, a principled hyperparameter search strategy is required.  
+To this end, Bayesian hyperparameter optimization is employed to systematically identify the optimal configuration
+\begin{equation}
+\boldsymbol{\lambda}^{\star} = 
+\arg\min_{\boldsymbol{\lambda} \in \Lambda} 
+\mathcal{J}(\boldsymbol{\lambda}),
+\end{equation}
+where $\mathcal{J}$ denotes the validation objective (e.g., a weighted combination of reconstruction error, inverse-parameter accuracy, and physical energy consistency).
 
-\subsection{Methodology Summary}
+\subsubsection{Surrogate Modeling of the Objective}
+Instead of directly evaluating $\mathcal{J}(\boldsymbol{\lambda})$ for every configuration, Bayesian optimization constructs a probabilistic surrogate model $M$—typically a Gaussian Process (GP)—to approximate the unknown objective function.  
+Given a set of observed evaluations 
+$\mathcal{D}_{t} = \{ (\boldsymbol{\lambda}_{i}, y_{i}) \}_{i=1}^{t}$,
+the GP surrogate models the objective as:
+\begin{equation}
+\mathcal{J}(\boldsymbol{\lambda}) \sim 
+\mathcal{GP}\big( m(\boldsymbol{\lambda}),\, 
+k(\boldsymbol{\lambda}, \boldsymbol{\lambda}') \big),
+\end{equation}
+where $m$ is the mean function (often taken as zero) and $k$ is a covariance kernel (e.g., Matérn or squared exponential).  
+The GP posterior provides both a predicted mean $\mu_{t}(\boldsymbol{\lambda})$ and uncertainty $\sigma_{t}(\boldsymbol{\lambda})$, enabling guided exploration.
 
-The methodology combines:
+\subsubsection{Acquisition Function}
+Bayesian optimization selects the next hyperparameter candidate by maximizing an acquisition function $\alpha(\boldsymbol{\lambda}; \mathcal{D}_{t})$ that balances exploration and exploitation.  
+A commonly used acquisition function is *Expected Improvement* (EI), defined as:
+\begin{equation}
+\alpha_{\mathrm{EI}}(\boldsymbol{\lambda}) 
+= \mathbb{E}\big[ \max(0,\, \mathcal{J}_{\mathrm{best}} - \mathcal{J}(\boldsymbol{\lambda}) ) \big],
+\end{equation}
+which has the closed-form expression:
+\begin{equation}
+\alpha_{\mathrm{EI}}(\boldsymbol{\lambda}) 
+= (\mathcal{J}_{\mathrm{best}} - \mu_{t}(\boldsymbol{\lambda})) 
+\Phi(Z) + \sigma_{t}(\boldsymbol{\lambda}) \phi(Z),
+\qquad
+Z = \frac{\mathcal{J}_{\mathrm{best}} - \mu_{t}(\boldsymbol{\lambda})}{\sigma_{t}(\boldsymbol{\lambda})},
+\end{equation}
+where $\Phi$ and $\phi$ denote the standard normal CDF and PDF respectively.
+
+This acquisition function assigns high values to regions where:
 \begin{itemize}
-    \item physics-based synthetic data generation via atomistic Hamiltonian simulations,
-    \item a conditional VAE model informed by Hamiltonian priors,
-    \item explicit physical regularization through Hamiltonian-derived energy terms,
-    \item cycle consistency between forward and inverse mappings, and
-    \item Bayesian optimization for selecting optimal model configurations.
+    \item the GP predicts low objective values (\textit{exploitation}), or
+    \item the model uncertainty $\sigma_{t}$ is high (\textit{exploration}).
 \end{itemize}
 
-This integrated framework establishes a physically grounded approach for mitigating magnetic state degeneracy in nanoscale magnetic imaging tasks.
+\subsubsection{Sequential Optimization Loop}
+At each iteration, the Bayesian optimization loop performs:
+\begin{enumerate}
+    \item Update the GP surrogate using all observed evaluations.
+    \item Select the next hyperparameter configuration:
+    \begin{equation}
+    \boldsymbol{\lambda}_{t+1}
+    = \arg\max_{\boldsymbol{\lambda} \in \Lambda}
+    \alpha(\boldsymbol{\lambda}; \mathcal{D}_{t}).
+    \end{equation}
+    \item Train the forward--inverse system using $\boldsymbol{\lambda}_{t+1}$ and compute the validation score:
+    \begin{equation}
+    y_{t+1} = \mathcal{J}(\boldsymbol{\lambda}_{t+1}).
+    \end{equation}
+    \item Expand the dataset:
+    \begin{equation}
+    \mathcal{D}_{t+1} = \mathcal{D}_{t} \cup \{ (\boldsymbol{\lambda}_{t+1}, y_{t+1}) \}.
+    \end{equation}
+\end{enumerate}
+
+The process continues until convergence or until a fixed evaluation budget is exhausted.  
+The final estimate of the optimal hyperparameters is:
+\begin{equation}
+\boldsymbol{\lambda}^{\star}
+= \arg\min_{(\boldsymbol{\lambda}_{i},\, y_{i}) \in \mathcal{D}_{T}}
+y_{i}.
+\end{equation}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.90\textwidth]{Figures/Bayesian2.png}
+    \caption{Bayesian Optimization}
+    \label{fig:pcvae_architecture}
+\end{figure}
+
+\subsubsection{Advantages for the Physical Modeling Context}
+Bayesian optimization is particularly suitable for this framework because:
+\begin{itemize}
+    \item training is computationally expensive, making random or grid search inefficient;
+    \item the objective is noisy due to stochastic optimization and Monte Carlo sampling;
+    \item degeneracy creates multimodal structures in the hyperparameter landscape;
+    \item Bayesian methods exploit uncertainties to escape local minima and navigate parameter regimes where physical constraints dominate.
+\end{itemize}
+
+Thus, Bayesian hyperparameter optimization provides a mathematically grounded mechanism for discovering optimal regularization weights, latent space dimensionality, and cycle-consistency strengths that maximize physical fidelity and inverse-model identifiability.
+
+\subsection{Mitigating Low-Quality Data in the Generative Pipeline}
+
+Two complementary strategies are considered to improve the quality and realism of generated magnetic-domain images when the synthetic forward model or training images are insufficiently realistic: (A) adversarial enhancement of generated images using a discriminator trained on high-quality references, and (B) domain adaptation (sim2real) when experimental images are available. Both strategies can be combined with the physically informed cVAE generator described previously.
+
+\subsubsection{A. Adversarial Enhancement (Conditional GAN on top of the cVAE generator)}
+
+\paragraph{Concept.}
+A conditional adversarial discriminator $D_{\psi}$ is introduced to distinguish high-quality magnetic images $x^{H}$ (real high-quality references) from generated images $\hat{x}$ produced by the cVAE generator $G_{\theta}(z,c)$. Conditioning on the Hamiltonian parameters $c$ or other metadata is recommended so that the discriminator judges both visual realism and consistency with the conditioned regime. The generator is therefore trained to minimize an adversarial loss that complements the reconstruction, KL and physics penalties.
+
+\paragraph{Architecture (schematic).}
+\[
+z \sim p_{\theta}(z|c) \quad\rightarrow\quad \hat{x} = G_{\theta}(z,c)
+\]
+\[
+D_{\psi}(x, c) \in [0,1] \quad\text{(probability that } x \text{ is real high-quality)}
+\]
+
+\paragraph{Losses.}
+A typical choice is a least-squares GAN (LSGAN) or hinge loss (both are more stable than vanilla GAN). The discriminator loss (LSGAN form) is:
+\begin{equation}
+\mathcal{L}_{D} = \frac{1}{2}\mathbb{E}_{x^{H},c}\left[ \big(D_{\psi}(x^{H},c) - 1\big)^2 \right]
++ \frac{1}{2}\mathbb{E}_{z,c}\left[ \big(D_{\psi}(\hat{x},c)\big)^2 \right].
+\label{eq:lsgan_D}
+\end{equation}
+
+The adversarial component of the generator loss is:
+\begin{equation}
+\mathcal{L}_{\mathrm{adv}} = \frac{1}{2}\mathbb{E}_{z,c}\left[ \big(D_{\psi}(\hat{x},c) - 1\big)^2 \right].
+\label{eq:lsgan_G}
+\end{equation}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.60\textwidth]{Figures/GANS.png}
+    \caption{Conditional GAN}
+    \label{fig:pcvae_architecture}
+\end{figure}
+The generator total loss augments the previously defined cVAE loss:
+\begin{equation}
+\mathcal{L}_{G} = \mathcal{L}_{\mathrm{rec}} + \beta \mathcal{L}_{\mathrm{KL}} + \gamma \mathcal{L}_{\mathrm{phys}}
++ \lambda_{\mathrm{adv}}\mathcal{L}_{\mathrm{adv}} + \lambda_{\mathrm{perc}}\mathcal{L}_{\mathrm{perc}} + \lambda_{\mathrm{tv}}\mathcal{L}_{\mathrm{tv}},
+\label{eq:gen_total_with_adv}
+\end{equation}
+where:
+\begin{itemize}
+  \item $\mathcal{L}_{\mathrm{perc}} = \mathbb{E}\big[\| \phi(\hat{x}) - \phi(x^{H})\|_2^2\big]$ is a perceptual loss computed on features $\phi(\cdot)$ of a pretrained network (e.g., VGG-like features or a domain-specific feature extractor) to preserve fine structural details (domain walls, cores).
+  \item $\mathcal{L}_{\mathrm{tv}}$ is a total-variation regularizer to suppress high-frequency artifacts.
+  \item $\lambda_{\mathrm{adv}}, \lambda_{\mathrm{perc}}, \lambda_{\mathrm{tv}}$ are scalar weights.
+\end{itemize}
 
 
 
 
 
-\section{Experimental Set-Up and Results on Image Data} \label{sec:Exp}
+
+
+
+
+
+
+\section{Results} \label{sec:Exp}
 
 
 
