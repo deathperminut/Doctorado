@@ -1216,7 +1216,7 @@ Once the model has been trained, inference proceeds by conditioning the generati
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.90\textwidth]{Figures/inference.png}
+    \includegraphics[width=0.90\textwidth]{Figures/Inference.png}
     \caption{Prediction Phase}
     \label{fig:pcvae_architecture}
 \end{figure}
@@ -1788,11 +1788,242 @@ Despite these encouraging results, this proof-of-concept implementation reveals 
 These findings validate the feasibility of the proposed architecture and motivate the subsequent integration of physics-informed regularization to further reduce degeneracy, improve generalization to unseen parameter regimes, and ensure strict adherence to micromagnetic principles. Moreover, they highlight the necessity of developing evaluation protocols that respect the geometric symmetries inherent to magnetic domain structures.
 
 
+\subsection{Proof of Concept: Inverse Problem for Parameter Estimation via Transfer Learning}
+
+Having established a baseline for the generative modeling of magnetic domain states through the conditional VAE, we now address the \textit{inverse problem}: the task of estimating underlying physical parameters from observed magnetic configurations. This complementary direction is critical for the long-term objective of integrating forward (state generation) and inverse (parameter inference) workflows into a unified physics-informed framework. In this proof-of-concept, we explore the feasibility of multivariate regression from spin structure images to physical parameters using convolutional neural networks (CNNs) trained via transfer learning. Additionally, we introduce a novel passive interpretability method—\textit{Regression Activation Maps (RAMs)}—to identify which spatial regions of the input contribute most to accurate predictions.
+
+\subsubsection{Problem Formulation and Architecture Design}
+
+The inverse problem is formulated as a multivariate regression task, where the model $f_\theta: \mathbb{R}^{H \times W} \to \mathbb{R}^p$ maps an input image representing the material's spin structure to a vector of $p$ physical parameters. For the KDM DATABASE SPINERS, the target variables are temperature $T$ and the Dzyaloshinskii–Moriya interaction magnitude $KDM$. For the MATERIAL SPINNERS DATA, we predict $T$, $J_{ex2}$, $J_{ex3}$, and $J_{ex4}$.
+
+Due to computational constraints, a representative subset of 50,000 images was selected from the full dataset, preserving the original distributions of physical variables. The approach is based on \textit{transfer learning}, leveraging pretrained image encoders from state-of-the-art computer vision architectures to extract high-level representations from spin configurations before performing regression. Pretrained weights from ImageNet are employed, allowing the model to benefit from learned visual features and accelerate convergence. The final classification layers of the original architectures are replaced with regression-specific dense layers, enabling multivariate continuous output.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\linewidth]{Figures/Esquema.png}
+\caption{Schematic representation of the transfer learning pipeline for inverse parameter estimation. A pretrained CNN encoder extracts high-dimensional features from the magnetic domain image, which are then mapped to physical parameters via regression-specific layers.}
+\label{fig:inverse_schema}
+\end{figure}
+
+The architectures implemented, all available in TensorFlow, are summarized in Table~\ref{tab:architectures_inverse}.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{Deep learning architectures evaluated for inverse parameter estimation.}
+\label{tab:architectures_inverse}
+\begin{tabular}{ll}
+\toprule
+\textbf{Model} & \textbf{Description / Notes} \\
+\midrule
+DenseNet121    & Dense Convolutional Network, 121 layers \\
+ResNet50       & Residual Network, 50 layers \\
+Inception      & Inception v3 architecture \\
+EfficientNetB0 & EfficientNet baseline model (lightweight) \\
+EfficientNetB2 & Scaled EfficientNet variant (deeper than B0) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Training Details.}
+All convolutional models were trained using the Adam optimizer with mean squared error (MSE) as the primary loss function:
+\begin{equation}
+\mathcal{L}_{\text{MSE}} = \frac{1}{n} \sum_{i=1}^n \left(y_i - \hat{y}_i\right)^2,
+\end{equation}
+and mean absolute error (MAE) as a complementary evaluation metric:
+\begin{equation}
+\text{MAE} = \frac{1}{n} \sum_{i=1}^n \left|y_i - \hat{y}_i\right|.
+\end{equation}
+
+The dataset was split into 80\% training, 10\% validation, and 10\% testing. Data normalization was performed using MinMaxScaler from scikit-learn. Models were trained for 10 epochs on an A100 GPU (Google Colab). Performance was evaluated using the coefficient of determination ($R^2$) and symmetric mean absolute percentage error (SMAPE):
+\begin{equation}
+R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2},
+\end{equation}
+\begin{equation}
+\text{SMAPE} = \frac{100}{n} \sum_{i=1}^n \frac{|y_i - \hat{y}_i|}{(|y_i| + |\hat{y}_i|)/2}.
+\end{equation}
+
+\subsubsection{Model Comparison and Selection}
+
+To assess predictive performance across the selected physical parameters, we evaluated five CNN encoder architectures on both datasets. Figures~\ref{fig:comparison_kdm_inverse} and~\ref{fig:comparison_jex2_inverse} summarize the results for the two target variables (KDM and T for the KDM DATABASE; $J_{ex2}$, $J_{ex3}$, $J_{ex4}$, and T for the MATERIAL SPINNERS DATA).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{Figures/comparacion_modelos_separados_KDM.pdf}
+    \caption{Model comparison for the KDM DATABASE SPINERS: $R^2$ and SMAPE across five CNN architectures for temperature (T) and Dzyaloshinskii–Moriya interaction (KDM) estimation. DenseNet121 achieves the best balance, particularly for KDM.}
+    \label{fig:comparison_kdm_inverse}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{Figures/comparacion_modelos_separados_JEX2.pdf}
+    \caption{Model comparison for the MATERIAL SPINNERS DATA: $R^2$ and SMAPE across architectures for temperature and exchange interaction parameters. Consistent performance trends emerge across datasets.}
+    \label{fig:comparison_jex2_inverse}
+\end{figure}
+
+Among the evaluated architectures, \textbf{DenseNet121} consistently achieved the best balance across both datasets, exhibiting the lowest SMAPE and highest $R^2$ for the most challenging parameter (KDM). This architecture was therefore selected for further analysis and interpretability studies.
+
+\paragraph{DenseNet Architecture.}
+DenseNet (Densely Connected Convolutional Networks) employs a concatenation strategy for layer activations, in contrast to ResNet's additive residual connections. Each layer within a dense block receives as input the concatenated outputs of all preceding layers. This dense connectivity enables efficient feature reuse, reduces the number of parameters, and mitigates the vanishing gradient problem, making DenseNet particularly well-suited for complex regression tasks.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{Figures/Densenet_diagram_V2.png}
+\caption{DenseNet121 architecture with dense blocks and transition layers. Feature reuse through concatenation enables parameter efficiency and improved gradient flow.}
+\label{fig:densenet_diagram}
+\end{figure}
+
+\subsubsection{Experimental Results: KDM DATABASE}
+
+Figure~\ref{fig:densenet_results_kdm} presents the regression results for DenseNet121 on the KDM DATABASE test set. The model achieves accurate predictions for temperature $T$, with minimal scatter around the identity line. However, estimations for $KDM$ exhibit greater dispersion, particularly at intermediate and high values.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{Figures/REGRESION_DENSENET_RESULTS.png}
+\caption{DenseNet121 regression results for the KDM DATABASE. Left: temperature estimation shows high fidelity. Right: KDM estimation exhibits increased scatter, especially at higher values.}
+\label{fig:densenet_results_kdm}
+\end{figure}
+
+This increased dispersion in KDM predictions is primarily attributable to the loss of magnetic order near the Curie temperature. Figure~\ref{fig:kdm_temp_scatter} provides a visual inspection of spin configurations across the KDM parameter space, conditioned on temperature. Coherent magnetic structures are observed for $T < 10$~K, whereas above this threshold, thermal fluctuations dominate and reduce prediction reliability.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{Figures/TvsKDM.png}
+\caption{Visual inspection of spin configurations over the KDM parameter space conditioned on temperature. Reliable magnetic structures are observed for $T < 10$~K. Above this range, thermal fluctuations dominate and reduce prediction reliability.}
+\label{fig:kdm_temp_scatter}
+\end{figure}
+
+To validate this hypothesis, we filtered the test set to include only samples with $T > 10$~K and re-evaluated the model's performance. Figure~\ref{fig:kdm_scatter_high_t} confirms the deterioration in KDM estimation quality in this high-temperature regime, as evidenced by increased deviation from the identity line.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\linewidth]{Figures/KDM_T_ESTIMATIONv2.png}
+\caption{DenseNet121 estimation performance for KDM after filtering the test set to include only states with $T > 10$~K. The increased dispersion reflects reduced reliability in the high-temperature regime, where thermal fluctuations disrupt magnetic ordering near the Curie point.}
+\label{fig:kdm_scatter_high_t}
+\end{figure}
+
+\paragraph{Cross-Dataset Generalization.}
+To evaluate the model's ability to generalize across different Hamiltonian formulations, we trained DenseNet121 on the KDM DATABASE SPINERS and tested it on the MATERIAL SPINNERS DATA. The target variable for this cross-dataset evaluation was temperature $T$, as it is the only common varying parameter. This experiment assesses whether the model can capture latent similarities between spin domain configurations even under different physical regimes.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\linewidth]{Figures/Cross.png}
+\caption{Cross-dataset evaluation setup: DenseNet121 trained on KDM DATABASE and tested on MATERIAL SPINNERS DATA for temperature estimation. This tests the model's robustness to variations in Hamiltonian parameters.}
+\label{fig:cross_dataset}
+\end{figure}
+
+\subsubsection{Interpretability via Layer-Wise UMAP Analysis}
+
+To understand how DenseNet121 encodes physical information throughout its layers, we performed a layer-wise analysis using Uniform Manifold Approximation and Projection (UMAP). Intermediate activations were extracted from four representative convolutional layers and projected into 2D embeddings. Each embedding was colored according to either temperature $T$ (Figure~\ref{fig:umap_temp_inverse}) or KDM (Figure~\ref{fig:umap_kdm_inverse}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{Figures/UMAP_T.png}
+\caption{UMAP projections of intermediate activations from DenseNet121, colored by temperature (T). A clear separation emerges in deeper layers, indicating strong internal encoding of thermal behavior.}
+\label{fig:umap_temp_inverse}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{Figures/UMAP_KDM.png}
+\caption{UMAP projections of intermediate activations from DenseNet121, colored by Dzyaloshinskii–Moriya interaction (KDM). The representations are less linearly separable, consistent with the increased difficulty in predicting this parameter.}
+\label{fig:umap_kdm_inverse}
+\end{figure}
+
+These visualizations reveal that deeper layers exhibit progressively more structured separation with respect to $T$, while embeddings colored by $KDM$ show greater variability and complexity. This aligns with the observed regression performance.
+
+To further explore the final latent representation, we extracted activations from the last convolutional layer and overlaid representative spin configuration images at their respective UMAP coordinates (Figure~\ref{fig:latent_space_kdm_inverse}). This composite visualization allows qualitative assessment of how the model clusters similar magnetic states and how these clusters align with variations in KDM.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{Figures/UMAP_IMAGE_KDM.png}
+\caption{UMAP projection of the final convolutional layer activations, colored by KDM, with representative spin configuration images overlaid. Smoother color gradients within regions suggest stronger correlation between latent structure and the target variable.}
+\label{fig:latent_space_kdm_inverse}
+\end{figure}
+
+\subsubsection{Interpretability via Regression Activation Maps (RAMs)}
+
+Following the training phase, we applied \textit{Class Activation Maps (CAMs)} as a post hoc explainability technique to identify the most relevant spatial regions contributing to the regression predictions. For regression tasks, we propose a modified approach termed \textit{Regression Activation Maps (RAMs)}, in which the gradient weighting is defined proportional to prediction accuracy rather than classification confidence:
+\begin{equation}
+\mathcal{L}_{\text{RAM}} = 1 - \left|y_i - \hat{y}_i\right|.
+\end{equation}
+This loss is used in gradient-based activation computation, highlighting the spatial regions in the input image that contribute most to accurate predictions.
+
+To examine spatial contribution patterns across different value ranges of KDM, the test dataset was stratified into five groups based on predefined KDM intervals (Figure~\ref{fig:kdm_ranges}). RAMs were computed for representative samples within each group.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{Figures/Ranges.png}
+\caption{Stratification of the KDM parameter space into five ranges for interpretability analysis via Regression Activation Maps.}
+\label{fig:kdm_ranges}
+\end{figure}
+
+Figure~\ref{fig:ram_activation} presents the activation maps for representative magnetic domain states across the five KDM ranges. These visualizations reveal that the model adaptively focuses on different spatial features depending on the KDM value, with increased attention to domain wall structures and topological defects in higher KDM regimes.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Figures/gradcam_1.pdf}
+    \caption{Regression Activation Maps (RAMs) for magnetic domain states across five KDM ranges. The model's attention shifts toward domain walls and topological features as KDM increases.}
+    \label{fig:ram_activation}
+\end{figure}
+
+\paragraph{Layer-Level Cumulative Analysis.}
+To quantify the contribution of each convolutional layer to the regression task across different KDM ranges, we computed the cumulative activation of RAMs per layer and per KDM value group. For each of the five KDM ranges, we aggregated the activation maps across all test images belonging to that range. Figure~\ref{fig:ram_cumulative} presents this layer-wise cumulative analysis, revealing which stages of the network architecture are most sensitive or informative for predicting low, medium, and high KDM values.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Figures/mean_contribution_gradcam2.pdf}
+    \caption{Cumulative activation maps per convolutional layer across five predefined KDM value ranges. Different layers exhibit varying sensitivity to specific KDM regimes, providing layer-level interpretability.}
+    \label{fig:ram_cumulative}
+\end{figure}
+
+\paragraph{Discussion.}
+This proof-of-concept demonstrates that transfer learning-based CNNs can effectively solve the inverse problem of parameter estimation from magnetic domain images. Key findings include:
+\begin{itemize}
+    \item \textbf{Architecture Selection}: DenseNet121 achieves the best balance across datasets and target variables, with particularly strong performance for temperature estimation.
+    \item \textbf{Parameter-Specific Challenges}: KDM estimation is inherently more difficult than temperature estimation, particularly in high-temperature regimes where thermal disorder dominates.
+    \item \textbf{Cross-Dataset Generalization}: The model trained on one Hamiltonian formulation can generalize to predict temperature in a different physical regime, suggesting that latent representations capture transferable magnetic features.
+    \item \textbf{Interpretability}: UMAP analysis reveals that deeper layers progressively organize representations according to physical parameters, while RAMs provide spatial interpretability, highlighting which regions of the magnetic configuration contribute most to accurate predictions.
+\end{itemize}
+
+These results establish a baseline for inverse parameter estimation and motivate future integration with the forward generative pipeline (cVAE) into a unified bidirectional framework capable of both state generation and parameter inference.
+
+
 \section{Conclusions} \label{sec:Conclusions}
 
+This work proposes a physics-informed deep learning framework to address three fundamental challenges in nanoscale magnetic domain characterization: parameter degeneracy, data quality degradation, and lack of interpretability. The methodology integrates conditional generative modeling with learned physics-guided priors, inverse parameter estimation via transfer learning, cycle-consistency constraints, physics-based regularization, and domain adaptation strategies to bridge synthetic and experimental data.
+
+Two proof-of-concept studies validate the feasibility of the core components using large-scale Monte Carlo datasets totaling over 200,000 magnetic domain images. The conditional VAE demonstrates that parameter-conditioned latent priors can organize representations according to physical parameters even without explicit energy constraints, achieving high-fidelity reconstructions of complex magnetic textures. The inverse problem study confirms that transfer learning-based CNNs (particularly DenseNet121) can effectively estimate Hamiltonian parameters from spin configurations, with strong performance for temperature prediction and challenges for Dzyaloshinskii–Moriya interaction estimation in high-disorder regimes. Layer-wise interpretability analysis via UMAP and the novel Regression Activation Maps methodology reveals that deeper network layers progressively encode physical information and adaptively focus on topologically relevant features.
+
+Critical limitations have been identified that guide the next development phase. Hyperparameter optimization via Bayesian methods is required to fully exploit model capacity. More fundamentally, the geometric invariance of magnetic configurations necessitates evaluation metrics beyond pixel-level comparisons—future work must incorporate rotation-invariant topological descriptors, energy-based metrics, and perceptual similarity measures adapted to magnetic textures.
+
+The path forward involves integrating the validated forward and inverse pipelines into a unified cycle-consistent framework, incorporating micromagnetic energy penalties and Landau-Lifshitz-Gilbert residuals to enforce strict physical constraints, and developing domain adaptation strategies to transfer knowledge from high-fidelity simulations to experimental microscopy data. The proof-of-concept results establish a promising foundation for physics-informed deep learning in this domain, demonstrating that the proposed components can address degeneracy, enhance generative quality, and provide interpretability while revealing critical methodological refinements needed for robust deployment in experimental scenarios.
 
 
 \section{Future Work}\label{sec:future_work}
+
+The proof-of-concept results presented in this work establish the foundation for several critical research directions that will consolidate the proposed physics-informed framework into a robust and deployable system for nanoscale magnetic domain characterization.
+
+\paragraph{Hyperparameter Optimization and Model Refinement.}
+Systematic Bayesian optimization using frameworks such as Optuna will be conducted to identify optimal configurations for the conditional VAE and inverse estimation architectures. This includes tuning the $\beta$ parameter in the loss function, latent space dimensionality, learning rates, network depth, and prior network capacity. Preliminary experiments used manually selected hyperparameters; rigorous optimization is expected to significantly enhance both generative quality and parameter estimation accuracy.
+
+\paragraph{Integration of Forward and Inverse Pipelines.}
+The next critical step involves unifying the forward generative pathway (cVAE) and inverse estimation pathway (DenseNet-based regressor) into a single cycle-consistent framework. This integration will enable the enforcement of bidirectional constraints: generated configurations must yield consistent parameter estimates when passed through the inverse model, and estimated parameters must regenerate configurations similar to the original inputs. This cycle-consistency regularization ($\mathcal{L}_{\text{cycle}}$) is expected to substantially reduce parameter degeneracy and improve physical identifiability, particularly for challenging parameters such as the Dzyaloshinskii–Moriya interaction in high-temperature regimes.
+
+\paragraph{Physics-Informed Regularization.}
+Explicit incorporation of micromagnetic energy functionals (exchange, anisotropy, Zeeman, and DMI contributions) and Landau-Lifshitz-Gilbert residuals into the loss function will enforce strict adherence to fundamental physical constraints. These physics-based penalties ($\mathcal{L}_{\text{energy}}$ and $\mathcal{L}_{\text{LLG}}$) will ensure that generated magnetic configurations are not only visually plausible but also energetically stable and dynamically consistent with micromagnetic theory. This is particularly critical for generalization to unseen parameter regimes and for robustness to out-of-distribution inputs.
+
+\paragraph{Handling Low-Quality Data and Domain Adaptation.}
+Addressing the degradation of experimental magnetic domain images requires developing robust domain adaptation strategies to transfer knowledge from high-fidelity Monte Carlo simulations to noisy, artifact-laden experimental data from MFM and LTEM microscopy. Adversarial domain adaptation techniques, including domain-adversarial neural networks (DANN) and adversarial discriminative domain adaptation (ADDA), will be explored to align latent representations across synthetic and experimental domains. Additionally, generative adversarial networks (GANs) and self-supervised denoising methods (e.g., Noise2Void) will be investigated for image quality enhancement while preserving physical structure. These techniques must be carefully validated to ensure that noise removal does not introduce spurious magnetic features or suppress genuine physical variability.
+
+\paragraph{Evaluation Metrics and Interpretability.}
+The geometric invariance of magnetic configurations necessitates the development of evaluation metrics beyond pixel-level comparisons. Future work will implement rotation- and translation-invariant topological descriptors (e.g., skyrmion number, vortex core counting, domain wall density), energy-based metrics computed from micromagnetic Hamiltonians, and perceptual similarity measures adapted to magnetic textures. Additionally, the Regression Activation Maps (RAMs) methodology introduced in this work will be extended and systematically compared with other interpretability techniques to ensure that model predictions align with physically meaningful features across diverse magnetic regimes.
+
+\paragraph{Comparative Evaluation with Alternative Architectures.}
+While this work focuses on conditional variational autoencoders and CNN-based inverse models, emerging generative architectures warrant systematic comparison. Diffusion models, which have demonstrated state-of-the-art performance in image synthesis tasks, offer an alternative generative paradigm with potentially superior sample quality and mode coverage. Similarly, transformer-based architectures have shown promise in capturing long-range dependencies and may provide advantages for modeling extended magnetic domain structures. Future work will conduct controlled comparisons between cVAEs, diffusion models, and transformer-based generators on the same benchmark datasets, evaluating trade-offs in generation quality, parameter efficiency, training stability, and interpretability.
+
+\paragraph{Extension to Experimental Validation and Complex Systems.}
+The ultimate validation of the proposed framework requires deployment on real experimental data and extension to more complex magnetic systems. Collaborations with experimental groups will enable access to high-resolution MFM and LTEM datasets, facilitating rigorous testing of the domain adaptation strategies. Furthermore, the methodology will be extended to three-dimensional magnetic nanostructures, multilayer thin films, and systems exhibiting more complex topological textures such as antiskyrmions, skyrmion lattices, and magnetic hopfions. These extensions will test the generality and scalability of the physics-informed deep learning approach across diverse material systems and experimental conditions.
 
 
 \bibliographystyle{unsrt}
