@@ -1472,7 +1472,108 @@ where:
 \end{itemize}
 
 
+A central requirement in the proposed forward--inverse modeling framework is the
+ability to interpret how the neural architectures---both the forward generator and
+the inverse regressor---extract, represent, and utilize physical information from
+magnetization domain images. To this end, we adopt a multi-layer interpretability
+strategy combining post-hoc attribution tools, regression-oriented activation metrics,
+latent-space structural analysis, and physics-guided constraints embedded directly
+into the training losses. This ensemble provides a coherent explanation of both
+local spatial relevance and global representational behavior.
 
+\subsubsection{Post-Hoc Spatial Attribution}
+
+Since the forward and inverse models rely on convolutional feature extractors,
+we compute a suite of post-hoc attribution methods to identify the image regions
+driving predictions:
+\begin{itemize}
+    \item \textbf{Grad-CAM} highlights parameter-specific activation patterns by
+    projecting gradients onto the final convolutional layers.
+    \item \textbf{Integrated Gradients (IG)} provides a global relevance score for
+    each pixel by integrating the gradients along a continuous interpolation path.
+    \item \textbf{Occlusion Sensitivity Maps} perturb localized patches of the input
+    and quantify prediction variation, acting as a model-agnostic attribution baseline.
+\end{itemize}
+
+These tools offer qualitative insights regarding whether the models attend to
+physically meaningful structures such as domain walls, vortex cores, or characteristic
+magnetization textures.
+
+\subsubsection{Regression Activation Maps (RAMs)}
+
+To complement visual inspection, we introduce a quantitative interpretability metric
+based on \emph{Regression Activation Maps} (RAMs). Let $A(x)$ denote the activation
+map extracted from a Grad-CAM-like procedure adapted for regression, associated with
+a predicted parameter vector $\hat{p}$. We define a spatial alignment score between
+activation intensity and absolute prediction error:
+\begin{equation}
+    \mathcal{E}_{\mathrm{RAM}} =
+    \frac{\langle A(x),\, |p - \hat{p}| \rangle}
+    {\|A(x)\|_2 \, \|p - \hat{p}\|_2},
+\end{equation}
+which yields a normalized correlation in $[-1,1]$. High scores indicate that the
+model assigns large relevance to spatial regions contributing directly to prediction
+errors, while low or negative scores reveal spurious or unstable attributions.
+
+This metric enables objective comparison across architectures, training stages,
+and loss configurations, particularly when evaluating the impact of physics-based
+regularization.
+
+\subsubsection{UMAP Latent-Space Analysis}
+
+To examine the global structure of internal representations, we apply
+\emph{Uniform Manifold Approximation and Projection} (UMAP) to latent features
+extracted from both the forward and inverse models:
+\begin{itemize}
+    \item In the \textbf{forward model}, we analyze whether variations in the latent
+    code $z$ correspond smoothly to changes in physical parameters $(J, K, T)$.
+    \item In the \textbf{inverse model}, UMAP visualizes how magnetic textures with
+    similar parameter values cluster in the feature space learned by the encoder.
+\end{itemize}
+
+This reveals global patterns such as parameter identifiability, degeneracies in
+magnetization textures, and the influence of physics constraints on representation
+geometry. Well-structured latent clusters indicate that the encoder and generator
+learn consistent manifolds aligned with physical invariants.
+
+\subsubsection{Physics-Guided Interpretability via Structural Constraints}
+
+An inherent interpretability component arises from the physics-based loss terms
+embedded in the training objective---such as energy consistency, divergence and curl
+penalties, and cycle consistency between forward and inverse mappings. These
+constraints enforce that learned representations lie within the manifold of
+physically admissible magnetization states. As a result, the internal structure of
+the latent space, as well as the spatial attribution maps, naturally align with
+physically meaningful quantities.
+
+\subsubsection{Integrated Interpretability Workflow}
+
+The full interpretability pipeline proceeds as follows:
+\begin{enumerate}
+    \item Compute RAM-based interpretability scores to quantify spatial relevance
+    alignment with prediction errors.
+    \item Generate Grad-CAM, IG, and occlusion maps for both forward and inverse
+    models to provide qualitative spatial explanations.
+    \item Apply UMAP projections to latent features to analyze global representational
+    geometry and identify physical manifold structure.
+    \item Monitor physics-aware loss components to ensure consistency between
+    attribution behavior and physically grounded learning.
+    \item Compare interpretability patterns across training epochs and hyperparameter
+    settings, including those produced by Bayesian optimization.
+\end{enumerate}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Figures/Full.png}
+    \caption{Interpretability Strategy}
+    \label{fig:pcvae_architecture}
+\end{figure}
+
+This multi-scale interpretability strategy ensures that the proposed models not only
+achieve high predictive performance but also maintain strong alignment with underlying
+physical principles, enabling reliable and transparent use in scientific domains
+involving magnetic microstructure analysis.
 
 
 
