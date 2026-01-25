@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datasets Experimentales de Dominios Magnéticos - Comparación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 20px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .dataset-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 6px solid #667eea;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .dataset-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .dataset-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .dataset-title {
+            color: #2c3e50;
+            font-size: 1.8em;
+            font-weight: bold;
+            flex: 1;
+        }
+
+        .utility-badge {
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-left: 20px;
+        }
+
+        .utility-high {
+            background: #27ae60;
+            color: white;
+        }
+
+        .utility-medium {
+            background: #f39c12;
+            color: white;
+        }
+
+        .utility-low {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #34495e;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin-top: 25px;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 8px;
+        }
+
+        .pros-cons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .pros, .cons {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .pros {
+            border-left: 4px solid #27ae60;
+        }
+
+        .cons {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .pros h3, .cons h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .pros h3::before {
+            content: "✅ ";
+        }
+
+        .cons h3::before {
+            content: "❌ ";
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #34495e;
+        }
+
+        .use-cases {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .use-cases h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .parameter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .tag-available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .tag-partial {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .tag-missing {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .links {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .links a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+            margin-right: 20px;
+            transition: color 0.3s;
+        }
+
+        .links a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .summary-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .summary-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .summary-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .score {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .score-high {
+            color: #27ae60;
+        }
+
+        .score-medium {
+            color: #f39c12;
+        }
+
+        .score-low {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .pros-cons-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dataset-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .utility-badge {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .recommendation h2 {
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .recommendation ol {
+            font-size: 1.1em;
+            line-height: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Datasets Experimentales de Dominios Magnéticos</h1>
+        <p class="subtitle">Análisis comparativo para investigación en nanodots magnéticos</p>
+
+        <!-- Dataset 1: Leeds Skyrmions -->
+        <div class="dataset-card">
+            <div class="dataset-header">
+                <div class="dataset-title">1. University of Leeds - Skyrmion Hall Angle Dataset</div>
+                <div class="utility-badge utility-medium">Utilidad: 65%</div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <div class="info-label">Técnica Experimental</div>
+                    <div class="info-value">STXM / MOKE Microscopy</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Cantidad de Imágenes</div>
+                    <div class="info-value">~2,400 imágenes</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Objetos Magnéticos</div>
+                    <div class="info-value">>1 millón skyrmions</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Escala</div>
+                    <div class="info-value">35 - 825 nm (diámetros)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Tamaño Dataset</div>
+                    <div class="info-value">110 MB (dataset.zip)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Material</div>
+                    <div class="info-value">Ta/Pt/[Pt/CoB/Ir]×5/Pt</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Parámetros Disponibles</div>
+                <div class="parameter-tags">
+                    <span class="tag tag-available">Keff = 0.47 ± 0.04 MJ/m³</span>
+                    <span class="tag tag-available">Skyrmion Hall angle = 9° ± 2°</span>
+                    <span class="tag tag-available">Diámetros medidos (35-825 nm)</span>
+                    <span class="tag tag-available">Velocidad = 6 ± 1 m/s</span>
+                    <span class="tag tag-missing">DMI (D) - No reportado</span>
+                    <span class="tag tag-missing">Exchange (J/A) - No reportado</span>
+                    <span class="tag tag-missing">Ms - No reportado</span>
+                    <span class="tag tag-partial">T - Ambiente (no variado)</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="pros-cons-grid">
+                    <div class="pros">
+                        <h3>Ventajas</h3>
+                        <ul>
+                            <li>Dataset GRANDE (2400+ imágenes)</li>
+                            <li>Escala nanométrica adecuada (35-825 nm)</li>
+                            <li>Sistema quiral con DMI implícito</li>
+                            <li>Variabilidad en tamaños de skyrmions</li>
+                            <li>Open access y bien documentado</li>
+                            <li>Texturas magnéticas topológicas</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h3>Limitaciones</h3>
+                        <ul>
+                            <li>Solo Keff reportado explícitamente</li>
+                            <li>Película continua, NO nanodots discretos</li>
+                            <li>Un solo material (sin variación J, K, D)</li>
+                            <li>No útil para problema inverso directo</li>
+                            <li>Parámetros magnéticos incompletos</li>
+                            <li>Temperatura no variada</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="use-cases">
+                    <h3>🎯 Casos de Uso para tu Investigación</h3>
+                    <ul>
+                        <li><strong>Transfer Learning:</strong> Preentrenar modelos para detectar texturas magnéticas quirales</li>
+                        <li><strong>Feature Extraction:</strong> Aprender representaciones de skyrmions para aplicar a nanodots</li>
+                        <li><strong>Validación Cualitativa:</strong> Comparar texturas generadas vs experimentales</li>
+                        <li><strong>Segmentación:</strong> Entrenar detectores de objetos magnéticos topológicos</li>
+                        <li><strong>NO usar para:</strong> Estimación de parámetros Hamiltonianos (problema inverso)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="links">
+                <strong>Enlaces:</strong><br>
+                <a href="https://archive.researchdata.leeds.ac.uk/619/" target="_blank">📦 Dataset Repository</a>
+                <a href="https://doi.org/10.5518/742" target="_blank">🔗 DOI: 10.5518/742</a>
+                <a href="https://www.nature.com/articles/s41467-019-14232-9" target="_blank">📄 Paper (Nature Comm 2019)</a>
+            </div>
+        </div>
+
+        <!-- Dataset 2: Co/Pd MFM -->
+        <div class="dataset-card">
+            <div class="dataset-header">
+                <div class="dataset-title">2. Co/Pd Multilayers - MFM Dataset</div>
+                <div class="utility-badge utility-medium">Utilidad: 60%</div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <div class="info-label">Técnica Experimental</div>
+                    <div class="info-value">MFM + AFM</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Cantidad de Imágenes</div>
+                    <div class="info-value">~30-50 imágenes MFM</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Tipo de Dominios</div>
+                    <div class="info-value">Stripe, labyrinthine, fragments</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Escala</div>
+                    <div class="info-value">100 nm - 5 μm (dominios)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Año</div>
+                    <div class="info-value">2022</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Material</div>
+                    <div class="info-value">Si/Ta/Pd/[Co/Pd]×50/Pd</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Parámetros Disponibles</div>
+                <div class="parameter-tags">
+                    <span class="tag tag-available">Keff - Varía con irradiación</span>
+                    <span class="tag tag-available">Aex - Varía con irradiación</span>
+                    <span class="tag tag-available">Ms - De hysteresis loops</span>
+                    <span class="tag tag-available">Coercitividad, Remanencia</span>
+                    <span class="tag tag-partial">T - En simulaciones (300-1000K)</span>
+                    <span class="tag tag-available">Fluencia de iones (0.5-33×10¹⁴ cm⁻²)</span>
+                    <span class="tag tag-missing">DMI - No significativo (Co/Pd)</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="pros-cons-grid">
+                    <div class="pros">
+                        <h3>Ventajas</h3>
+                        <ul>
+                            <li>Parámetros VARÍAN (Keff, Aex con irradiación)</li>
+                            <li>MFM: técnica común para nanoestructuras</li>
+                            <li>Incluye simulaciones micromagnéticas</li>
+                            <li>Validación sim-exp integrada</li>
+                            <li>Suplementarios descargables</li>
+                            <li>Múltiples condiciones experimentales</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h3>Limitaciones</h3>
+                        <ul>
+                            <li>Película continua, NO nanodots</li>
+                            <li>Sin DMI (sistema centrosimétrico)</li>
+                            <li>Parámetros inferidos, no medidos directamente</li>
+                            <li>Escala mayor (micras, no nanodots <100nm)</li>
+                            <li>Dataset pequeño (~30-50 imágenes)</li>
+                            <li>Solo 2 parámetros varían independientemente</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="use-cases">
+                    <h3>🎯 Casos de Uso para tu Investigación</h3>
+                    <ul>
+                        <li><strong>Domain Adaptation:</strong> Entrenar con simulaciones, adaptar a MFM experimental</li>
+                        <li><strong>Benchmark:</strong> Validar que modelos capturan dominios stripe/labyrinth</li>
+                        <li><strong>Metodología Híbrida:</strong> Aprender approach de combinar sim + exp</li>
+                        <li><strong>Validación de Texturas:</strong> Comparar dominios generados con MFM real</li>
+                        <li><strong>Limitado para Inverso:</strong> Solo Keff y Aex varían, no full Hamiltonian</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="links">
+                <strong>Enlaces:</strong><br>
+                <a href="https://pubs.acs.org/doi/10.1021/acsami.2c12848" target="_blank">📄 Paper (ACS AMI 2022)</a>
+                <a href="https://pubs.acs.org/doi/suppl/10.1021/acsami.2c12848" target="_blank">📦 Supplementary Data</a>
+                <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9650662/" target="_blank">🔗 PMC Access</a>
+            </div>
+        </div>
+
+        <!-- Dataset 3: KIT 4D-STEM -->
+        <div class="dataset-card">
+            <div class="dataset-header">
+                <div class="dataset-title">3. KIT RADAR - Lorentz 4D-STEM Dataset</div>
+                <div class="utility-badge utility-low">Utilidad: 40%</div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <div class="info-label">Técnica Experimental</div>
+                    <div class="info-value">4D-STEM Lorentz Microscopy</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Tipo de Datos</div>
+                    <div class="info-value">Mapas cuantitativos + raw 4D</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Resolución</div>
+                    <div class="info-value">&lt;5 nm (nanométrica)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Escala</div>
+                    <div class="info-value">Nanométrica (strain + mag)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Año</div>
+                    <div class="info-value">2025 (Nature Comm - Feb)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Material</div>
+                    <div class="info-value">Ferromagneto amorfo deformado</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Parámetros Disponibles</div>
+                <div class="parameter-tags">
+                    <span class="tag tag-available">Campos magnéticos (Bx, By) - pixel-by-pixel</span>
+                    <span class="tag tag-available">Strain tensor - completo</span>
+                    <span class="tag tag-available">Estructura atómica - packing</span>
+                    <span class="tag tag-available">Correlaciones strain ↔ magnetismo</span>
+                    <span class="tag tag-available">Scripts MATLAB/Python</span>
+                    <span class="tag tag-missing">J, K, D, Ms - No reportados</span>
+                    <span class="tag tag-missing">T - No variado</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="pros-cons-grid">
+                    <div class="pros">
+                        <h3>Ventajas</h3>
+                        <ul>
+                            <li>Datos CUANTITATIVOS (campos magnéticos medidos)</li>
+                            <li>Alta resolución (&lt;5 nm)</li>
+                            <li>Formatos procesables (HDF5, CSV)</li>
+                            <li>Scripts de análisis incluidos</li>
+                            <li>Paper muy reciente (Feb 2025)</li>
+                            <li>Metodología transferible (4D-STEM → mapas)</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h3>Limitaciones</h3>
+                        <ul>
+                            <li>Material MUY diferente (amorfo ≠ cristalino)</li>
+                            <li>Foco en strain, NO en J, K, D</li>
+                            <li>Sin variación de parámetros Hamiltonianos</li>
+                            <li>Geometría: película continua, NO nanodots</li>
+                            <li>Física diferente (magnetoelástico vs DMI/exchange)</li>
+                            <li>No aplicable a problema directo/inverso</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="use-cases">
+                    <h3>🎯 Casos de Uso para tu Investigación</h3>
+                    <ul>
+                        <li><strong>Aprender Técnicas:</strong> Reconstrucción de campos magnéticos desde TEM</li>
+                        <li><strong>Validación Metodológica:</strong> Comparar mapas simulados vs experimentales</li>
+                        <li><strong>Features Físicos:</strong> Entrenar con campos vectoriales (no solo intensidad)</li>
+                        <li><strong>Referencia Estado del Arte:</strong> Citar en marco teórico (técnicas avanzadas)</li>
+                        <li><strong>NO usar para:</strong> Entrenamiento directo (sistema muy diferente)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="links">
+                <strong>Enlaces:</strong><br>
+                <a href="https://radar.kit.edu/radar/en/dataset/ms36bzm0nrrzj51g" target="_blank">📦 Dataset Repository</a>
+                <a href="https://doi.org/10.35097/ms36bzm0nrrzj51g" target="_blank">🔗 DOI: 10.35097/ms36bzm0nrrzj51g</a>
+                <a href="https://www.nature.com/articles/s41467-025-56521-6" target="_blank">📄 Paper (Nature Comm 2025)</a>
+            </div>
+        </div>
+
+        <!-- Dataset 4: Exchange Interaction -->
+        <div class="dataset-card">
+            <div class="dataset-header">
+                <div class="dataset-title">4. Experimental Exchange Interaction Dataset</div>
+                <div class="utility-badge utility-low">Utilidad: 15%</div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <div class="info-label">Técnica Experimental</div>
+                    <div class="info-value">Inelastic Neutron Scattering (INS)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Tipo de Datos</div>
+                    <div class="info-value">Parámetros numéricos (NO imágenes)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Cantidad de Materiales</div>
+                    <div class="info-value">~100 materiales magnéticos</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Escala</div>
+                    <div class="info-value">Bulk (cristales grandes)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Año</div>
+                    <div class="info-value">2025 (ArXiv/Nature Sci Data)</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-label">Formato</div>
+                    <div class="info-value">GitHub + Monte Carlo files</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Parámetros Disponibles</div>
+                <div class="parameter-tags">
+                    <span class="tag tag-available">J (exchange constants) - Heisenberg</span>
+                    <span class="tag tag-available">Tc (temperatura Curie) - calculado MC</span>
+                    <span class="tag tag-available">Estructura cristalina + pathways</span>
+                    <span class="tag tag-available">Spin wave dispersions</span>
+                    <span class="tag tag-available">Corrección cuántica (S+1)/S</span>
+                    <span class="tag tag-missing">DMI - Explícitamente excluido</span>
+                    <span class="tag tag-missing">Imágenes de dominios - NO incluidas</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="pros-cons-grid">
+                    <div class="pros">
+                        <h3>Ventajas</h3>
+                        <ul>
+                            <li>Parámetros J validados experimentalmente</li>
+                            <li>Muchos materiales (~100 sistemas)</li>
+                            <li>Formato Hamiltoniano unificado</li>
+                            <li>Open access (GitHub)</li>
+                            <li>Metodología bien documentada</li>
+                            <li>Incluye simulaciones Monte Carlo</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h3>Limitaciones CRÍTICAS</h3>
+                        <ul>
+                            <li><strong>SIN IMÁGENES:</strong> Solo parámetros numéricos</li>
+                            <li><strong>SIN DMI:</strong> Excluido intencionalmente</li>
+                            <li>Escala bulk, NO nanodots</li>
+                            <li>Spin waves en cristales grandes</li>
+                            <li>No aplicable a modelos image-based</li>
+                            <li>Física muy diferente a tu enfoque</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="use-cases">
+                    <h3>🎯 Casos de Uso para tu Investigación</h3>
+                    <ul>
+                        <li><strong>Referencias de J:</strong> Validar órdenes de magnitud en simulaciones</li>
+                        <li><strong>Contexto Teórico:</strong> Entender medición experimental de exchange</li>
+                        <li><strong>Comparación Metodológica:</strong> INS vs tus métodos image-based</li>
+                        <li><strong>NO usar para:</strong> Entrenamiento ML (sin imágenes)</li>
+                        <li><strong>NO usar para:</strong> Sistemas con DMI (excluido del dataset)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="links">
+                <strong>Enlaces:</strong><br>
+                <a href="https://arxiv.org/abs/2504.15764" target="_blank">📄 ArXiv Preprint</a>
+                <a href="https://www.nature.com/articles/s41597-025-06099-x" target="_blank">📄 Nature Sci Data 2025</a>
+                <a href="https://github.com/" target="_blank">💻 GitHub Repository (buscar en paper)</a>
+            </div>
+        </div>
+
+        <!-- Tabla Resumen Comparativa -->
+        <h2 style="margin-top: 50px; color: #2c3e50; border-bottom: 3px solid #667eea; padding-bottom: 15px;">
+            📋 Tabla Comparativa Resumida
+        </h2>
+
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Dataset</th>
+                    <th>Imágenes</th>
+                    <th>Parámetros Clave</th>
+                    <th>Escala</th>
+                    <th>Nanodots</th>
+                    <th>Utilidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Leeds Skyrmions</strong></td>
+                    <td>✅✅✅ ~2400</td>
+                    <td>⚠️ Keff (DMI implícito)</td>
+                    <td>✅ 35-825 nm</td>
+                    <td>⚠️ Film continua</td>
+                    <td><span class="score score-medium">65%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Co/Pd MFM</strong></td>
+                    <td>✅ ~30-50</td>
+                    <td>✅ Keff, Aex varían</td>
+                    <td>⚠️ 100nm-5μm</td>
+                    <td>❌ Film continua</td>
+                    <td><span class="score score-medium">60%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>KIT 4D-STEM</strong></td>
+                    <td>✅ Mapas cuantitativos</td>
+                    <td>⚠️ Campos, strain</td>
+                    <td>✅ &lt;5 nm</td>
+                    <td>❌ Amorfo continuo</td>
+                    <td><span class="score score-low">40%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Exchange Dataset</strong></td>
+                    <td>❌ Sin imágenes</td>
+                    <td>✅ J (sin DMI)</td>
+                    <td>❌ Bulk</td>
+                    <td>❌ No</td>
+                    <td><span class="score score-low">15%</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Recomendaciones -->
+        <div class="recommendation">
+            <h2>🎯 Recomendaciones de Uso</h2>
+            <ol>
+                <li><strong>Para Transfer Learning y Features:</strong> Usar <strong>Leeds Skyrmions</strong> (2400 imágenes, texturas quirales)</li>
+                <li><strong>Para Validación Sim-Exp:</strong> Usar <strong>Co/Pd MFM</strong> (variación de parámetros, metodología híbrida)</li>
+                <li><strong>Para Metodología Avanzada:</strong> Estudiar <strong>KIT 4D-STEM</strong> (reconstrucción cuantitativa)</li>
+                <li><strong>Para Contexto Teórico:</strong> Referenciar <strong>Exchange Dataset</strong> (valores de J validados)</li>
+            </ol>
+            <p style="margin-top: 20px; font-size: 1.1em;">
+                <strong>⚠️ Nota Crítica:</strong> Ningún dataset cumple completamente con nanodots + parámetros Hamiltonianos variables.
+                Se recomienda estrategia híbrida: entrenar con simulaciones (que tienes) + validar con estos datasets experimentales.
+            </p>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #ecf0f1; border-radius: 10px; text-align: center;">
+            <p style="color: #7f8c8d; font-size: 0.9em;">
+                Documento generado el 23 de Enero de 2025 | Para: Investigación Doctoral - Nanodots Magnéticos
+            </p>
+        </div>
+    </div>
+</body>
+</html>

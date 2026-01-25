@@ -19,6 +19,28 @@
 \usetikzlibrary{angles, quotes}
 
 \usepackage{hyperref}
+\usepackage[acronym,nonumberlist]{glossaries}
+\makeglossaries
+
+% Define acronyms
+\newacronym{mfm}{MFM}{Magnetic Force Microscopy}
+\newacronym{spstm}{SP-STM}{Spin-Polarized Scanning Tunneling Microscopy}
+\newacronym{mram}{MRAM}{Magnetic Random-Access Memory}
+\newacronym{dmi}{DMI}{Dzyaloshinskii–Moriya Interaction}
+\newacronym{llg}{LLG}{Landau–Lifshitz–Gilbert}
+\newacronym{mri}{MRI}{Magnetic Resonance Imaging}
+\newacronym{mnp}{MNP}{Magnetic Nanoparticle}
+\newacronym{mnps}{MNPs}{Magnetic Nanoparticles}
+\newacronym{tem}{TEM}{Transmission Electron Microscopy}
+\newacronym{stt}{STT}{Spin-Transfer Torque}
+\newacronym{sot}{SOT}{Spin-Orbit Torque}
+\newacronym{cvae}{cVAE}{Conditional Variational Autoencoder}
+\newacronym{gan}{GAN}{Generative Adversarial Network}
+\newacronym{cnn}{CNN}{Convolutional Neural Network}
+\newacronym{ram}{RAM}{Regression Activation Map}
+\newacronym{eeg}{EEG}{Electroencephalographic}
+\newacronym{ai}{AI}{Artificial Intelligence}
+
 \usepackage{graphics,color}
 \usepackage[table]{xcolor} 
 \usepackage{tabularray}
@@ -53,6 +75,8 @@
 \usepackage{xcolor}
 \usepackage{subcaption}
 %\usepackage[caption=false]{subfig}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
 \usepackage{tikz}
     \usetikzlibrary{positioning,mindmap,arrows.meta,bending}
     \usetikzlibrary{mindmap, backgrounds, calc} % Mindmap drawing library 
@@ -213,18 +237,14 @@ high dimensionality of the mapping between physical parameters and domain patter
 direct analytical inversion \cite{WangMicromag2024, DeepMLHam2024}. The second is degeneracy:
 distinct combinations of Hamiltonian parameters can yield visually similar configurations, complicating
 inverse identification \cite{Feng2024, Liu2023}. Third, experimental limitations—such as noise, finite
-probe resolution, tip–sample convolution in MFM, and sample variability—hinder quantitative
-interpretation of MFM or SP-STM images \cite{Makarova2022, Bagchi2024}. Finally, the computational cost
-of atomistic or micromagnetic simulations restricts large-scale parameter sweeps, limiting predictive
-exploration of material regimes \cite{WangMicromag2024, MuMax3docs}.
+probe resolution, tip–sample convolution in \gls{mfm}, and sample variability—hinder quantitative
+interpretation of \gls{mfm} or \gls{spstm} images \cite{Makarova2022, Bagchi2024}.
 
 Deep learning has emerged as a powerful tool to bridge this gap. The inverse problem—inferring
-physical parameters from magnetic domain images—has been successfully addressed using CNNs and
+physical parameters from magnetic domain images—has been successfully addressed using \glspl{cnn} and
 explainable regression frameworks \cite{Kong2023, AIP2022, DeepMLHam2024}. The direct problem—
 generating domain configurations from parameters—has been explored in materials science using
-generative models such as VAEs and conditional GANs \cite{MicroVAE2023, Ronne2024}. These methods
-can reproduce general morphologies but suffer from poor interpretability, instability under noise, limited
-generalization, and lack of physical constraints \cite{Feng2024, Park2024, MicroVAE2023}.
+generative models such as VAEs and conditional \glspl{gan} \cite{MicroVAE2023, Ronne2024}. However, three fundamental challenges remain unresolved. First, \textit{parameter degeneracy}—where distinct Hamiltonian parameter combinations produce visually similar magnetic textures—complicates unique identification and prevents robust inverse estimation \cite{Feng2024, Liu2023, DeepSPIN2023}. Second, \textit{data quality degradation} arising from experimental noise, finite probe resolution, and numerical discretization in simulations limits the reliability of both training data and model predictions \cite{Kramer2021MFMNoise, Exl2021NumericalErrors, Park2024}. Third, the \textit{lack of physics-based interpretability} in data-driven models obscures the connection between learned representations and fundamental magnetic interactions, hindering validation against established physical laws and limiting their utility for materials design \cite{Rao2022ExplainableMaterialsML, Chen2021PINNMagnetism, Sanchez2023ExplainableDesign}. Existing generative approaches can reproduce general morphologies but suffer from poor interpretability, instability under noise, limited generalization, and lack of physical constraints \cite{Feng2024, Park2024, MicroVAE2023}.
 
 
 % AGREGAR EL PARRAFO INTRODUCTORIO ASOCIADO A LAS TAREAS QUE SE VAN A GENERAR. -- > REVISAR CON ANDRES MARINO.
@@ -246,75 +266,42 @@ generalization, and lack of physical constraints \cite{Feng2024, Park2024, Micro
 %% CON UN EJERCICIO BASICO.
 
 
-Recently, diffusion-based models have achieved state-of-the-art performance in conditional image
-synthesis and inverse design across materials science \cite{Alverson2024, Chen2024, SyMat2023}. Yet,
-their application to magnetic systems remains underexplored, and existing generative strategies rarely
-enforce physical consistency—such as energy minimization or Hamiltonian symmetry—limiting their use
-for predictive materials discovery \cite{Ronne2024, Park2024}.
+This work proposes a unified deep learning framework to address three fundamental challenges in nanoscale magnetic domain characterization: parameter degeneracy, data quality degradation, and lack of interpretability. \textbf{First}, to mitigate the effects of magnetic state degeneracy, the framework integrates a physically informed \gls{cvae} with cycle-consistent forward--inverse modeling. The \gls{cvae} employs parameter-dependent latent priors and physics-based energy penalties—including exchange, \gls{dmi}, anisotropy, and Zeeman contributions—to enforce physically plausible domain generation. A complementary inverse estimator based on transfer learning performs Hamiltonian parameter regression from spin configurations. Both models are jointly optimized under a cycle-consistency constraint to ensure round-trip parameter identifiability. \textbf{Second}, to enhance the quality of magnetic states under degraded data conditions, diffusion-based generative strategies and domain adaptation techniques will be explored to bridge high-fidelity simulations and noisy experimental \gls{mfm}/\gls{spstm} observations, incorporating denoising and adversarial alignment methods while preserving physical structure. \textbf{Third}, to provide physics-based interpretability, the framework employs \glspl{ram} to identify spatially relevant features contributing to parameter predictions, combined with UMAP analysis of latent representations to verify alignment with physical regimes \cite{Sparks2024, Optuna2022}.
 
-
-This work proposes a unified deep learning framework for the direct and inverse estimation of magnetic Hamiltonian parameters and nanoscale domain configurations. Instead of relying on a fixed generative architecture, the framework will explore families of regularized and variational deep learning methodologies capable of integrating physical priors—such as Hamiltonian constraints, energy-based consistency, or symmetry-aware embeddings—to enhance robustness under degeneracy and low-quality data conditions. \cite{Sparks2024, Optuna2022}.
-
+This research addresses critical technological needs at the national and regional level, particularly in advancing Colombia's capabilities in emerging materials characterization and intelligent data processing. The proposed framework directly supports the development of next-generation magnetic memory devices and energy storage systems—technologies identified as strategic priorities for national innovation and competitiveness. By integrating physics-informed deep learning with experimental microscopy workflows, this work contributes to bridging the gap between fundamental materials science and industrial applications in spintronics and magnetic-based energy technologies. Furthermore, this research aligns with the mission of the Digital Signal and Control Processing Group (GCPDS), which focuses on developing advanced computational methods for signal and image analysis. The integration of multimodal explainability techniques, physics-based regularization, and robust inference under noisy data conditions extends the group's expertise in digital image processing into the domain of nanoscale materials characterization, fostering interdisciplinary collaboration between materials physics, machine learning, and computational imaging. This convergence positions Colombia to contribute to global efforts in accelerating materials discovery through data-driven approaches while building local capacity in high-impact research areas with direct technological and economic implications.
 
 \section{Motivation}
 
 %1.1. Contexto general: el magnetismo a nanoescala
 
 The study of magnetic systems at the nanoscale has gained strategic importance in
-modern materials science \cite{Wang2022, Lak2021}. In particular, magnetic nanoparticles (MNPs) and nanodots
+modern materials science \cite{Wang2022, Lak2021}. In particular, \glspl{mnp} and nanodots
 constitute platforms where spin interactions and collective quantum properties give
 rise to emergent phenomena of great scientific and technological interest \cite{Jiang2023, Rarokar2024}. At these
-scales, the balance between exchange interactions, anisotropy, Dzyaloshinskii–Moriya
-interaction (DMI), and external magnetic fields generates a wide variety of magnetic
-textures—vortices, skyrmions, helical domains, and labyrinthine configurations \cite{Ga2022, Fert2023, Tokura2021}. These
+scales, the balance between exchange interactions, anisotropy, \gls{dmi}, and external magnetic fields generates a wide variety of magnetic
+textures—vortices, skyrmions, helical domains, and labyrinthine configurations, as illustrated in Figure~\ref{fig:magnetic_domains} \cite{Ga2022, Fert2023, Tokura2021}. These
 structures determine the magnetic response, thermal stability, and switching dynamics
 of the material, which are key aspects for functionality in advanced devices \cite{Song2023, Wang2022}.
 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{Figures/magneticTexture.jpg}
-    \caption{ Magnetic domains configurations }
-    \label{fig:skyrmions_textures}
+    \includegraphics[width=0.85\textwidth]{Figures/MagneticDomainsConfigurations.pdf}
+    \caption{Representative magnetic domain configurations in nanoscale systems: (a) vortex states with in-plane curling magnetization, (b) skyrmion configurations stabilized by Dzyaloshinskii–Moriya interaction, (c) helical and stripe domain patterns, and (d) labyrinthine domains from dipolar interactions.}
+    \label{fig:magnetic_domains}
 \end{figure}
 
 %1.2. Relevancia aplicada: por qué las nanopartículas magnéticas importan
 
-Magnetic nanoparticles and nanodots possess a unique versatility that makes them
-relevant across multiple fields:  
-a) Spintronics and Non-Volatile Magnetic Memories. Topologically protected magnetic textures, such as skyrmions, enable the storage of information as stable and switchable bits. These structures support the development of MRAM, racetrack memories, and magnetic logic devices, combining high density, low power consumption, and radiation resistance \cite{Morshed2021, Sisodia2022, Zhang2015, Eurek2024}.
+Magnetic NPs and nanodots possess a unique versatility that makes them relevant across multiple technological and scientific domains (Figure~\ref{fig:applications}). In the field of spintronics and non-volatile memory technologies, topologically protected magnetic textures—such as skyrmions and magnetic vortices—enable the encoding and manipulation of information as stable, switchable magnetic bits. These nanoscale spin configurations support the development of next-generation memory architectures including \gls{mram}, racetrack memory devices, and reconfigurable magnetic logic gates. The appeal of these technologies lies in their combination of high storage density, ultralow power consumption, radiation hardness, and non-volatility, making them promising candidates for replacing conventional charge-based electronics in applications ranging from edge computing to space-grade systems \cite{Morshed2021, Sisodia2022, Zhang2015, Eurek2024}. Beyond information processing, the dynamic magnetic response of these nanostructures under applied fields or current-induced torques allows for fast and deterministic switching, essential for achieving competitive read/write speeds in practical memory devices.
 
+In parallel, magnetic NPs have emerged as transformative agents in biomedical and energy-related applications, where their spin dynamics and domain structure directly govern functional performance. In biomedicine, magnetic NPs are employed in targeted oncological hyperthermia therapies, where alternating magnetic fields induce localized heating to selectively destroy tumor cells, as well as in advanced drug delivery systems that exploit magnetic guidance for site-specific therapeutic action \cite{Barrera2023, IronOxideReview2023, MLDesign2023}. Their utility extends to contrast enhancement in \gls{mri}, where tailored magnetic anisotropy and relaxation properties improve diagnostic sensitivity. In the energy sector, magnetic NPs are investigated for magnetocaloric refrigeration—a sustainable alternative to vapor-compression cooling—thermoelectric energy conversion, and reversible magnetic energy storage systems \cite{He2025, Nehan2024, Hadouch2022}. In all these contexts, the efficiency of the functional response is fundamentally determined by the internal magnetic domain structure, anisotropy landscape, and the mechanisms of energy transfer between spin, lattice, and thermal degrees of freedom \cite{Liedienov2021, Nehan2024}. This broad spectrum of applications underscores the critical need for robust characterization and predictive modeling frameworks capable of linking Hamiltonian parameters to experimentally observable magnetic configurations.
 
-\begin{figure}[H]
+\begin{figure}[t]
     \centering
-    \includegraphics[width=0.75\textwidth]{Figures/mram.png}
-    \caption{ Magnetic Random Memories }
-    \label{fig:skyrmions_textures}
-\end{figure}
-
-
-b) Magnetic nanoparticles are used in oncological hyperthermia therapies, drug targeting, and enhanced magnetic resonance imaging (MRI). Their efficiency depends on the dynamic spin response under alternating fields, which is determined by the internal structure and anisotropy of the material \cite{Barrera2023, IronOxideReview2023, MLDesign2023}.
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{Figures/medicine.jpg}
-    \caption{ Biomedical applications }
-    \label{fig:skyrmions_textures}
-\end{figure}
-
-c) Energy Conversion and Storage. In the energy field, magnetic nanoparticles are
-investigated for magnetocaloric refrigeration, thermoelectric conversion, and magnetic
-energy storage \cite{He2025, Nehan2024, Hadouch2022}. The spin configurations determine
-the mechanisms of energy transfer between magnetic and thermal degrees of freedom,
-directly influencing the efficiency of these processes \cite{Liedienov2021, Nehan2024}.
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Figures/storage.png}
-    \caption{ Biomedical applications }
-    \label{fig:skyrmions_textures}
+    \includegraphics[width=0.65\textwidth]{Figures/Applications.pdf}
+    \caption{Applications of magnetic nanoparticles and nanodots: (left) spintronics and non-volatile memory (MRAM, racetrack memory), (center) biomedical uses (hyperthermia, drug delivery, MRI contrast), and (right) energy technologies (magnetocaloric refrigeration, thermoelectric conversion).}
+    \label{fig:applications}
 \end{figure}
 
 
@@ -323,9 +310,7 @@ directly influencing the efficiency of these processes \cite{Liedienov2021, Neha
 
 %2.4 Scientific Importance of Nanoscale Studies
 
-The analysis of magnetic systems at the nanoscale not only drives the development of new technologies but also contributes fundamental knowledge about emergent phenomena in condensed matter physics \cite{Xiao2023, Liao2023}. These systems serve as natural models of complex physical behavior, where local interactions give rise to collective responses that challenge classical linear approximations \cite{Xiao2023, DeepSPIN2023}.
-
-In recent years, the integration of Artificial Intelligence (AI) with computational physics has opened new avenues for the modeling and prediction of complex material behaviors \cite{Hilgers2025, Ryu2025, Goswami2022}. Traditional simulation methods offer precise control over physical parameters but are limited by high computational cost and restricted scalability across parameter spaces \cite{Liao2023}. AI-driven approaches, particularly deep learning architectures, enable the extraction of latent physical relationships directly from data, accelerating the exploration of vast configuration spaces that would otherwise be computationally intractable \cite{Xiao2023, Hilgers2025}. When coupled with physics-informed principles, these models not only enhance predictive accuracy but also preserve interpretability and physical consistency \cite{Ryu2025, Sharma2023}. In the context of nanoscale magnetism, such hybrid frameworks bridge the gap between experimental observation and theoretical modeling, providing a data-efficient path toward inverse design and the discovery of emergent spin phenomena \cite{DeepSPIN2023, Liao2023}.
+In recent years, the integration of \gls{ai} with computational physics has opened new avenues for the modeling and prediction of complex material behaviors \cite{Hilgers2025, Ryu2025, Goswami2022}. Traditional simulation methods offer precise control over physical parameters but are limited by high computational cost and restricted scalability across parameter spaces \cite{Liao2023}. \Gls{ai}-driven approaches, particularly deep learning architectures, enable the extraction of latent physical relationships directly from data, accelerating the exploration of vast configuration spaces that would otherwise be computationally intractable \cite{Xiao2023, Hilgers2025}. When coupled with physics-informed principles, these models not only enhance predictive accuracy but also preserve interpretability and physical consistency \cite{Ryu2025, Sharma2023}. In the context of nanoscale magnetism, such hybrid frameworks bridge the gap between experimental observation and theoretical modeling, providing a data-efficient path toward inverse design and the discovery of emergent spin phenomena \cite{DeepSPIN2023, Liao2023}.
 
 
 \vspace{0.5cm}
@@ -333,7 +318,7 @@ In recent years, the integration of Artificial Intelligence (AI) with computatio
 %%%
 %%% REFERENCIAS DEL GRUPO?
 %%%
-This work is developed within the Research Signal Processing and Recognition  (GCPDS), which has extensive experience in the design and implementation of intelligent systems for signal and image analysis. The group has explored artificial intelligence methodologies across multiple domains, including image processing, temporal series analysis, and, more recently, electroencephalographic (EEG) signal interpretation. Building on this background, GCPDS is currently expanding its research toward the application of AI in computational physics, focusing on the intersection between data-driven learning and physical modeling. Current efforts involve the integration of generative models, interpretability mechanisms, transformer-based architectures, and optimization strategies to develop hybrid frameworks capable of revealing underlying physical principles from complex experimental data. This interdisciplinary approach establishes a foundation for applying advanced machine learning to the understanding and design of magnetic systems at the nanoscale. %% PAULINA
+This work is developed within the Research Signal Processing and Recognition (GCPDS), which has extensive experience in the design and implementation of intelligent systems for signal and image analysis. The group has explored artificial intelligence methodologies across multiple domains, including image processing, temporal series analysis, and, more recently, \gls{eeg} signal interpretation. Building on this background, GCPDS is currently expanding its research toward the application of \gls{ai} in computational physics, focusing on the intersection between data-driven learning and physical modeling. This research effort is supported by the project "Machine Learning Applied to the Efficient Prediction of Magnetic Properties of Nanoparticles as Support for the Generation of Electronic Devices," funded by the Faculty of Engineering and Architecture of Universidad Nacional de Colombia, Manizales Campus, under the 2024 Call for Research Project Support. Current efforts involve the integration of generative models, interpretability mechanisms, transformer-based architectures, and optimization strategies to develop hybrid frameworks capable of revealing underlying physical principles from complex experimental data. This interdisciplinary approach establishes a foundation for applying advanced machine learning to the understanding and design of magnetic systems at the nanoscale.
 
 
 \section{Problem Statement}
@@ -342,109 +327,37 @@ This work is developed within the Research Signal Processing and Recognition  (G
 The study of magnetic nanostructures integrates two complementary approaches: the \textbf{experimental} and the \textbf{theoretical-simulation} pathways \cite{Streubel2022}. The experimental route focuses on the physical synthesis, visualization, and measurement of magnetic systems \cite{Zhang2024MFM, Wiesendanger2022SPSTM}, whereas the theoretical approach aims to model and predict their magnetic behavior from first principles or phenomenological descriptions \cite{Evans2014Atomistic, MuMaxReview2021}.
 
 
-From the experimental perspective, research begins with the \textit{sample preparation} of thin films, multilayers, or nanostructures that define the system’s geometry and magnetic anisotropy \cite{Nagaosa2021Deposition, Fert2022ThinFilms}. These samples are then characterized through advanced \textit{magnetic imaging techniques} such as Lorentz Transmission Electron Microscopy (TEM), Magnetic Force Microscopy (MFM), and Kerr microscopy, which reveal the domain patterns at nanometer resolution \cite{Streubel2022, Zhang2024MFM, McVitie2023Lorentz}. The resulting data are complemented by \textit{acquisition and analysis} of external stimuli, including magnetic and electric fields (STT and SOT effects), strain fields, and temperature variations, which allow for the control and manipulation of domain structures \cite{Manchon2019SOT, Yu2022StrainControl, Finco2024Stimuli}.
+From the experimental perspective, research begins with the \textit{sample preparation} of thin films, multilayers, or nanostructures that define the system's geometry and magnetic anisotropy \cite{Nagaosa2021Deposition, Fert2022ThinFilms}. These samples are then characterized through advanced \textit{magnetic imaging techniques} such as Lorentz \gls{tem}, \gls{mfm}, and Kerr microscopy, which reveal the domain patterns at nanometer resolution \cite{Streubel2022, Zhang2024MFM, McVitie2023Lorentz}. The resulting data are complemented by \textit{acquisition and analysis} of external stimuli, including magnetic and electric fields (\gls{stt} and \gls{sot} effects), strain fields, and temperature variations, which allow for the control and manipulation of domain structures \cite{Manchon2019SOT, Yu2022StrainControl, Finco2024Stimuli}. However, experimental images often contain noise, contrast distortions, and limited resolution, making quantitative parameter extraction challenging \cite{Gao2021NoiseMFM, Phark2022ResolutionLimits}. As a result, bridging the gap between simulated and observed magnetic configurations remains an open problem that hinders both predictive modeling and materials discovery \cite{Liao2023, DeepSPIN2023, Finco2024Stimuli}.
 
 
-In parallel, the theoretical and computational approach seeks to describe these systems at different scales. At the \textit{atomistic level}, models such as the Heisenberg Hamiltonian and Monte Carlo simulations capture spin interactions with atomic precision \cite{Evans2014Atomistic, Nowak2007MC, Hinzke2022Atomistic}. Moving to larger scales, \textit{micromagnetic simulations} employ the Landau–Lifshitz–Gilbert (LLG) equation to model the continuous magnetization field, implemented through frameworks like MuMax3, OOMMF, and Spirit \cite{MuMaxReview2021, Donahue1999OOMMF, Spirit2020}.
+In parallel, the theoretical and computational approach seeks to describe these systems at different scales. At the \textit{atomistic level}, models such as the Heisenberg Hamiltonian and Monte Carlo simulations capture spin interactions with atomic precision \cite{Evans2014Atomistic, Nowak2007MC, Hinzke2022Atomistic}. Moving to larger scales, \textit{micromagnetic simulations} employ the \gls{llg} equation to model the continuous magnetization field, implemented through frameworks like MuMax3, OOMMF, and Spirit \cite{MuMaxReview2021, Donahue1999OOMMF, Spirit2020}.
 
-Together, these methodologies constitute a multi-scale, multi-modal ecosystem that bridges empirical observation and theoretical understanding, providing the foundation for modern research in magnetic materials \cite{Gomez2023MultiscaleReview}.
+Together, these methodologies constitute a multi-scale, multi-modal ecosystem that bridges empirical observation and theoretical understanding, as illustrated in Figure~\ref{fig:problem_statement}, providing the foundation for modern research in magnetic materials \cite{Gomez2023MultiscaleReview}.
 
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{Figures/ProblemStatement.png}
-    \caption{ Magnetic Domain Approach }
-    \label{fig:skyrmions_textures}
+    \caption{Multi-scale ecosystem integrating experimental and theoretical-computational approaches for studying magnetic nanostructures.}
+    \label{fig:problem_statement}
 \end{figure}
-
-From an experimental perspective, advances in Magnetic Force Microscopy (MFM) and Spin-Polarized Scanning Tunneling Microscopy (SP-STM) have enabled direct visualization of nanoscale magnetic textures, revealing complex domain morphologies such as vortices, skyrmions, and labyrinthine patterns \cite{Zhang2024MFM, Wiesendanger2022SPSTM, McVitie2023Lorentz}. However, experimental images often contain noise, contrast distortions, and limited resolution, making quantitative parameter extraction challenging \cite{Gao2021NoiseMFM, Phark2022ResolutionLimits}. As a result, bridging the gap between simulated and observed magnetic configurations remains an open problem that hinders both predictive modeling and materials discovery \cite{Liao2023, DeepSPIN2023, Finco2024Stimuli}.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% EXTENSIÓN PARA HABLAR DE LAS SIMULACIONES Y PROBLEMAS 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Despite the significant advances in atomistic and micromagnetic simulations, the theoretical–computational approach faces several inherent limitations that restrict its scalability and practical applicability. First, the computational cost associated with solving high-dimensional Hamiltonian systems grows rapidly with the number of spins and spatial resolution, making large-scale or time-dependent studies computationally prohibitive \cite{Gomes2022Limitations, Hinzke2022Atomistic}. Parameter sweeps over exchange coupling, anisotropy, or Dzyaloshinskii–Moriya interaction (DMI) often require thousands of independent simulation runs, each demanding considerable processing time and memory resources \cite{Gomez2023MultiscaleReview, MuMaxReview2021}, and the approximation level of each simulation method imposes constraints on physical fidelity \cite{Nowak2007MC, Evans2014Atomistic}. Atomistic models offer high precision but are limited to small systems, while micromagnetic models extend spatial coverage at the expense of losing atomistic detail \cite{Spirit2020, McMichael2009Limitations}. Incorporating temperature effects, stochastic fluctuations, and material imperfections further increases complexity and reduces interpretability \cite{Hinzke2022Atomistic, Brown1963Thermal}.  
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % INTRODUCCIÓN AL PROBLEMA INVERSO Y DIRECTO %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Within this integrated context, the study of magnetic nanostructures can be framed around two complementary and interdependent challenges: the direct and the inverse magnetic domain problems \cite{Feng2024, Liao2023}.
+Within this integrated context, the study of magnetic nanostructures can be framed around two complementary and interdependent challenges: the direct and the inverse magnetic domain problems, as illustrated in Figure~\ref{fig:framework} \cite{Feng2024, Liao2023}.
 
-The direct problem involves predicting or generating the magnetic domain configuration that emerges from a given set of Hamiltonian parameters—exchange interaction, anisotropy, DMI, external magnetic field, and temperature. This process defines the forward mapping from the parameter space to the spatial magnetization distribution and is typically addressed using micromagnetic or atomistic simulations \cite{Evans2014Atomistic, MuMaxReview2021, Nowak2007MC}. However, such simulations are often computationally intractable for broad parameter exploration or for incorporating stochastic thermal and experimental effects \cite{Gomes2022Limitations, Hinzke2022Atomistic, Brown1963Thermal}.
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{Figures/Direct.png}
-    \caption{ Magnetic Domain Approach }
-    \label{fig:skyrmions_textures}
-\end{figure}
-
-In contrast, the inverse problem aims to infer the underlying physical parameters responsible for a given observed domain configuration, such as those obtained from Magnetic Force Microscopy (MFM) or Spin-Polarized Scanning Tunneling Microscopy (SP-STM) \cite{Zhang2024MFM, Wiesendanger2022SPSTM}. This task is intrinsically ill-posed: multiple parameter combinations can reproduce visually similar textures, leading to degeneracy and uncertainty in parameter estimation \cite{Feng2024, Liu2023, DeepSPIN2023}.
-
+The direct problem involves predicting or generating the magnetic domain configuration that emerges from a given set of parameters—exchange interaction, anisotropy, \gls{dmi}, external magnetic field, and temperature. This process defines the forward mapping from the parameter space to the spatial magnetization distribution and is typically addressed using micromagnetic or atomistic simulations \cite{Evans2014Atomistic, MuMaxReview2021, Nowak2007MC}. However, such simulations are often computationally intractable for broad parameter exploration or for incorporating stochastic thermal and experimental effects \cite{Gomes2022Limitations, Hinzke2022Atomistic, Brown1963Thermal}. In contrast, the inverse problem aims to infer the underlying physical parameters responsible for a given observed domain configuration, such as those obtained from \gls{mfm} or \gls{spstm} \cite{Zhang2024MFM, Wiesendanger2022SPSTM}. This task is intrinsically ill-posed: multiple parameter combinations can reproduce visually similar textures, leading to degeneracy and uncertainty in parameter estimation \cite{Feng2024, Liu2023, DeepSPIN2023}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{Figures/Inverse.png}
-    \caption{ Magnetic Domain Approach }
-    \label{fig:skyrmions_textures}
+    \includegraphics[width=0.85\textwidth]{Figures/Framework.pdf}
+    \caption{Unified framework illustrating the direct and inverse magnetic domain problems. The direct problem (top path) maps physical parameters—exchange interaction, anisotropy, DMI, external field, and temperature—to magnetic domain configurations through energy minimization or simulation. The inverse problem (bottom path) infers parameters from observed domain textures obtained via experimental techniques such as MFM or SP-STM. Bridging both directions through cycle-consistency ensures physical coherence and enables explainable, data-driven modeling of nanoscale magnetic systems.}
+    \label{fig:framework}
 \end{figure}
 
 Bridging these two directions—ensuring coherence between generation (direct mapping) and estimation (inverse mapping)—is essential for predictive materials discovery \cite{Feng2024, Park2024}. A unified and physically consistent framework that can simultaneously learn both directions offers a pathway toward explainable, data-driven modeling of nanoscale magnetic phenomena \cite{DeepSPIN2023, Ryu2025, Hilgers2025}.
-
-Overall, the study of magnetic nanodots is constrained by three fundamental challenges that motivate the development of hybrid approaches combining physical modeling and data-driven inference \cite{Gomez2023MultiscaleReview, Liao2023, Evans2014Atomistic}.
-
-
-
-\begin{figure}[H]
-\centering
-\begin{adjustbox}{center, max width=\textwidth}
-\begin{tikzpicture}[
-  box/.style = {draw, rounded corners=6pt, minimum width=5cm, minimum height=1.6cm, align=center, font=\small},
-  process/.style = {draw, rounded corners=6pt, minimum width=5cm, minimum height=1.4cm, align=center, font=\footnotesize},
-  arr/.style = {-{Latex[length=3mm,width=2mm]}, line width=0.9pt},
-  dashedarr/.style = {->, dashed, line width=0.9pt},
-  node distance=12mm
-]
-
-% --- Nodes (top to bottom) ---
-\node[box] (ham) {Hamiltonian parameters\\[2pt]
-\footnotesize $J$ (Exchange), $K$ (Anisotropy),\\ $D$ (DMI), $H$ (Field), $T$ (Temperature)};
-
-\node[process, below=of ham] (direct) {Direct model / Simulation\\
-\footnotesize Energy minimization \\ Monte Carlo / LLG / Diffusion generator};
-
-\node[box, below=of direct] (domain) {Domain configuration\\[2pt]
-\footnotesize (MFM / SP-STM-like texture: vortices, skyrmions, stripes)};
-
-\node[process, below=of domain] (inverse) {Inverse model \\ \footnotesize Feature extraction $\rightarrow$ Bayesian / NN regression};
-
-\node[box, below=of inverse] (est) {Estimated Hamiltonian parameters};
-
-% --- Arrows ---
-\draw[arr] (ham) -- (direct);
-\draw[arr] (direct) -- (domain);
-\draw[arr] (domain) -- (inverse);
-\draw[arr] (inverse) -- (est);
-
-% --- Loop arrow back up (cycle consistency) ---
-\draw[arr] (est.east) .. controls +(2.5,0) and +(2.5,0) .. (ham.east)
-node[midway, right=1mm, font=\footnotesize, align=center] {Cycle-consistency\\(reconstruction / energy loss)};
-
-% --- Labels ---
-\node[font=\footnotesize, align=center, left=3mm of direct] {Direct mapping\\(forward problem)};
-\node[font=\footnotesize, align=center, left=3mm of inverse] {Inverse mapping\\(backward problem)};
-
-\end{tikzpicture}
-\end{adjustbox}
-\caption{Vertical unified cycle illustrating the direct (top-down) and inverse (bottom-up) problems in magnetic domain research. The cycle-consistency loop (right) enforces physical coherence between estimated Hamiltonian parameters and generated magnetic textures.}
-\label{fig:vertical-cycle}
-\end{figure}
-
-
 
 Overall, the study of magnetic nanodots is constrained by three fundamental challenges that motivate the development of hybrid approaches combining physical modeling and data-driven inference:
 
@@ -455,24 +368,26 @@ Overall, the study of magnetic nanodots is constrained by three fundamental chal
 
 \vspace{0.5cm}
 
-Different combinations of Hamiltonian parameters—such as exchange interaction, anisotropy, and Dzyaloshinskii–Moriya interaction (DMI)—can lead to visually similar magnetic patterns \cite{Feng2024, Liao2023, DeepSPIN2023}. This degeneracy complicates the unique identification of physical parameters from experimental observations, creating ambiguity in inverse estimation tasks \cite{Park2024, Liu2023InverseML, Raju2022SkyrmionInverse}.
+Theoretical and computational approaches based on Hamiltonian formulations have become the dominant framework for studying magnetic nanodots due to their ability to provide physically grounded predictions under controlled parameter conditions. Micromagnetic simulations and atomistic spin dynamics solve the \gls{llg} equation or minimize the magnetic Hamiltonian to predict equilibrium and dynamic states \cite{Donahue1999OOMMF, MuMaxReview2021, Evans2014Atomistic}. This approach offers several critical advantages: it enables exploration of parameter regimes inaccessible to experiment, provides complete three-dimensional vector field information at arbitrary resolution, and allows systematic investigation of competing magnetic interactions—exchange, anisotropy, \gls{dmi}, Zeeman coupling—without measurement-induced perturbations \cite{Hertel2022MicromagneticLimits, Hinzke2022Atomistic}. Moreover, simulations can incorporate thermal fluctuations, boundary conditions, and time-dependent external fields with explicit physical control, making them indispensable for understanding emergent phenomena such as skyrmion nucleation, domain wall dynamics, and magnetization reversal pathways \cite{Hertel2023Thermal, Brown1963Thermal}.
+
+However, despite their physical rigor, Hamiltonian-based simulations reveal a fundamental challenge: the degeneracy of magnetic states. Different combinations of parameters—such as exchange interaction, anisotropy, and \gls{dmi}—can produce visually similar or energetically comparable magnetic patterns \cite{Feng2024, Liao2023, DeepSPIN2023}. As illustrated in Figure~\ref{fig:degeneracy_problem}, spin configurations sampled across the KDM (a proxy for \gls{dmi} strength) and temperature parameter space exhibit striking visual similarity across distinct parameter regimes. This degeneracy arises because the magnetic energy landscape contains multiple local minima corresponding to metastable spin textures—vortices, skyrmions, stripe domains—that can be stabilized under different parameter sets \cite{Leonov2020EnergyLandscape, Du2022MetaStableSkyrmions}. Small compensations between competing interactions can preserve the overall energy balance: for instance, an increase in anisotropy may be offset by stronger exchange or weaker \gls{dmi}, yielding morphologically indistinguishable configurations \cite{Liu2023InverseML, Bessarab2018EnergyBarriers}. The visual similarity of domain textures across this parameter space creates fundamental ambiguity in inverse estimation tasks, complicating the unique identification of physical parameters from observed configurations and limiting the predictive power of both simulation-based and data-driven workflows \cite{Park2024, Raju2022SkyrmionInverse}.
 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{Figures/Problems1.png}
-    \caption{Degenerate magnetic states arising from distinct parameter combinations.}
+    \includegraphics[width=0.85\textwidth]{Figures/TvsKDM.png}
+    \caption{Visual inspection of spin configurations over the KDM parameter space conditioned on temperature. Multiple parameter combinations produce visually similar magnetic textures, evidencing the degeneracy problem that complicates unique parameter identification from domain observations.}
     \label{fig:degeneracy_problem}
 \end{figure}
 
-In nanoscale magnetic systems, the relationship between the Hamiltonian parameters and the resulting domain configurations is highly nonlinear and often degenerate \cite{Feng2024, Liao2023}. This degeneracy arises because different combinations of exchange coupling (J), magnetic anisotropy (K), and Dzyaloshinskii–Moriya interaction (D) can produce equilibrium states with similar total energy and comparable spatial magnetization patterns \cite{Raju2022SkyrmionInverse, DeepSPIN2023}. From a physical perspective, the energy landscape of the magnetic Hamiltonian contains multiple local minima corresponding to metastable spin textures—such as vortices, skyrmions, or labyrinthine domains—that can be stabilized under different parameter sets \cite{Leonov2020EnergyLandscape, Du2022MetaStableSkyrmions}. In practice, this means that small compensations between parameters can preserve the overall balance of competing interactions: for example, an increase in anisotropy can be offset by a stronger exchange term or a weaker DMI, yielding morphologically indistinguishable configurations \cite{Liu2023InverseML, Bessarab2018EnergyBarriers}. Thermal fluctuations and boundary effects further blur these distinctions by allowing transitions between nearby minima, effectively broadening the range of parameter combinations that generate similar observable textures \cite{Hertel2023Thermal, Maletta2021BoundaryEffects}. As a result, the mapping from physical parameters to domain patterns is non-injective, complicating the inverse identification of Hamiltonian parameters from experimental images and introducing intrinsic ambiguity in inverse modeling tasks \cite{Park2024, Ryu2025}.
+In nanoscale magnetic systems, the relationship between the Hamiltonian parameters and the resulting domain configurations is highly nonlinear and often degenerate \cite{Feng2024, Liao2023}. This degeneracy arises because different combinations of exchange coupling (J), magnetic anisotropy (K), and Dzyaloshinskii–Moriya interaction (D) can produce equilibrium states with similar total energy and comparable spatial magnetization patterns \cite{Raju2022SkyrmionInverse, DeepSPIN2023}. From a physical perspective, as illustrated in Figure~\ref{fig:energy_landscape}, the energy landscape of the magnetic Hamiltonian contains multiple local minima corresponding to metastable spin textures—such as vortices, skyrmions, or labyrinthine domains—that can be stabilized under different parameter sets \cite{Leonov2020EnergyLandscape, Du2022MetaStableSkyrmions}. In practice, this means that small compensations between parameters can preserve the overall balance of competing interactions: for example, an increase in anisotropy can be offset by a stronger exchange term or a weaker \gls{dmi}, yielding morphologically indistinguishable configurations \cite{Liu2023InverseML, Bessarab2018EnergyBarriers}. Thermal fluctuations and boundary effects further blur these distinctions by allowing transitions between nearby minima, effectively broadening the range of parameter combinations that generate similar observable textures \cite{Hertel2023Thermal, Maletta2021BoundaryEffects}. As a result, the mapping from physical parameters to domain patterns is non-injective, complicating the inverse identification of Hamiltonian parameters from experimental images and introducing intrinsic ambiguity in inverse modeling tasks \cite{Park2024, Ryu2025}.
 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{Figures/NonUniqueness.png}
-    \caption{Energy Landscape of magnetic hamiltonian}
-    \label{fig:degeneracy_problem}
+    \caption{Schematic representation of the magnetic energy landscape showing multiple local minima corresponding to different magnetic domain configurations. The energy surface exhibits numerous metastable states (vortices, skyrmions, stripe domains) accessible under different parameter combinations, illustrating the fundamental non-uniqueness of the inverse problem: distinct paths through parameter space can lead to energetically similar or morphologically indistinguishable spin textures.}
+    \label{fig:energy_landscape}
 \end{figure}
 
 In addition to energy-based degeneracy, a second source of non-uniqueness stems from the geometric symmetries intrinsic to many spin Hamiltonians. For systems where the magnetic energy is invariant (or nearly invariant) under in-plane rotations and translations, distinct domain configurations obtained by rotating or shifting the spin texture may represent the same physical state. Recent works exploiting equivariant neural-network architectures have shown that incorporating these Euclidean symmetries (rotational and translational) into the learning model significantly improves generalization and ensures physically consistent predictions across symmetry-related configurations \cite{Zhong2023EquivariantMagnetic, Yuan2024MagNet}. Consequently, image-based states differing only by rigid motions should be considered equivalent under the symmetry group, adding a geometric layer to the degeneracy beyond parameter compensation.
@@ -999,14 +914,20 @@ This question is inherently multifaceted, requiring the integration of regulariz
 
 \section{Objectives}
 
-To address the research question formulated above, this work pursues three complementary objectives that tackle the core challenges of degeneracy, data quality, and interpretability in the modeling of nanoscale magnetic domain states:
+\subsection{General Objective}
+
+Design and develop a physics-informed deep learning framework to simultaneously mitigate parameter degeneracy, enhance the quality of generated magnetic configurations, and ensure physical interpretability in the forward and inverse modeling of nanoscale magnetic domain states.
+
+\subsection{Specific Objectives}
+
+To achieve the general objective stated above, this work pursues three complementary specific objectives that tackle the core challenges of degeneracy, data quality, and interpretability in the modeling of nanoscale magnetic domain states:
 
 \begin{enumerate}
-    \item Develop a regularized deep learning framework based on Hamiltonian modeling refinement and transfer learning methodology to mitigate the effect of magnetic state degeneracy when performing a configuration estimation task.
+    \item Develop an image-based deep learning framework for parameter estimation from Hamiltonian-derived magnetic configurations, employing transfer learning and physically informed regularization to mitigate the effects of magnetic state degeneracy.
 
-    \item Develop a regularized deep learning framework based on generative models, employing diffusion strategies to enhance the quality of magnetic states generated from a related physical condition in a task of generating nanoscale magnetic domain states.
+    \item Develop a regularized deep learning framework based on variational methodologies to enhance the quality and physical consistency of magnetic states generated from specified physical conditions in nanoscale magnetic domain synthesis tasks.
 
-    \item Develop interpretability methodologies for deep learning models that take into account the underlying physical conditions that generated the analyzed magnetic domain states.
+    \item Develop interpretability methodologies for deep learning models based on activation maps and \glspl{ram} under defined metrics to identify spatially relevant features associated with the underlying physical conditions of magnetic domain states.
 \end{enumerate}
 
 \section{Methodology}\label{sec:Material_methods}
