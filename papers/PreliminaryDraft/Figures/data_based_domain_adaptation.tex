@@ -1,0 +1,100 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows, calc}
+
+\begin{document}
+
+\tikzset{
+    box/.style={
+        rectangle,
+        rounded corners=3mm,
+        draw=#1!70,
+        fill=#1!15,
+        thick,
+        minimum height=1cm,
+        text width=2.8cm,
+        align=center,
+        font=\small\bfseries,
+        drop shadow
+    },
+    data/.style={
+        cylinder,
+        draw=blue!60,
+        fill=blue!10,
+        minimum height=1.5cm,
+        minimum width=1.8cm,
+        shape border rotate=90,
+        font=\tiny\bfseries,
+        drop shadow
+    },
+    arrow/.style={
+        -Stealth,
+        very thick,
+        draw=gray!70
+    },
+    label/.style={
+        font=\scriptsize,
+        text=black
+    }
+}
+
+\begin{tikzpicture}[node distance=1.5cm and 1.2cm]
+
+    % Title
+    \node[font=\Large\bfseries, text=blue!80!black] (title) at (0,0) {Data-Based Domain Adaptation};
+
+    % Source domain
+    \node[data, below=1cm of title] (source) {Synthetic\\Data\\(Sim)};
+
+    % Adaptation techniques
+    \node[box=orange, below=of source] (augment) {Data\\Augmentation};
+    \node[box=purple, right=0.8cm of augment] (generation) {Synthetic\\Degradation};
+    \node[box=green, left=0.8cm of augment] (mixing) {Domain\\Mixing};
+
+    % Target domain
+    \node[data, below=1.8cm of augment] (target) {Adapted\\Data};
+
+    % Real data (small)
+    \node[data, right=2.5cm of source, minimum height=1cm, minimum width=1.3cm] (real) {Real\\Data\\(Exp)};
+
+    % Model
+    \node[box=blue, below=of target] (model) {Neural\\Network};
+
+    % Arrows
+    \draw[arrow] (source) -- (augment);
+    \draw[arrow] (source) -- (generation);
+    \draw[arrow] (source) -- (mixing);
+    \draw[arrow] (real) -- (mixing);
+    \draw[arrow] (real) -- (generation);
+
+    \draw[arrow] (augment) -- (target);
+    \draw[arrow] (generation) -- (target);
+    \draw[arrow] (mixing) -- (target);
+
+    \draw[arrow] (target) -- (model);
+
+    % Annotations
+    \node[label, right=0.1cm of generation, text width=2.5cm, align=left] {
+        • Add noise\\
+        • Blur\\
+        • Resolution\\
+        • Artifacts
+    };
+
+    \node[label, left=0.1cm of mixing, text width=2.3cm, align=right] {
+        • Combine\\
+        • Interpolate\\
+        • Style transfer
+    };
+
+    % Benefits box
+    \node[box=green, below=0.8cm of model, minimum width=8cm, text width=7.5cm] (benefits) {
+        \textbf{Advantages:} Simple, no architecture changes, low computational cost\\
+        \textbf{Limitations:} Requires knowing real data distribution, manual tuning
+    };
+
+\end{tikzpicture}
+
+\end{document}

@@ -1,0 +1,98 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows, calc}
+
+\begin{document}
+
+\tikzset{
+    box/.style={
+        rectangle,
+        rounded corners=3mm,
+        draw=#1!70,
+        fill=#1!15,
+        thick,
+        minimum height=1cm,
+        text width=2.5cm,
+        align=center,
+        font=\small\bfseries,
+        drop shadow
+    },
+    data/.style={
+        cylinder,
+        draw=blue!60,
+        fill=blue!10,
+        minimum height=1.2cm,
+        minimum width=1.5cm,
+        shape border rotate=90,
+        font=\tiny\bfseries,
+        drop shadow
+    },
+    arrow/.style={
+        -Stealth,
+        very thick,
+        draw=gray!70
+    },
+    redarrow/.style={
+        -Stealth,
+        very thick,
+        draw=red!70,
+        dashed
+    }
+}
+
+\begin{tikzpicture}[node distance=1.2cm and 1cm]
+
+    % Title
+    \node[font=\Large\bfseries, text=blue!80!black] (title) {Adversarial Domain Adaptation};
+
+    % Source and target
+    \node[data, below left=1cm and 1.5cm of title] (source) {Source\\(Sim)};
+    \node[data, below right=1cm and 1.5cm of title] (target) {Target\\(Exp)};
+
+    % Feature extractor
+    \node[box=blue, below=2cm of title, minimum width=6cm, text width=5.5cm] (feat) {Feature Extractor\\(Shared)};
+
+    % Domain discriminator
+    \node[box=red, below left=1.5cm and 0.5cm of feat] (disc) {Domain\\Discriminator};
+
+    % Task classifier
+    \node[box=green, below right=1.5cm and 0.5cm of feat] (class) {Task\\Classifier};
+
+    % Gradient reversal layer
+    \node[box=orange, left=0.3cm of disc, text width=2cm, minimum height=0.7cm, font=\scriptsize\bfseries] (grl) {Gradient\\Reversal\\Layer};
+
+    % Outputs
+    \node[data, below=of disc, minimum height=0.8cm, minimum width=1.2cm] (domain_out) {Domain\\Label};
+    \node[data, below=of class, minimum height=0.8cm, minimum width=1.2cm] (task_out) {Task\\Output};
+
+    % Arrows
+    \draw[arrow] (source) -- (feat);
+    \draw[arrow] (target) -- (feat);
+    \draw[arrow] (feat) -- (disc);
+    \draw[arrow] (feat) -- (class);
+    \draw[arrow] (disc) -- (domain_out);
+    \draw[arrow] (class) -- (task_out);
+
+    % Gradient reversal
+    \draw[redarrow] (grl) -- (feat);
+
+    % Annotations
+    \node[font=\scriptsize, above=0.1cm of grl, text width=3cm, align=center] {
+        Adversarial\\Training
+    };
+
+    \node[font=\scriptsize, right=0.1cm of class, text width=2.5cm, align=left] {
+        Supervised\\on source
+    };
+
+    % Benefits
+    \node[box=green, below=1.8cm of feat, minimum width=8cm, text width=7.5cm, font=\scriptsize\bfseries] (benefits) {
+        \textbf{Advantages:} Powerful alignment, end-to-end training, theoretically grounded\\
+        \textbf{Limitations:} Training instability, requires careful hyperparameter tuning
+    };
+
+\end{tikzpicture}
+
+\end{document}

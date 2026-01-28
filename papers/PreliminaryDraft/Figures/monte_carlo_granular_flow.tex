@@ -1,0 +1,155 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows, decorations.pathmorphing}
+
+\begin{document}
+
+\tikzset{
+    process/.style={
+        rectangle,
+        rounded corners=3mm,
+        draw=blue!70,
+        fill=blue!15,
+        thick,
+        minimum height=1.1cm,
+        minimum width=4cm,
+        text width=3.7cm,
+        align=center,
+        font=\small\bfseries,
+        drop shadow
+    },
+    component/.style={
+        rectangle,
+        rounded corners=2mm,
+        draw=green!70,
+        fill=green!10,
+        thick,
+        minimum height=0.9cm,
+        minimum width=3.5cm,
+        text width=3.2cm,
+        align=center,
+        font=\scriptsize
+    },
+    detail/.style={
+        rectangle,
+        rounded corners=1.5mm,
+        draw=orange!70,
+        fill=orange!8,
+        minimum height=0.65cm,
+        minimum width=3.2cm,
+        text width=3cm,
+        align=center,
+        font=\tiny
+    },
+    arrow/.style={
+        -Stealth,
+        very thick,
+        draw=gray!70
+    },
+    bigarrow/.style={
+        -Stealth,
+        line width=1.5mm,
+        draw=blue!40
+    },
+    label/.style={
+        font=\scriptsize\bfseries,
+        text=blue!70!black
+    },
+    title/.style={
+        font=\Large\bfseries,
+        text=blue!80!black
+    },
+    hamiltonian/.style={
+        rectangle,
+        rounded corners=2mm,
+        draw=purple!70,
+        fill=purple!10,
+        thick,
+        minimum height=2.8cm,
+        minimum width=3.8cm,
+        text width=3.5cm,
+        align=left,
+        font=\tiny
+    }
+}
+
+\begin{tikzpicture}[node distance=0.7cm and 1.2cm]
+
+    % Title
+    \node[title] (title) at (0,0) {Monte Carlo Simulation Flow for Nanogranular Magnetic Structures};
+    \node[font=\footnotesize\itshape, text=gray!70, below=0.1cm of title] (subtitle) {(Agudelo Giraldo 2016)};
+
+    % Step 1: Structural Generation
+    \node[process, below=0.6cm of subtitle] (struct) {1. Structural\\Generation};
+    \node[component, below=0.2cm of struct] (struct1) {Lognormal volume\\distribution};
+    \node[detail, below=0.15cm of struct1] (struct2) {Periodic boundary\\conditions (x-y plane)};
+
+    % Step 2: Grain Boundary Relaxation
+    \node[process, below=0.5cm of struct2] (relax) {2. Grain Boundary\\Relaxation};
+    \node[component, below=0.2cm of relax] (relax1) {Morse Potential};
+    \node[detail, below=0.15cm of relax1] (relax2) {Monte Carlo Method\\(structural)};
+
+    % Step 3: Hamiltonian Definition
+    \node[process, below=0.5cm of relax2] (ham) {3. Hamiltonian\\Construction};
+
+    % Hamiltonian box (detailed)
+    \node[hamiltonian, below=0.2cm of ham] (hambox) {
+        \textbf{4 Components:}\\[0.1cm]
+        (i) \textbf{Exchange:} $J_{ij}$\\
+        \phantom{(i)} Distance-dependent\\[0.05cm]
+        (ii) \textbf{Anisotropy:}\\
+        \phantom{(i)} Magnetocrystalline, surface,\\
+        \phantom{(i)} grain boundary\\[0.05cm]
+        (iii) \textbf{External field:} $H_{\text{ext}}$\\[0.05cm]
+        (iv) \textbf{Dipolar interaction:}\\
+        \phantom{(i)} Spin-spin + spin-cell
+    };
+
+    % Step 4: Monte Carlo Relaxation
+    \node[process, below=0.5cm of hambox] (mc) {4. Magnetic State\\Relaxation};
+    \node[component, below=0.2cm of mc] (mc1) {Metropolis Algorithm};
+    \node[detail, below=0.15cm of mc1] (mc2) {Classical Heisenberg\\+ Cubic anisotropy};
+
+    % Step 5: Parallelization
+    \node[process, below=0.5cm of mc2] (para) {5. Parallelization};
+    \node[component, below=0.2cm of para] (para1) {Cell decomposition};
+    \node[detail, below=0.15cm of para1] (para2) {Shared memory access\\Cutoff radius: 5 replicas};
+
+    % Step 6: Results
+    \node[process, below=0.5cm of para2, fill=green!20, draw=green!70] (results) {6. Results \& Analysis};
+    \node[component, below=0.2cm of results, fill=yellow!10] (res1) {M(T), Hysteresis loops};
+    \node[detail, below=0.15cm of res1] (res2) {ZFC-FC, Blocking temp.\\Mono/Multi-domain};
+
+    % Right side: Key findings
+    \node[process, right=1.5cm of ham, minimum width=4.5cm, text width=4.2cm, fill=purple!10, draw=purple!70] (findings) {Key Physical Effects};
+
+    \node[component, below=0.2cm of findings, minimum width=4.2cm, text width=3.9cm, fill=purple!5] (find1) {Monodomain tendency:\\$\uparrow$ thickness, $\uparrow$ grain vol.};
+
+    \node[component, below=0.25cm of find1, minimum width=4.2cm, text width=3.9cm, fill=purple!5] (find2) {Perpendicular $\to$ in-plane\\transition (surface vs dipolar)};
+
+    \node[component, below=0.25cm of find2, minimum width=4.2cm, text width=3.9cm, fill=purple!5] (find3) {Superparamagnetic effect\\(boundary anisotropy isolation)};
+
+    % Arrows
+    \draw[arrow] (struct2) -- (relax);
+    \draw[arrow] (relax2) -- (ham);
+    \draw[arrow] (hambox) -- (mc);
+    \draw[arrow] (mc2) -- (para);
+    \draw[arrow] (para2) -- (results);
+
+    % Connection to findings
+    \draw[arrow, dashed, purple!70] (hambox.east) -- (findings.west);
+    \draw[arrow, dashed, purple!70] (mc.east) -- ++(0.5,0) |- (find2.west);
+    \draw[arrow, dashed, purple!70] (results.east) -- ++(0.5,0) |- (find3.west);
+
+    % Temperature note
+    \node[detail, right=1.5cm of relax, minimum width=4.2cm, text width=4cm, draw=red!60, fill=red!5] (tempnote) {Temperature-dependent\\anisotropy included};
+    \draw[arrow, dashed, red!60] (tempnote.west) -- (relax.east);
+
+    % Disorder note
+    \node[detail, right=1.5cm of struct, minimum width=4.2cm, text width=4cm, draw=orange!70, fill=orange!8] (disnote) {Disorder: anisotropy vector\\$\propto$ lattice deformations};
+    \draw[arrow, dashed, orange!70] (disnote.west) -- (hambox.north east);
+
+\end{tikzpicture}
+
+\end{document}

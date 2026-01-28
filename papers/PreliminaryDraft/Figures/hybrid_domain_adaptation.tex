@@ -1,0 +1,94 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows, calc}
+
+\begin{document}
+
+\tikzset{
+    box/.style={
+        rectangle,
+        rounded corners=3mm,
+        draw=#1!70,
+        fill=#1!15,
+        thick,
+        minimum height=1cm,
+        text width=2.5cm,
+        align=center,
+        font=\small\bfseries,
+        drop shadow
+    },
+    data/.style={
+        cylinder,
+        draw=blue!60,
+        fill=blue!10,
+        minimum height=1.2cm,
+        minimum width=1.5cm,
+        shape border rotate=90,
+        font=\tiny\bfseries,
+        drop shadow
+    },
+    arrow/.style={
+        -Stealth,
+        very thick,
+        draw=gray!70
+    }
+}
+
+\begin{tikzpicture}[node distance=1.2cm and 1.5cm]
+
+    % Title
+    \node[font=\Large\bfseries, text=blue!80!black] (title) {Hybrid Domain Adaptation};
+
+    % Source and target
+    \node[data, below left=1cm and 2.5cm of title] (source) {Source\\Data};
+    \node[data, below right=1cm and 2.5cm of title] (target) {Target\\Data};
+
+    % Data-level
+    \node[box=orange, below=1.5cm of source] (data_adapt) {Data\\Augmentation};
+
+    % Feature-level
+    \node[box=purple, below=2.5cm of title, minimum width=5.5cm, text width=5cm] (feat) {Feature Alignment\\(MMD/CORAL)};
+
+    % Model-level
+    \node[box=blue, above=0.5cm of feat, text width=2.3cm] (transfer) {Transfer\\Learning};
+
+    % Adversarial
+    \node[box=red, below=of feat] (adv) {Adversarial\\Training};
+
+    % Instance weighting
+    \node[box=teal, right=3cm of feat] (instance) {Instance\\Weighting};
+
+    % Task network
+    \node[box=green, below=1.5cm of adv, minimum width=5.5cm, text width=5cm] (task) {Task Predictor};
+
+    % Output
+    \node[data, below=of task, minimum height=0.8cm] (output) {Predictions};
+
+    % Arrows
+    \draw[arrow] (source) -- (data_adapt);
+    \draw[arrow] (data_adapt) -- (feat);
+    \draw[arrow] (target) -- (feat);
+    \draw[arrow] (source) -- (transfer);
+    \draw[arrow] (transfer) -- (feat);
+    \draw[arrow] (feat) -- (adv);
+    \draw[arrow] (feat) -- (instance);
+    \draw[arrow] (instance) -- (task);
+    \draw[arrow] (adv) -- (task);
+    \draw[arrow] (task) -- (output);
+
+    % Annotations
+    \node[font=\scriptsize, above=0.1cm of title, text width=4.5cm, align=center] {
+        Combining Multiple Strategies
+    };
+
+    % Benefits
+    \node[box=green, below=0.6cm of output, minimum width=8cm, text width=7.5cm, font=\scriptsize\bfseries] (benefits) {
+        \textbf{Advantages:} Combines strengths of multiple methods, robust performance\\
+        \textbf{Limitations:} Complex implementation, increased computational cost
+    };
+
+\end{tikzpicture}
+
+\end{document}

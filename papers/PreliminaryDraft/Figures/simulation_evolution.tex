@@ -1,0 +1,126 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows}
+
+\begin{document}
+
+\tikzset{
+    simulation/.style={
+        rectangle,
+        rounded corners=3mm,
+        draw=blue!60,
+        fill=blue!10,
+        thick,
+        minimum height=1.2cm,
+        minimum width=3.5cm,
+        text width=3.2cm,
+        align=center,
+        font=\small\bfseries,
+        drop shadow
+    },
+    method/.style={
+        rectangle,
+        rounded corners=2mm,
+        draw=green!60,
+        fill=green!10,
+        thick,
+        minimum height=1cm,
+        minimum width=3cm,
+        text width=2.8cm,
+        align=center,
+        font=\footnotesize,
+        drop shadow
+    },
+    feature/.style={
+        rectangle,
+        rounded corners=1mm,
+        draw=orange!60,
+        fill=orange!10,
+        minimum height=0.7cm,
+        minimum width=2.8cm,
+        text width=2.6cm,
+        align=center,
+        font=\tiny
+    },
+    arrow/.style={
+        -Stealth,
+        thick,
+        draw=gray!70
+    },
+    title/.style={
+        font=\Large\bfseries,
+        text=blue!70!black
+    },
+    category/.style={
+        rectangle,
+        rounded corners=2mm,
+        draw=purple!60,
+        fill=purple!5,
+        thick,
+        minimum height=0.8cm,
+        minimum width=9cm,
+        align=center,
+        font=\small\bfseries\itshape
+    }
+}
+
+\begin{tikzpicture}[node distance=0.8cm and 1.5cm]
+
+    % Title
+    \node[title] (title) at (0,0) {Evolution of Forward Simulation Approaches};
+
+    % Category 1: Traditional Simulations
+    \node[category, below=0.5cm of title] (cat1) {Traditional High-Fidelity Simulations};
+
+    % Micromagnetic Simulations
+    \node[simulation, below left=0.8cm and 0.5cm of cat1] (micro) {Continuum\\Micromagnetics};
+    \node[method, below=0.3cm of micro] (micro1) {MuMax3, OOMMF,\\Spirit};
+    \node[feature, below=0.15cm of micro1] (micro2) {Finite differences,\\FEM, LLG dynamics};
+
+    % Monte Carlo Simulations
+    \node[simulation, below right=0.8cm and 0.5cm of cat1] (monte) {Atomistic\\Monte Carlo};
+    \node[method, below=0.3cm of monte] (monte1) {Heisenberg Model\\(Agudelo 2016)};
+    \node[feature, below=0.15cm of monte1] (monte2) {Nanogranular, grain\\boundaries, Metropolis};
+
+    % Characteristics box
+    \node[feature, below=3.5cm of cat1, text width=8.5cm] (char1) {
+        \textbf{Strengths:} Physical ground truth, reliable synthetic data\\
+        \textbf{Limitations:} Computationally expensive, cannot resolve degeneracy
+    };
+
+    % Category 2: Modern Approaches
+    \node[category, below=1.2cm of char1] (cat2) {Modern Data-Driven \& Hybrid Approaches};
+
+    % Surrogate Models
+    \node[simulation, below left=0.8cm and 1.8cm of cat2] (surr) {Neural\\Surrogates};
+    \node[method, below=0.3cm of surr] (surr1) {DeepSPIN,\\Differentiable solvers};
+    \node[feature, below=0.15cm of surr1] (surr2) {Gradient-based,\\orders faster};
+
+    % PINNs
+    \node[simulation, below=0.8cm of cat2] (pinn) {Physics-Informed\\NNs (PINNs)};
+    \node[method, below=0.3cm of pinn] (pinn1) {LLG-constrained\\learning};
+    \node[feature, below=0.15cm of pinn1] (pinn2) {Physical consistency,\\energy penalties};
+
+    % Generative Models
+    \node[simulation, below right=0.8cm and 1.8cm of cat2] (gen) {Conditional\\Generative Models};
+    \node[method, below=0.3cm of gen] (gen1) {cVAEs, GANs,\\Diffusion};
+    \node[feature, below=0.15cm of gen1] (gen2) {Multimodality,\\uncertainty-aware};
+
+    % Characteristics box 2
+    \node[feature, below=3.5cm of cat2, text width=8.5cm] (char2) {
+        \textbf{Strengths:} Fast, gradient-based optimization, multimodality\\
+        \textbf{Limitations:} Limited generalization, training instability, immature
+    };
+
+    % Evolution arrows
+    \draw[arrow, very thick, blue!50] (char1.south) -- node[right, font=\footnotesize\itshape, text width=2cm, align=center] {Computational\\efficiency push} (cat2.north);
+
+    % Connection arrows from traditional to modern
+    \draw[arrow, dashed, gray] (micro2.south) .. controls +(down:1.5cm) and +(up:1.5cm) .. (surr.north);
+    \draw[arrow, dashed, gray] (micro2.south) .. controls +(down:1.5cm) and +(up:1.5cm) .. (pinn.north);
+    \draw[arrow, dashed, gray] (monte2.south) .. controls +(down:1.5cm) and +(up:1.5cm) .. (pinn.north);
+    \draw[arrow, dashed, gray] (monte2.south) .. controls +(down:1.5cm) and +(up:1.5cm) .. (gen.north);
+
+\end{tikzpicture}
+
+\end{document}

@@ -1,0 +1,81 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows, calc}
+
+\begin{document}
+
+\tikzset{
+    box/.style={
+        rectangle,
+        rounded corners=3mm,
+        draw=#1!70,
+        fill=#1!15,
+        thick,
+        minimum height=1cm,
+        text width=2.5cm,
+        align=center,
+        font=\small\bfseries,
+        drop shadow
+    },
+    data/.style={
+        cylinder,
+        draw=blue!60,
+        fill=blue!10,
+        minimum height=1.2cm,
+        minimum width=1.5cm,
+        shape border rotate=90,
+        font=\tiny\bfseries,
+        drop shadow
+    },
+    arrow/.style={
+        -Stealth,
+        very thick,
+        draw=gray!70
+    }
+}
+
+\begin{tikzpicture}[node distance=1.2cm and 1cm]
+
+    % Title
+    \node[font=\Large\bfseries, text=blue!80!black] (title) {Feature-Based Domain Adaptation};
+
+    % Source and target
+    \node[data, below left=1cm and 1.5cm of title] (source) {Source\\(Sim)};
+    \node[data, below right=1cm and 1.5cm of title] (target) {Target\\(Exp)};
+
+    % Encoder blocks
+    \node[box=blue, below=of source] (enc_s) {Encoder};
+    \node[box=blue, below=of target] (enc_t) {Encoder};
+
+    % Feature space
+    \node[box=purple, below=2cm of title, minimum width=6cm, text width=5.5cm] (feat) {Shared Feature Space\\(Domain-Invariant)};
+
+    % Alignment methods
+    \node[box=orange, below=of feat, text width=2cm] (mmd) {MMD\\Loss};
+    \node[box=orange, right=0.3cm of mmd, text width=2cm] (coral) {CORAL\\Alignment};
+    \node[box=orange, left=0.3cm of mmd, text width=2cm] (dann) {DANN\\Loss};
+
+    % Task
+    \node[box=green, below=1.5cm of feat] (task) {Task Network\\(Prediction)};
+
+    % Arrows
+    \draw[arrow] (source) -- (enc_s);
+    \draw[arrow] (target) -- (enc_t);
+    \draw[arrow] (enc_s) -- (feat);
+    \draw[arrow] (enc_t) -- (feat);
+    \draw[arrow, dashed, red] (mmd) -- (feat);
+    \draw[arrow, dashed, red] (coral) -- (feat);
+    \draw[arrow, dashed, red] (dann) -- (feat);
+    \draw[arrow] (feat) -- (task);
+
+    % Benefits
+    \node[box=green, below=0.6cm of task, minimum width=8cm, text width=7.5cm, font=\scriptsize\bfseries] (benefits) {
+        \textbf{Advantages:} Reduces domain gap at representation level, theoretically grounded\\
+        \textbf{Limitations:} Requires careful hyperparameter tuning, may lose discriminative features
+    };
+
+\end{tikzpicture}
+
+\end{document}

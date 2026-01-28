@@ -99,7 +99,7 @@ La composición $\mathcal{M} \circ f$ agrava la no-unicidad.
 ### Objetivo
 
 **Mapear la relación parámetro-a-imagen** para entender:
-- Qué combinaciones de parámetros producen imágenes similares
+- Qué combinaciones de parámetros producen imágenes similares -- MAPEAR MULTIPLES COMBINACIONES PARA VER EL ESPACIO DE IMAGENES GENERADO
 - Regiones de alta ambigüedad en el espacio de parámetros
 - Mecanismos físicos subyacentes a la degeneración
 
@@ -319,7 +319,7 @@ Esto penaliza razones de parámetros no físicas.
 
 ---
 
-## 3. Enfoques Inversos: Manejando la Ambigüedad
+## 3. Enfoques Inversos: Manejando la Ambigüedad -- NECESITARIAMOS UNA BASE DE DATOS DE MAS COMBINACIONES DE PARAMETROS  O ENTRE ELLOS MISMOS SI UN KDM O UN T PUEDE GENERARME ESTADOS SIMILARES POR EJEMPLO TOCA HACER MAS PRUEBAS DE CONCEPTO EN ESTA PARTE. MAS GAMMA DE PARAMETROS
 
 ### Objetivo
 
@@ -649,15 +649,15 @@ inverse_net = train_cycle_consistent(forward_pinn, inverse_net)
 
 ### 4.1 Tabla Resumen
 
-| **Enfoque** | **Dirección** | **Objetivo** | **Maneja No-Unicidad** | **Limitaciones** | **Costo Computacional** |
-|--------------|---------------|---------------|---------------------------|-----------------|----------------------|
-| **Simuladores Diferenciables** | Directo | Mapear espacio de parámetros, calcular gradientes | Caracteriza degeneración, permite optimización inversa | • Requiere modelado físico preciso<br>• Costoso para grandes barridos de parámetros<br>• Depende de condiciones iniciales | Alto (simulación física) |
-| **Redes Neuronales Informadas por Física (PINNs)** | Directo | Aprender solución respetando física | Filtra soluciones no físicas | • Difícil balancear términos de pérdida<br>• Requiere discretización<br>• Puede perder física compleja | Medio-Alto |
-| **Modelos Generativos (VAE/GAN)** | Directo | Sintetizar imágenes realistas | Explora espacio de parámetros eficientemente | • Puede generar artefactos<br>• Requiere grandes datos de entrenamiento<br>• Sin garantías físicas | Medio |
-| **Regresión Supervisada** | Inverso | Predicción rápida de parámetros | ❌ Promedia sobre soluciones<br>❌ Sin incertidumbre | • Sobreajuste a distribución de entrenamiento<br>• Sin detección de multimodalidad<br>• Sensible al ruido | Bajo |
-| **Inferencia Bayesiana** | Inverso | Cuantificar incertidumbre | ✅ Multimodalidad explícita<br>✅ Distribución posterior | • Costoso (MCMC)<br>• Sensibilidad al prior<br>• Likelihood puede ser intratable | Muy Alto |
-| **Cycle-Consistent** | Bidireccional | Auto-consistencia | ✅ Filtra soluciones inconsistentes | • Inestabilidad de entrenamiento<br>• Requiere buen modelo directo<br>• Doble de parámetros | Alto |
-| **Híbrido PINN + Bayes** | Bidireccional | Física + incertidumbre | ✅ Mejor combinación de restricciones | • Más complejo<br>• Muchos hiperparámetros<br>• Requiere conocimiento experto | Muy Alto |
+| **Enfoque**                                        | **Dirección** | **Objetivo**                                      | **Maneja No-Unicidad**                                 | **Limitaciones**                                                                                                          | **Costo Computacional**  |
+| -------------------------------------------------- | ------------- | ------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| **Simuladores Diferenciables**                     | Directo       | Mapear espacio de parámetros, calcular gradientes | Caracteriza degeneración, permite optimización inversa | • Requiere modelado físico preciso<br>• Costoso para grandes barridos de parámetros<br>• Depende de condiciones iniciales | Alto (simulación física) |
+| **Redes Neuronales Informadas por Física (PINNs)** | Directo       | Aprender solución respetando física               | Filtra soluciones no físicas                           | • Difícil balancear términos de pérdida<br>• Requiere discretización<br>• Puede perder física compleja                    | Medio-Alto               |
+| **Modelos Generativos (VAE/GAN)**                  | Directo       | Sintetizar imágenes realistas                     | Explora espacio de parámetros eficientemente           | • Puede generar artefactos<br>• Requiere grandes datos de entrenamiento<br>• Sin garantías físicas                        | Medio                    |
+| **Regresión Supervisada**                          | Inverso       | Predicción rápida de parámetros                   | ❌ Promedia sobre soluciones<br>❌ Sin incertidumbre     | • Sobreajuste a distribución de entrenamiento<br>• Sin detección de multimodalidad<br>• Sensible al ruido                 | Bajo                     |
+| **Inferencia Bayesiana**                           | Inverso       | Cuantificar incertidumbre                         | ✅ Multimodalidad explícita<br>✅ Distribución posterior | • Costoso (MCMC)<br>• Sensibilidad al prior<br>• Likelihood puede ser intratable                                          | Muy Alto                 |
+| **Cycle-Consistent**                               | Bidireccional | Auto-consistencia                                 | ✅ Filtra soluciones inconsistentes                     | • Inestabilidad de entrenamiento<br>• Requiere buen modelo directo<br>• Doble de parámetros                               | Alto                     |
+| **Híbrido PINN + Bayes**                           | Bidireccional | Física + incertidumbre                            | ✅ Mejor combinación de restricciones                   | • Más complejo<br>• Muchos hiperparámetros<br>• Requiere conocimiento experto                                             | Muy Alto                 |
 
 ### 4.2 Árbol de Decisión: ¿Qué Método Usar?
 
@@ -689,16 +689,16 @@ P5: ¿Necesitas interpretabilidad/garantías físicas?
 
 ### 4.3 Métricas de Rendimiento
 
-| Métrica | Regresión Supervisada | Inferencia Bayesiana | Cycle-Consistent | Híbrido |
-|--------|----------------------|-------------------|-----------------|--------|
-| **Precisión de Predicción** (RMSE en conjunto de prueba) | ★★★☆☆ | ★★★★☆ | ★★★★☆ | ★★★★★ |
-| **Calibración de Incertidumbre** | ☆☆☆☆☆ | ★★★★★ | ★★☆☆☆ | ★★★★★ |
-| **Detección de Multimodalidad** | ☆☆☆☆☆ | ★★★★★ | ★★★☆☆ | ★★★★★ |
-| **Consistencia Física** | ★☆☆☆☆ | ★★★☆☆ | ★★★☆☆ | ★★★★★ |
-| **Tiempo de Entrenamiento** | ★★★★★ (rápido) | ★☆☆☆☆ (lento) | ★★★☆☆ | ★★☆☆☆ |
-| **Tiempo de Inferencia** | ★★★★★ (ms) | ★☆☆☆☆ (horas) | ★★★★☆ | ★★☆☆☆ |
-| **Eficiencia de Datos** | ★★☆☆☆ | ★★★★☆ | ★★★☆☆ | ★★★★★ |
-| **Robustez al Ruido** | ★★☆☆☆ | ★★★★☆ | ★★★☆☆ | ★★★★☆ |
+| Métrica                                                  | Regresión Supervisada | Inferencia Bayesiana | Cycle-Consistent | Híbrido |
+| -------------------------------------------------------- | --------------------- | -------------------- | ---------------- | ------- |
+| **Precisión de Predicción** (RMSE en conjunto de prueba) | ★★★☆☆                 | ★★★★☆                | ★★★★☆            | ★★★★★   |
+| **Calibración de Incertidumbre**                         | ☆☆☆☆☆                 | ★★★★★                | ★★☆☆☆            | ★★★★★   |
+| **Detección de Multimodalidad**                          | ☆☆☆☆☆                 | ★★★★★                | ★★★☆☆            | ★★★★★   |
+| **Consistencia Física**                                  | ★☆☆☆☆                 | ★★★☆☆                | ★★★☆☆            | ★★★★★   |
+| **Tiempo de Entrenamiento**                              | ★★★★★ (rápido)        | ★☆☆☆☆ (lento)        | ★★★☆☆            | ★★☆☆☆   |
+| **Tiempo de Inferencia**                                 | ★★★★★ (ms)            | ★☆☆☆☆ (horas)        | ★★★★☆            | ★★☆☆☆   |
+| **Eficiencia de Datos**                                  | ★★☆☆☆                 | ★★★★☆                | ★★★☆☆            | ★★★★★   |
+| **Robustez al Ruido**                                    | ★★☆☆☆                 | ★★★★☆                | ★★★☆☆            | ★★★★☆   |
 
 ---
 

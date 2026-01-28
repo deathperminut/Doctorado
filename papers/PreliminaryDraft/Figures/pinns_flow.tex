@@ -1,0 +1,167 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows, patterns, decorations.pathmorphing, calc}
+
+\begin{document}
+
+\tikzset{
+    box/.style={
+        rectangle,
+        rounded corners=3mm,
+        draw=#1!70,
+        fill=#1!15,
+        thick,
+        minimum height=1.2cm,
+        text width=3.2cm,
+        align=center,
+        font=\small\bfseries,
+        drop shadow
+    },
+    layer/.style={
+        rectangle,
+        rounded corners=2mm,
+        draw=blue!60,
+        fill=blue!8,
+        minimum height=3cm,
+        minimum width=0.8cm,
+        font=\tiny
+    },
+    neuron/.style={
+        circle,
+        draw=orange!70,
+        fill=orange!20,
+        minimum size=0.4cm
+    },
+    arrow/.style={
+        -Stealth,
+        very thick,
+        draw=gray!70
+    },
+    physarrow/.style={
+        -Stealth,
+        very thick,
+        draw=red!70,
+        dashed
+    },
+    label/.style={
+        font=\scriptsize\bfseries,
+        text=blue!70!black
+    },
+    math/.style={
+        font=\footnotesize,
+        text=black
+    },
+    physics/.style={
+        rectangle,
+        rounded corners=2mm,
+        draw=red!70,
+        fill=red!10,
+        thick,
+        minimum height=1.8cm,
+        text width=4cm,
+        align=center,
+        font=\scriptsize\bfseries,
+        drop shadow
+    }
+}
+
+\begin{tikzpicture}[node distance=1.5cm and 1cm]
+
+    % Input parameters
+    \node[box=green, minimum height=3cm] (input) {
+        Input\\Parameters\\
+        $\mathbf{y}_n \in \mathbb{R}^P$
+    };
+
+    \node[font=\tiny, below=0.1cm of input, text width=3cm, align=center] (params) {
+        $D, K, J, H_{\text{ext}}, T$
+    };
+
+    % Neural Network Architecture
+    \node[layer, right=of input, minimum height=3.5cm, minimum width=1.2cm] (dense1) {};
+    \node[font=\tiny, rotate=90, anchor=south] at (dense1.center) {Dense Layers};
+
+    % Feature map
+    \node[box=purple, right=of dense1, minimum height=2.5cm] (features) {
+        Feature\\Embedding\\
+        $\mathbf{F}_0$
+    };
+
+    % Transposed Convolutions
+    \node[layer, right=0.8cm of features, minimum height=3cm, minimum width=1cm] (conv1) {};
+    \node[font=\tiny, rotate=90, anchor=south] at (conv1.center) {Conv$^T$ Block 1};
+
+    \node[layer, right=0.4cm of conv1, minimum height=2.5cm, minimum width=1cm] (conv2) {};
+    \node[font=\tiny, rotate=90, anchor=south] at (conv2.center) {Conv$^T$ Block 2};
+
+    \node[layer, right=0.4cm of conv2, minimum height=2cm, minimum width=1cm] (conv3) {};
+    \node[font=\tiny, rotate=90, anchor=south] at (conv3.center) {Conv$^T$ Block 3};
+
+    % Output image
+    \node[box=orange, right=1cm of conv3, minimum height=3cm, minimum width=2.5cm] (output) {
+        Predicted\\Spin Config.\\
+        $\mathbf{\hat{I}}_n$
+    };
+
+    \node[font=\tiny, below=0.1cm of output, text width=2.3cm, align=center] (imgsize) {
+        $H \times W \times C$
+    };
+
+    % LLG Physics Constraint Box (positioned between network and output)
+    \node[physics, above=1.2cm of conv2] (llg) {
+        LLG Equation\\
+        $\frac{\partial \mathbf{m}}{\partial t} = -\gamma (\mathbf{m} \times \mathbf{H}_{\text{eff}})$\\
+        $- \alpha \mathbf{m} \times \frac{\partial \mathbf{m}}{\partial t}$
+    };
+
+    % Collocation points
+    \node[box=cyan, above=0.3cm of llg, minimum width=4cm, minimum height=0.8cm, text width=3.8cm] (colloc) {
+        Collocation Points $\{t_i, \mathbf{r}_i\}$
+    };
+
+    % Draw arrows from physics to network layers
+    \draw[physarrow] (llg.south) -- (conv2.north);
+    \draw[physarrow] (colloc.south) -- (llg.north);
+
+    % Forward pass arrows
+    \draw[arrow] (input) -- (dense1);
+    \draw[arrow] (dense1) -- (features);
+    \draw[arrow] (features) -- (conv1);
+    \draw[arrow] (conv1) -- (conv2);
+    \draw[arrow] (conv2) -- (conv3);
+    \draw[arrow] (conv3) -- (output);
+
+    % Mathematical expressions
+    \node[math, above=0.2cm of features] (eq1) {$f_\Theta$};
+
+    % Title
+    \node[font=\Large\bfseries, text=blue!80!black, above=0.8cm of input] (title) {Physics-Informed Neural Network (PINN) Architecture};
+
+    % Training objective box with three loss components
+    \node[box=red, below=1.8cm of conv2, minimum width=8cm, minimum height=2cm, text width=7.5cm] (loss) {
+        Training: $\Theta^* = \arg\min_\Theta \left[\mathcal{L}_{\text{data}} + \lambda_p \mathcal{L}_{\text{physics}} + \lambda_m \mathcal{L}_{\text{mag}}\right]$\\[0.15cm]
+        \textit{Data loss:} $\mathcal{L}_{\text{data}} = \|\mathbf{I}_n - \mathbf{\hat{I}}_n\|^2$\\
+        \textit{Physics loss:} $\mathcal{L}_{\text{physics}} = \|\frac{\partial \mathbf{m}}{\partial t} + \text{LLG}[\mathbf{m}]\|^2$\\
+        \textit{Magnitude:} $\mathcal{L}_{\text{mag}} = \|\|\mathbf{m}\| - 1\|^2$
+    };
+
+    % Advantages/Limitations boxes
+    \node[box=green, below=0.5cm of loss, minimum width=3.8cm, text width=3.5cm, minimum height=1.5cm] (adv) {
+        \textbf{Strengths:}\\
+        • Physical constraints enforced\\
+        • Reduced non-physical solutions\\
+        • Better generalization
+    };
+
+    \node[box=red, right=0.3cm of adv, minimum width=3.8cm, text width=3.5cm, minimum height=1.5cm] (lim) {
+        \textbf{Limitations:}\\
+        • Complex hyperparameter tuning\\
+        • Higher computational cost\\
+        • Derivative approximation errors
+    };
+
+\end{tikzpicture}
+
+\end{document}

@@ -1,0 +1,94 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows, calc}
+
+\begin{document}
+
+\tikzset{
+    box/.style={
+        rectangle,
+        rounded corners=3mm,
+        draw=#1!70,
+        fill=#1!15,
+        thick,
+        minimum height=1cm,
+        text width=2.5cm,
+        align=center,
+        font=\small\bfseries,
+        drop shadow
+    },
+    data/.style={
+        cylinder,
+        draw=blue!60,
+        fill=blue!10,
+        minimum height=1.2cm,
+        minimum width=1.5cm,
+        shape border rotate=90,
+        font=\tiny\bfseries,
+        drop shadow
+    },
+    arrow/.style={
+        -Stealth,
+        very thick,
+        draw=gray!70
+    }
+}
+
+\begin{tikzpicture}[node distance=1.2cm and 1cm]
+
+    % Title
+    \node[font=\Large\bfseries, text=blue!80!black] (title) {Instance-Based Domain Adaptation};
+
+    % Source and target
+    \node[data, below left=1cm and 2cm of title] (source) {Source\\Data\\(Labeled)};
+    \node[data, below right=1cm and 2cm of title] (target) {Target\\Data\\(Unlabeled)};
+
+    % Pre-trained model
+    \node[box=blue, below=1.5cm of title] (pretrained) {Pre-trained\\Model};
+
+    % Instance weighting
+    \node[box=orange, below left=of pretrained] (weighting) {Instance\\Weighting};
+
+    % Self-training
+    \node[box=purple, below right=of pretrained] (selftrain) {Self-Training\\(Pseudo-labels)};
+
+    % Adapted model
+    \node[box=green, below=2cm of pretrained] (adapted) {Adapted\\Model};
+
+    % Test time adaptation
+    \node[box=teal, below=of adapted] (tta) {Test-Time\\Adaptation};
+
+    % Final predictions
+    \node[box=green!70!black, below=of tta] (output) {Predictions};
+
+    % Arrows
+    \draw[arrow] (source) -- (pretrained);
+    \draw[arrow] (pretrained) -- (weighting);
+    \draw[arrow] (pretrained) -- (selftrain);
+    \draw[arrow] (target) -- (selftrain);
+    \draw[arrow] (weighting) -- (adapted);
+    \draw[arrow] (selftrain) -- (adapted);
+    \draw[arrow] (adapted) -- (tta);
+    \draw[arrow] (target) -- (tta);
+    \draw[arrow] (tta) -- (output);
+
+    % Annotations
+    \node[font=\scriptsize, right=0.1cm of weighting, text width=2.2cm, align=left] {
+        Reweight\\samples by\\importance
+    };
+
+    \node[font=\scriptsize, left=0.1cm of selftrain, text width=2.5cm, align=right] {
+        Generate labels\\for target data
+    };
+
+    % Benefits
+    \node[box=green, below=0.6cm of output, minimum width=8cm, text width=7.5cm, font=\scriptsize\bfseries] (benefits) {
+        \textbf{Advantages:} No target labels required, adapts at test time, flexible\\
+        \textbf{Limitations:} Requires confidence calibration, sensitive to distribution shift
+    };
+
+\end{tikzpicture}
+
+\end{document}

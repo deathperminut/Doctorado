@@ -1,0 +1,96 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows, calc}
+
+\begin{document}
+
+\tikzset{
+    box/.style={
+        rectangle,
+        rounded corners=3mm,
+        draw=#1!70,
+        fill=#1!15,
+        thick,
+        minimum height=1cm,
+        text width=2.5cm,
+        align=center,
+        font=\small\bfseries,
+        drop shadow
+    },
+    data/.style={
+        cylinder,
+        draw=blue!60,
+        fill=blue!10,
+        minimum height=1.2cm,
+        minimum width=1.5cm,
+        shape border rotate=90,
+        font=\tiny\bfseries,
+        drop shadow
+    },
+    arrow/.style={
+        -Stealth,
+        very thick,
+        draw=gray!70
+    }
+}
+
+\begin{tikzpicture}[node distance=1.2cm and 1.5cm]
+
+    % Title
+    \node[font=\Large\bfseries, text=blue!80!black] (title) {Model-Based Domain Adaptation};
+
+    % Source data
+    \node[data, below=1cm of title] (source) {Source\\Domain\\(Large)};
+
+    % Pre-training
+    \node[box=blue, below=of source] (pretrain) {Pre-training};
+
+    % Pre-trained model
+    \node[box=purple, below=of pretrain, minimum width=5cm, text width=4.5cm] (pretrained) {Pre-trained Model\\(Source Knowledge)};
+
+    % Adaptation strategies (parallel)
+    \node[box=orange, below left=1.5cm and 1.5cm of pretrained] (finetune) {Fine-Tuning};
+    \node[box=green, below=1.5cm of pretrained] (transfer) {Transfer\\Learning};
+    \node[box=teal, below right=1.5cm and 1.5cm of pretrained] (freeze) {Feature\\Extraction};
+
+    % Target data
+    \node[data, left=0.3cm of finetune, minimum height=0.8cm] (target_ft) {Target\\(Small)};
+    \node[data, below=0.3cm of transfer, minimum height=0.8cm] (target_tr) {Target\\(Small)};
+    \node[data, right=0.3cm of freeze, minimum height=0.8cm] (target_fr) {Target\\(Small)};
+
+    % Adapted model
+    \node[box=green!70!black, below=2.5cm of pretrained, minimum width=5cm, text width=4.5cm] (adapted) {Adapted Model\\(Target Domain)};
+
+    % Arrows
+    \draw[arrow] (source) -- (pretrain);
+    \draw[arrow] (pretrain) -- (pretrained);
+    \draw[arrow] (pretrained) -- (finetune);
+    \draw[arrow] (pretrained) -- (transfer);
+    \draw[arrow] (pretrained) -- (freeze);
+    \draw[arrow] (target_ft) -- (finetune);
+    \draw[arrow] (target_tr) -- (transfer);
+    \draw[arrow] (target_fr) -- (freeze);
+    \draw[arrow] (finetune) -- (adapted);
+    \draw[arrow] (transfer) -- (adapted);
+    \draw[arrow] (freeze) -- (adapted);
+
+    % Annotations
+    \node[font=\scriptsize, left=0.1cm of finetune, text width=2.2cm, align=right] {
+        Update all\\layers
+    };
+
+    \node[font=\scriptsize, right=0.1cm of freeze, text width=2.2cm, align=left] {
+        Freeze\\features
+    };
+
+    % Benefits
+    \node[box=green, below=0.6cm of adapted, minimum width=8cm, text width=7.5cm, font=\scriptsize\bfseries] (benefits) {
+        \textbf{Advantages:} Leverages source knowledge, works with limited target data\\
+        \textbf{Limitations:} Risk of negative transfer, requires careful layer selection
+    };
+
+\end{tikzpicture}
+
+\end{document}

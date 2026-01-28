@@ -1,0 +1,139 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows, patterns, decorations.pathmorphing, calc}
+
+\begin{document}
+
+\tikzset{
+    box/.style={
+        rectangle,
+        rounded corners=3mm,
+        draw=#1!70,
+        fill=#1!15,
+        thick,
+        minimum height=1.2cm,
+        text width=3.2cm,
+        align=center,
+        font=\small\bfseries,
+        drop shadow
+    },
+    layer/.style={
+        rectangle,
+        rounded corners=2mm,
+        draw=blue!60,
+        fill=blue!8,
+        minimum height=3cm,
+        minimum width=0.8cm,
+        font=\tiny
+    },
+    neuron/.style={
+        circle,
+        draw=orange!70,
+        fill=orange!20,
+        minimum size=0.4cm
+    },
+    arrow/.style={
+        -Stealth,
+        very thick,
+        draw=gray!70
+    },
+    bigarrow/.style={
+        -Stealth,
+        line width=2mm,
+        draw=blue!50
+    },
+    label/.style={
+        font=\scriptsize\bfseries,
+        text=blue!70!black
+    },
+    math/.style={
+        font=\footnotesize,
+        text=black
+    }
+}
+
+\begin{tikzpicture}[node distance=1.5cm and 1cm]
+
+    % Input parameters
+    \node[box=green, minimum height=3cm] (input) {
+        Input\\Parameters\\
+        $\mathbf{y}_n \in \mathbb{R}^P$
+    };
+
+    \node[font=\tiny, below=0.1cm of input, text width=3cm, align=center] (params) {
+        $D, K, J, H_{\text{ext}}, T$
+    };
+
+    % Neural Network Architecture
+    \node[layer, right=of input, minimum height=3.5cm, minimum width=1.2cm] (dense1) {};
+    \node[font=\tiny, rotate=90, anchor=south] at (dense1.center) {Dense Layers};
+
+    % Feature map
+    \node[box=purple, right=of dense1, minimum height=2.5cm] (features) {
+        Feature\\Embedding\\
+        $\mathbf{F}_0$
+    };
+
+    % Transposed Convolutions
+    \node[layer, right=0.8cm of features, minimum height=3cm, minimum width=1cm] (conv1) {};
+    \node[font=\tiny, rotate=90, anchor=south] at (conv1.center) {Conv$^T$ Block 1};
+
+    \node[layer, right=0.4cm of conv1, minimum height=2.5cm, minimum width=1cm] (conv2) {};
+    \node[font=\tiny, rotate=90, anchor=south] at (conv2.center) {Conv$^T$ Block 2};
+
+    \node[layer, right=0.4cm of conv2, minimum height=2cm, minimum width=1cm] (conv3) {};
+    \node[font=\tiny, rotate=90, anchor=south] at (conv3.center) {Conv$^T$ Block 3};
+
+    % Output image
+    \node[box=orange, right=1cm of conv3, minimum height=3cm, minimum width=2.5cm] (output) {
+        Predicted\\Spin Config.\\
+        $\mathbf{\hat{I}}_n$
+    };
+
+    \node[font=\tiny, below=0.1cm of output, text width=2.3cm, align=center] (imgsize) {
+        $H \times W \times C$
+    };
+
+    % Arrows
+    \draw[arrow] (input) -- (dense1);
+    \draw[arrow] (dense1) -- (features);
+    \draw[arrow] (features) -- (conv1);
+    \draw[arrow] (conv1) -- (conv2);
+    \draw[arrow] (conv2) -- (conv3);
+    \draw[arrow] (conv3) -- (output);
+
+    % Mathematical expressions
+    \node[math, above=0.2cm of features] (eq1) {$f_\Theta$};
+    \node[math, above=0.2cm of conv2, text width=3.5cm, align=center] (eq2) {
+        $\mathbf{F}_l = \sigma(\mathbf{W}_l \otimes^T \mathbf{F}_{l-1})$
+    };
+
+    % Title
+    \node[font=\Large\bfseries, text=blue!80!black, above=0.8cm of dense1] (title) {Neural Surrogate Model Architecture};
+
+    % Training objective box
+    \node[box=red, below=1.8cm of conv2, minimum width=8cm, minimum height=1.2cm, text width=7.5cm] (loss) {
+        Training: $\Theta^* = \arg\min_\Theta \mathbb{E}[\mathcal{L}(\mathbf{I}_n, \mathbf{\hat{I}}_n)]$\\[0.1cm]
+        \textit{Loss:} $\mathcal{L}_{\text{MSE}} = \|\mathbf{I}_n - \mathbf{\hat{I}}_n\|^2$
+    };
+
+    % Advantages/Limitations boxes
+    \node[box=green, below=0.5cm of loss, minimum width=3.8cm, text width=3.5cm, minimum height=1.5cm] (adv) {
+        \textbf{Strengths:}\\
+        • Orders of magnitude faster\\
+        • Gradient-based optimization\\
+        • High-dim. parameter exploration
+    };
+
+    \node[box=red, right=0.3cm of adv, minimum width=3.8cm, text width=3.5cm, minimum height=1.5cm] (lim) {
+        \textbf{Limitations:}\\
+        • Limited generalization\\
+        • Non-physical textures\\
+        • Training data dependent
+    };
+
+\end{tikzpicture}
+
+\end{document}

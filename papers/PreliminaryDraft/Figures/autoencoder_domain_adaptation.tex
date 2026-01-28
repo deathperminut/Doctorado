@@ -1,0 +1,96 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows, calc}
+
+\begin{document}
+
+\tikzset{
+    box/.style={
+        rectangle,
+        rounded corners=3mm,
+        draw=#1!70,
+        fill=#1!15,
+        thick,
+        minimum height=1cm,
+        text width=2.5cm,
+        align=center,
+        font=\small\bfseries,
+        drop shadow
+    },
+    data/.style={
+        cylinder,
+        draw=blue!60,
+        fill=blue!10,
+        minimum height=1.2cm,
+        minimum width=1.5cm,
+        shape border rotate=90,
+        font=\tiny\bfseries,
+        drop shadow
+    },
+    arrow/.style={
+        -Stealth,
+        very thick,
+        draw=gray!70
+    }
+}
+
+\begin{tikzpicture}[node distance=1.2cm and 1.5cm]
+
+    % Title
+    \node[font=\Large\bfseries, text=blue!80!black] (title) {Autoencoder-Based Domain Adaptation};
+
+    % Source and target
+    \node[data, below left=1cm and 2cm of title] (source) {Source\\Data};
+    \node[data, below right=1cm and 2cm of title] (target) {Target\\Data};
+
+    % Encoders
+    \node[box=blue, below=of source] (enc_s) {Encoder};
+    \node[box=blue, below=of target] (enc_t) {Encoder};
+
+    % Shared latent space
+    \node[box=purple, below=2cm of title, minimum width=5cm, text width=4.5cm] (latent) {Shared Latent Space\\(Domain-Invariant)};
+
+    % Decoders
+    \node[box=green, below left=1.5cm and 0.5cm of latent] (dec_s) {Decoder\\Source};
+    \node[box=green, below right=1.5cm and 0.5cm of latent] (dec_t) {Decoder\\Target};
+
+    % Reconstructions
+    \node[data, below=of dec_s, minimum height=0.8cm] (recon_s) {Recon\\Source};
+    \node[data, below=of dec_t, minimum height=0.8cm] (recon_t) {Recon\\Target};
+
+    % Task predictor
+    \node[box=orange, right=2.5cm of latent] (task) {Task\\Predictor};
+    \node[data, below=of task, minimum height=0.8cm] (output) {Task\\Output};
+
+    % Arrows
+    \draw[arrow] (source) -- (enc_s);
+    \draw[arrow] (target) -- (enc_t);
+    \draw[arrow] (enc_s) -- (latent);
+    \draw[arrow] (enc_t) -- (latent);
+    \draw[arrow] (latent) -- (dec_s);
+    \draw[arrow] (latent) -- (dec_t);
+    \draw[arrow] (dec_s) -- (recon_s);
+    \draw[arrow] (dec_t) -- (recon_t);
+    \draw[arrow] (latent) -- (task);
+    \draw[arrow] (task) -- (output);
+
+    % Reconstruction loss arrows
+    \draw[arrow, dashed, red!70] (recon_s) to[out=180, in=180] (source);
+    \draw[arrow, dashed, red!70] (recon_t) to[out=0, in=0] (target);
+
+    % Annotations
+    \node[font=\scriptsize, above=0.1cm of latent, text width=3cm, align=center] {
+        Domain-invariant\\representations
+    };
+
+    % Benefits
+    \node[box=green, below=1.5cm of dec_s, minimum width=8cm, text width=7.5cm, font=\scriptsize\bfseries] (benefits) {
+        \textbf{Advantages:} Learns shared representations, unsupervised adaptation possible\\
+        \textbf{Limitations:} May lose task-relevant information, reconstruction quality critical
+    };
+
+\end{tikzpicture}
+
+\end{document}
