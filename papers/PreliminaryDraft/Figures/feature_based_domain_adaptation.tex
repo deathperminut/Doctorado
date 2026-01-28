@@ -57,9 +57,6 @@
     \node[box=orange, right=0.3cm of mmd, text width=2cm] (coral) {CORAL\\Alignment};
     \node[box=orange, left=0.3cm of mmd, text width=2cm] (dann) {DANN\\Loss};
 
-    % Task
-    \node[box=green, below=1.5cm of feat] (task) {Task Network\\(Prediction)};
-
     % Arrows
     \draw[arrow] (source) -- (enc_s);
     \draw[arrow] (target) -- (enc_t);
@@ -68,13 +65,6 @@
     \draw[arrow, dashed, red] (mmd) -- (feat);
     \draw[arrow, dashed, red] (coral) -- (feat);
     \draw[arrow, dashed, red] (dann) -- (feat);
-    \draw[arrow] (feat) -- (task);
-
-    % Benefits
-    \node[box=green, below=0.6cm of task, minimum width=8cm, text width=7.5cm, font=\scriptsize\bfseries] (benefits) {
-        \textbf{Advantages:} Reduces domain gap at representation level, theoretically grounded\\
-        \textbf{Limitations:} Requires careful hyperparameter tuning, may lose discriminative features
-    };
 
 \end{tikzpicture}
 
