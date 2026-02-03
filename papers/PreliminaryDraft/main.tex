@@ -223,52 +223,16 @@ Co-Advisor: Prof. Jorge Ivan Montes\\ \small{Universidad Nacional de Colombia - 
 \begin{document}
 \maketitle
 \section{Abstract}
-The study of magnetic domain structures in nanoscale materials is essential for advancing
-emerging technologies in spintronics, biomedicine, and energy storage \cite{Wang2022, Rarokar2024, Lak2021}. 
-Magnetic nanoparticles and nanodots exhibit complex spin textures—such as vortices, skyrmions,
-and stripe domains—that determine their functional behavior in applications ranging from magnetic
-memory bits to targeted hyperthermia \cite{Wang2022, Lak2021, Zelent2021}. Understanding and controlling
-these states requires a deep connection between the parameters of the magnetic Hamiltonian
-(exchange, anisotropy, Dzyaloshinskii–Moriya interaction, external field, and temperature) and the
-resulting spatial spin configurations \cite{Zelent2021, Ga2022, Fert2023}.
 
-However, several fundamental challenges persist at the nanoscale. The first is the nonlinearity and
-high dimensionality of the mapping between physical parameters and domain patterns, which prevents
-direct analytical inversion \cite{WangMicromag2024, DeepMLHam2024}. The second is degeneracy:
-distinct combinations of Hamiltonian parameters can yield visually similar configurations, complicating
-inverse identification \cite{Feng2024, Liu2023}. Third, experimental limitations—such as noise, finite
-probe resolution, tip–sample convolution in \gls{mfm}, and sample variability—hinder quantitative
-interpretation of \gls{mfm} or \gls{spstm} images \cite{Makarova2022, Bagchi2024}.
+Magnetic domain structures in nanoscale materials play a central role in spintronics, biomedicine, and energy storage technologies. Magnetic nanoparticles and nanodots exhibit complex spin textures—vortices, skyrmions, and stripe domains—whose functional properties depend critically on Hamiltonian parameters such as exchange, anisotropy, Dzyaloshinskii–Moriya interaction, temperature, and external fields. Understanding and controlling these states requires establishing robust mappings between physical parameters and spatial spin configurations.
 
-Deep learning has emerged as a powerful tool to bridge this gap. The inverse problem—inferring
-physical parameters from magnetic domain images—has been successfully addressed using \glspl{cnn} and
-explainable regression frameworks \cite{Kong2023, AIP2022, DeepMLHam2024}. The direct problem—
-generating domain configurations from parameters—has been explored in materials science using
-generative models such as VAEs and conditional \glspl{gan} \cite{MicroVAE2023, Ronne2024}. However, three fundamental challenges remain unresolved. First, \textit{parameter degeneracy}—where distinct Hamiltonian parameter combinations produce visually similar magnetic textures—complicates unique identification and prevents robust inverse estimation \cite{Feng2024, Liu2023, DeepSPIN2023}. Second, \textit{data quality degradation} arising from experimental noise, finite probe resolution, and numerical discretization in simulations limits the reliability of both training data and model predictions \cite{Kramer2021MFMNoise, Exl2021NumericalErrors, Park2024}. Third, the \textit{lack of physics-based interpretability} in data-driven models obscures the connection between learned representations and fundamental magnetic interactions, hindering validation against established physical laws and limiting their utility for materials design \cite{Rao2022ExplainableMaterialsML, Chen2021PINNMagnetism, Sanchez2023ExplainableDesign}. Existing generative approaches can reproduce general morphologies but suffer from poor interpretability, instability under noise, limited generalization, and lack of physical constraints \cite{Feng2024, Park2024, MicroVAE2023}.
+Three fundamental challenges complicate this effort. First, the nonlinearity and high dimensionality of parameter-to-configuration mappings prevent direct analytical inversion. Second, degeneracy arises when distinct parameter combinations produce visually similar magnetic textures, hindering unique identification. Third, experimental limitations—including noise, finite probe resolution, and tip–sample convolution in microscopy techniques—compromise quantitative interpretation of magnetic domain images.
 
+Deep learning has shown promise in addressing these problems. The inverse problem of inferring physical parameters from magnetic images has been tackled with convolutional neural networks and explainable regression frameworks, while the forward problem of generating domain configurations from parameters has been explored using variational autoencoders and conditional generative adversarial networks. However, critical gaps remain: parameter degeneracy prevents robust inverse estimation, data quality degradation from experimental noise and simulation artifacts limits model reliability, and lack of physics-based interpretability obscures connections between learned representations and fundamental magnetic interactions. Existing generative approaches suffer from poor interpretability, instability under noise, and insufficient physical constraints.
 
-% AGREGAR EL PARRAFO INTRODUCTORIO ASOCIADO A LAS TAREAS QUE SE VAN A GENERAR. -- > REVISAR CON ANDRES MARINO.
+This work proposes a unified deep learning framework that integrates variational methodologies with physics-informed regularization to address degeneracy, bridge the simulation-to-experiment gap, and ensure interpretability. The approach combines image-based parameter estimation with generative modeling of magnetic states, incorporating domain-aware training strategies to maintain validity across synthetic and experimental imaging modalities while employing post-hoc attribution methods to identify spatially relevant features underlying domain configurations.
 
-%% FIGURA DEL PROBLEMA INVERSO Y DIRECTO --CHECK
-
-%% CAMBIAR EL PROBLEMA MIXTO DEGENERAY OF CONFIGURATIONS --CHECK
-%% 2 parrafos uno que conceptualmente explique que es  y las posibles causas segun la fisica. --CHECK
-%% LOW QUALITY DATA. 
-
-%% explicabilidad fisica.
-%% RESUMIR EN UNA TABLA O DIBUJO EL ESTADO DEL ARTE.
-%% tabla con items para los proyectos futuros.
-
-
-
-
-% TUTORIAL DE REDES INFORMADAS POR LA FISICA -- MIRAR COMO LLEVARLO A UN METODOLOGIA DE OPTIMAZCIÓN BAYESIANA. - QUE SEA EXPLICABLE. COMO PUEDO SINTONIZAR DICHOS CON INTERPRETABILIDAD.
-%% CON UN EJERCICIO BASICO.
-
-
-This work proposes a unified deep learning framework to address three fundamental challenges in nanoscale magnetic domain characterization: parameter degeneracy, data quality degradation, and lack of interpretability. \textbf{First}, to mitigate the effects of magnetic state degeneracy, the framework integrates a physically informed \gls{cvae} with cycle-consistent forward--inverse modeling. The \gls{cvae} employs parameter-dependent latent priors and physics-based energy penalties—including exchange, \gls{dmi}, anisotropy, and Zeeman contributions—to enforce physically plausible domain generation. A complementary inverse estimator based on transfer learning performs Hamiltonian parameter regression from spin configurations. Both models are jointly optimized under a cycle-consistency constraint to ensure round-trip parameter identifiability. \textbf{Second}, to enhance the quality of magnetic states under degraded data conditions, diffusion-based generative strategies and domain adaptation techniques will be explored to bridge high-fidelity simulations and noisy experimental \gls{mfm}/\gls{spstm} observations, incorporating denoising and adversarial alignment methods while preserving physical structure. \textbf{Third}, to provide physics-based interpretability, the framework employs \glspl{ram} to identify spatially relevant features contributing to parameter predictions, combined with UMAP analysis of latent representations to verify alignment with physical regimes \cite{Sparks2024, Optuna2022}.
-
-This research addresses critical technological needs at the national and regional level, particularly in advancing Colombia's capabilities in emerging materials characterization and intelligent data processing. The proposed framework directly supports the development of next-generation magnetic memory devices and energy storage systems—technologies identified as strategic priorities for national innovation and competitiveness. By integrating physics-informed deep learning with experimental microscopy workflows, this work contributes to bridging the gap between fundamental materials science and industrial applications in spintronics and magnetic-based energy technologies. Furthermore, this research aligns with the mission of the Digital Signal and Control Processing Group (GCPDS), which focuses on developing advanced computational methods for signal and image analysis. The integration of multimodal explainability techniques, physics-based regularization, and robust inference under noisy data conditions extends the group's expertise in digital image processing into the domain of nanoscale materials characterization, fostering interdisciplinary collaboration between materials physics, machine learning, and computational imaging. This convergence positions Colombia to contribute to global efforts in accelerating materials discovery through data-driven approaches while building local capacity in high-impact research areas with direct technological and economic implications.
+This research addresses critical national and regional technological needs by advancing Colombia's capabilities in materials characterization and intelligent data processing. The framework supports development of next-generation magnetic memory and energy storage systems, identified as strategic innovation priorities. By integrating physics-informed deep learning with experimental microscopy workflows, this work bridges fundamental materials science and industrial spintronics applications. Furthermore, it aligns with the mission of the Digital Signal and Control Processing Group, extending the group's expertise in digital image processing to nanoscale materials characterization and fostering interdisciplinary collaboration between materials physics, machine learning, and computational imaging.
 
 \section{Motivation}
 
