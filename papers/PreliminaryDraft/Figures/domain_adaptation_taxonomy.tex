@@ -1,0 +1,100 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, shadows, calc, shapes.multipart}
+
+\begin{document}
+
+\tikzset{
+    strategy/.style={
+        rectangle,
+        rounded corners=2mm,
+        draw=#1!70,
+        fill=#1!15,
+        thick,
+        minimum height=2.2cm,
+        text width=3.2cm,
+        align=center,
+        font=\tiny\bfseries,
+        drop shadow
+    },
+    title/.style={
+        font=\scriptsize\bfseries,
+        text=#1!80!black
+    },
+    desc/.style={
+        font=\tiny,
+        align=center
+    }
+}
+
+\begin{tikzpicture}[node distance=0.4cm and 0.4cm]
+
+    % Main Title
+    \node[font=\Large\bfseries, text=blue!80!black] (maintitle) {Domain Adaptation Strategies Taxonomy};
+
+    % Row 1: Data-Based, Instance-Based, Feature-Based
+    \node[strategy=blue, below=1cm of maintitle, xshift=-4.8cm] (data) {
+        \textbf{Data-Based}\\[0.2cm]
+        {\tiny • Augmentation\\
+        • Degradation\\
+        • Domain Mixing}
+    };
+
+    \node[strategy=green, right=of data] (instance) {
+        \textbf{Instance-Based}\\[0.2cm]
+        {\tiny • Reweighting\\
+        • Pseudo-labels\\
+        • Test-time Adapt.}
+    };
+
+    \node[strategy=purple, right=of instance] (feature) {
+        \textbf{Feature-Based}\\[0.2cm]
+        {\tiny • MMD, CORAL\\
+        • Statistical Align.\\
+        • Domain-Invariant}
+    };
+
+    % Row 2: Adversarial, Autoencoder-Based
+    \node[strategy=red, below=0.8cm of data, xshift=1.8cm] (adversarial) {
+        \textbf{Adversarial}\\[0.2cm]
+        {\tiny • Gradient Reversal\\
+        • Domain Confusion\\
+        • Minimax Game}
+    };
+
+    \node[strategy=teal, right=of adversarial] (autoencoder) {
+        \textbf{Autoencoder-Based}\\[0.2cm]
+        {\tiny • Shared Encoder\\
+        • Reconstruction\\
+        • Latent Alignment}
+    };
+
+    % Row 3: Model-Based, Hybrid
+    \node[strategy=orange, below=0.8cm of adversarial, xshift=1.8cm] (model) {
+        \textbf{Model-Based}\\[0.2cm]
+        {\tiny • Transfer Learning\\
+        • Fine-tuning\\
+        • Feature Extract.}
+    };
+
+    \node[strategy=violet, right=of model] (hybrid) {
+        \textbf{Hybrid}\\[0.2cm]
+        {\tiny • Multi-level\\
+        • Combined Strategies\\
+        • Data+Feature+Model}
+    };
+
+    % Category labels below
+    \node[below=0.2cm of data, font=\tiny, text=blue!70] {Data Level};
+    \node[below=0.2cm of instance, font=\tiny, text=green!70] {Sample Level};
+    \node[below=0.2cm of feature, font=\tiny, text=purple!70] {Representation};
+    \node[below=0.2cm of adversarial, font=\tiny, text=red!70] {Adversarial};
+    \node[below=0.2cm of autoencoder, font=\tiny, text=teal!70] {Generative};
+    \node[below=0.2cm of model, font=\tiny, text=orange!70] {Transfer};
+    \node[below=0.2cm of hybrid, font=\tiny, text=violet!70] {Combined};
+
+\end{tikzpicture}
+
+\end{document}
