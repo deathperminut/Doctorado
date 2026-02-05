@@ -415,7 +415,7 @@ A complementary approach to continuum micromagnetics is the use of classical Mon
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{Figures/monte_carlo_granular_flow.pdf}
+    \includegraphics[width=0.83\textwidth]{Figures/monte_carlo_granular_flow.pdf}
     \caption{Monte Carlo simulation workflow for nanogranular magnetic structures (Agudelo Giraldo 2016): from structural generation with lognormal grain distributions through Hamiltonian construction (incorporating exchange, anisotropy, external field, and dipolar interactions) to magnetic state relaxation via Metropolis algorithm. The framework successfully reproduces monodomain-to-multidomain transitions, superparamagnetic effects, and blocking temperature phenomena in nanogranular thin films.}
     \label{fig:monte_carlo_flow}
 \end{figure}
@@ -427,7 +427,7 @@ To mitigate these limitations, recent work has turned to differentiable and surr
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{Figures/neural_surrogate_flow.pdf}
+    \includegraphics[width=0.83\textwidth]{Figures/neural_surrogate_flow.pdf}
     \caption{Neural surrogate model architecture for fast forward mapping from physical parameters to spin configurations. The network processes input parameters through dense layers to create feature embeddings, then upsamples via transposed convolutions to generate predicted magnetic domain images.}
     \label{fig:neural_surrogate_flow}
 \end{figure} 
@@ -438,7 +438,7 @@ In parallel, physics-informed neural networks (PINNs) and hybrid modeling framew
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{Figures/pinns_flow.pdf}
+    \includegraphics[width=0.82\textwidth]{Figures/pinns_flow.pdf}
     \caption{Physics-informed neural network (PINN) architecture incorporating Landau–Lifshitz–Gilbert equation constraints. The training objective combines data-driven loss with physics-based residuals evaluated at collocation points, enforcing both accuracy and physical consistency.}
     \label{fig:pinns_flow}
 \end{figure}
@@ -499,7 +499,7 @@ A qualitatively different perspective has emerged with the use of conditional ge
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{Figures/simulation_evolution.pdf}
+    \includegraphics[width=0.82\textwidth]{Figures/simulation_evolution.pdf}
     \caption{Evolution of forward simulation approaches for magnetic domain modeling: from traditional high-fidelity simulations (continuum micromagnetics and atomistic Monte Carlo) to modern data-driven frameworks (neural surrogates, physics-informed networks, and conditional generative models). Traditional methods provide physical ground truth but are computationally expensive, while modern approaches offer speedup and multimodality at the cost of generalization and training complexity.}
     \label{fig:simulation_evolution}
 \end{figure}
@@ -659,7 +659,7 @@ Hybrid approaches combine multiple adaptation strategies to leverage their compl
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{Figures/domain_adaptation_taxonomy.pdf}
+    \includegraphics[width=0.85\textwidth]{Figures/domain_adaptation_taxonomy.pdf}
     \caption{Taxonomy of domain adaptation strategies showing the seven main approaches with their key characteristics and selection criteria based on data availability, domain shift magnitude, computational budget, and interpretability requirements.}
     \label{fig:da_taxonomy}
 \end{figure}
@@ -1577,7 +1577,7 @@ This probabilistic approach acknowledges that experimental images may be compati
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{Figures/domain_adapted_cycle.pdf}
+    \includegraphics[width=0.85\textwidth]{Figures/domain_adapted_cycle.pdf}
     \caption{\textbf{Domain adaptation strategy for sim-to-real transfer.} Combines data augmentation, feature-level alignment with experimental datasets, and uncertainty quantification for robust parameter estimation.}
     \label{fig:domain_adapted_cycle}
 \end{figure}
@@ -1655,13 +1655,26 @@ learn consistent manifolds aligned with physical invariants.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{Figures/Full.png}
+    \includegraphics[width=0.85\textwidth]{Figures/Full.png}
     \caption{\textbf{Multi-scale interpretability strategy.} Combines post-hoc attribution (Grad-CAM, IG, occlusion), RAMs analysis, UMAP latent space visualization, and physics-guided constraints for transparent model validation.}
     \label{fig:interpretability_strategy}
 \end{figure}
 
 
 \section{Experimental Set Up} \label{sec:Exp}
+
+\subsection{Computational Infrastructure and Training Configuration}
+
+All experiments reported in this work were conducted using two complementary cloud-based computational environments, selected based on scalability requirements and workflow optimization needs.
+
+\paragraph{Google Colab Environment.}
+Initial model prototyping, architecture design, and single-GPU training were performed on Google Colab\footnote{\url{https://colab.research.google.com}} utilizing NVIDIA A100 GPUs (40GB VRAM) with 64GB system RAM. Models were implemented in TensorFlow 2.x, leveraging GPU-accelerated operations for convolutional layers, variational sampling, and loss computation. This environment provided rapid iteration cycles for hyperparameter exploration and architecture validation during the early development phase.
+
+\paragraph{Databricks Environment.}
+For large-scale training over the full dataset and distributed hyperparameter tuning, experiments were deployed on Databricks\footnote{\url{https://databricks.com}} clusters configured with NVIDIA GPUs (32GB VRAM) and leveraging Apache Spark (PySpark) for parallel data preprocessing and distributed batch generation. The training pipeline integrated TensorFlow with MLflow for experiment tracking, versioning, and model registry, enabling systematic comparison of architecture variants, hyperparameter configurations, and physics-informed loss weighting schemes. This setup facilitated efficient management of multiple training runs and reproducibility across experiments.
+
+\paragraph{Data Partitioning.}
+All datasets were partitioned into training (70\%), validation (15\%), and test (15\%) subsets using stratified sampling to preserve the distribution of physical parameters (KDM, temperature) across splits. The training set was used for gradient-based optimization, the validation set for early stopping and hyperparameter selection, and the test set for final performance evaluation and generalization assessment. This partitioning scheme was maintained consistently across all proof-of-concept experiments to ensure fair comparison.
 
 \subsection{Proof of Concept: Conditional Variational Autoencoder with Physics-Guided Conditioning}
 
@@ -1713,7 +1726,7 @@ To assess whether the learned latent space encodes physically meaningful structu
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{Figures/UmapDirectTKDM.png}
+    \includegraphics[width=0.85\textwidth]{Figures/UmapDirectTKDM.png}
     \caption{UMAP projection of the latent space learned by the conditional VAE, colored by physical parameters. Left: temperature $T$; Right: KDM parameter. The visualization reveals that the latent space exhibits smooth gradients corresponding to variations in physical parameters, indicating that the conditional prior successfully structures the latent manifold according to the underlying Hamiltonian parameter space.}
     \label{fig:umap_tkdm}
 \end{figure}
@@ -1725,7 +1738,7 @@ To evaluate the reconstruction and generative fidelity of the model, we compared
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{Figures/Generation.png}
+    \includegraphics[width=0.85\textwidth]{Figures/Generation.png}
     \caption{Comparison between ground-truth magnetic domain configurations (top rows) and their reconstructions generated by the conditional VAE (bottom rows). The model successfully captures the main topological features of the magnetic textures—including vortex cores, domain wall structures, and edge effects—demonstrating that the architecture achieves high-fidelity reconstruction even without explicit physics-based constraints. Minor discrepancies in fine-scale details suggest opportunities for further improvement through physics-informed regularization.}
     \label{fig:generation}
 \end{figure}
@@ -1934,6 +1947,74 @@ This proof-of-concept demonstrates that transfer learning-based CNNs can effecti
 \end{itemize}
 
 These results establish a baseline for inverse parameter estimation and motivate future integration with the forward generative pipeline (cVAE) into a unified bidirectional framework capable of both state generation and parameter inference.
+
+
+\section{Work Plan and Timeline} \label{sec:timeline}
+
+This section outlines the work plan and timeline for completing the doctoral research over eight semesters (four months each). The activities are organized according to the three specific objectives, with additional phases for literature review, dataset preparation, integration, validation, and thesis writing. Table~\ref{tab:timeline} presents the detailed schedule.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{Doctoral research timeline and activity schedule (8 semesters, 4 months each)}
+\label{tab:timeline}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|p{6cm}|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Activity} & \textbf{S1} & \textbf{S2} & \textbf{S3} & \textbf{S4} & \textbf{S5} & \textbf{S6} & \textbf{S7} & \textbf{S8} \\
+\hline
+\multicolumn{9}{|l|}{\textbf{Preliminary Phase}} \\
+\hline
+Literature review and state-of-the-art analysis & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & \\
+\hline
+Dataset construction and augmentation & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & \\
+\hline
+Computational infrastructure setup & \cellcolor{blue!30} & & & & & & & \\
+\hline
+\multicolumn{9}{|l|}{\textbf{Objective 1: Parameter Estimation and Degeneracy Mitigation}} \\
+\hline
+CNN architecture design and baseline training & & \cellcolor{green!30} & \cellcolor{green!30} & & & & & \\
+\hline
+Physics-informed regularization implementation & & & \cellcolor{green!30} & \cellcolor{green!30} & & & & \\
+\hline
+Bayesian hyperparameter optimization & & & \cellcolor{green!30} & \cellcolor{green!30} & & & & \\
+\hline
+Evaluation with rotation-invariant metrics & & & & \cellcolor{green!30} & & & & \\
+\hline
+\multicolumn{9}{|l|}{\textbf{Objective 2: Generative Modeling and Domain Adaptation}} \\
+\hline
+cVAE architecture with learned prior & & & \cellcolor{orange!30} & \cellcolor{orange!30} & & & & \\
+\hline
+Cycle-consistency framework integration & & & & \cellcolor{orange!30} & \cellcolor{orange!30} & & & \\
+\hline
+Domain adaptation strategies implementation & & & & & \cellcolor{orange!30} & \cellcolor{orange!30} & & \\
+\hline
+Experimental validation (Leeds, KIT datasets) & & & & & & \cellcolor{orange!30} & \cellcolor{orange!30} & \\
+\hline
+\multicolumn{9}{|l|}{\textbf{Objective 3: Interpretability and Physical Validation}} \\
+\hline
+RAMs methodology development & & & & & \cellcolor{purple!30} & \cellcolor{purple!30} & & \\
+\hline
+Grad-CAM and integrated gradients analysis & & & & & & \cellcolor{purple!30} & \cellcolor{purple!30} & \\
+\hline
+UMAP latent space analysis & & & & & & \cellcolor{purple!30} & \cellcolor{purple!30} & \\
+\hline
+Physics-guided validation framework & & & & & & & \cellcolor{purple!30} & \\
+\hline
+\multicolumn{9}{|l|}{\textbf{Integration and Dissemination}} \\
+\hline
+International research internship & & & & & \cellcolor{cyan!30} & \cellcolor{cyan!30} & & \\
+\hline
+Unified framework integration & & & & & & \cellcolor{red!30} & \cellcolor{red!30} & \\
+\hline
+Publication writing (papers 1-3) & & & \cellcolor{yellow!30} & \cellcolor{yellow!30} & \cellcolor{yellow!30} & \cellcolor{yellow!30} & \cellcolor{yellow!30} & \\
+\hline
+Thesis writing & & & & & & \cellcolor{red!30} & \cellcolor{red!30} & \cellcolor{red!30} \\
+\hline
+Thesis defense preparation & & & & & & & & \cellcolor{red!30} \\
+\hline
+\end{tabular}
+\end{table}
 
 
 \section{Conclusions} \label{sec:Conclusions}
