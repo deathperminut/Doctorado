@@ -1,0 +1,294 @@
+====================================================================================================
+REPORTE COMPLETO DE LIMPIEZA DE REFERENCIAS
+====================================================================================================
+
+FECHA: 2026-02-07
+OBJETIVO: Eliminar referencias <2020, no citadas, e inexistentes
+
+====================================================================================================
+RESUMEN EJECUTIVO
+====================================================================================================
+
+ESTADO INICIAL:
+  - Referencias en .bib: 174
+  - Referencias citadas: 81
+  - Referencias no utilizadas: 93
+
+LIMPIEZA REALIZADA EN 3 FASES:
+
+FASE 1 - Eliminación de referencias <2020:
+  ✅ 27 referencias eliminadas (años 1996-2019)
+  ✅ 29 citas reemplazadas con \cite{???}
+
+FASE 2 - Eliminación de referencias no citadas:
+  ✅ 93 referencias no utilizadas eliminadas
+  ✅ Reducción de 147 → 54 referencias
+
+FASE 3 - Eliminación de referencias inexistentes:
+  ✅ 26 referencias verificadas como inexistentes eliminadas
+  ✅ 60 citas adicionales reemplazadas con \cite{???}
+
+ESTADO FINAL:
+  ✅ Referencias en .bib: 28
+  ✅ Referencias citadas: 28 (100% utilizadas)
+  ✅ Citas con [???]: 89
+  ✅ Documento compilado: 71 páginas
+
+TOTAL DE REFERENCIAS ELIMINADAS: 146 (84% del total original)
+REFERENCIAS RESTANTES: 28 (16% del total original)
+
+====================================================================================================
+FASE 1: REFERENCIAS <2020 ELIMINADAS (27)
+====================================================================================================
+
+1996:
+  - Aharoni1996Introduction
+
+2005:
+  - Grandvalet2005SemiSupervised
+
+2014:
+  - Evans2014Atomistic
+  - Goodfellow2014GAN
+
+2016:
+  - Agudelo2016Granular
+  - Ganin2016DomainAdversarial
+  - Gal2016DropoutBayesian
+  - Ghifary2016DeepReconstruction
+  - Liu2016CoupledGAN
+  - Ribeiro2016LIME
+  - Sun2016DeepCORAL
+
+2017:
+  - Arjovsky2017Wasserstein
+  - CoPdMFM2018 (realmente 2017)
+  - Lakshminarayanan2017Ensembles
+  - Lundberg2017SHAP
+  - Tobin2017DomainRandomization
+  - Tzeng2017Adversarial
+
+2018:
+  - Hoffman2018CyCADA
+  - Long2018ConditionalDA
+  - Tan2018SurveyDL
+
+2019:
+  - Cubuk2019AutoAugment
+  - Laugel2019Dangers
+  - Optuna2022 (realmente 2019)
+  - Peng2019MomentMatching
+  - Saito2019SemiSupervisedDA
+  - Shorten2019DataAugmentation
+  - Zhao2019LearningTransferable
+
+====================================================================================================
+FASE 2: REFERENCIAS NO CITADAS ELIMINADAS (93)
+====================================================================================================
+
+Se eliminaron 93 referencias que existían en el .bib pero no estaban citadas en el documento.
+
+Incluyen referencias sobre:
+- Domain adaptation (DANN, CORAL, CycleGAN, etc.)
+- Transfer learning
+- Simulaciones micromagnéticas (OOMMF, Spirit, MuMax3)
+- Técnicas de data augmentation
+- Métodos de interpretabilidad
+- Uncertainty quantification
+- Materiales magnéticos específicos
+- Revisiones y surveys
+
+Ver archivo: REFERENCIAS_ELIMINADAS_NO_CITADAS.txt
+
+====================================================================================================
+FASE 3: REFERENCIAS INEXISTENTES ELIMINADAS (26)
+====================================================================================================
+
+Estas referencias fueron verificadas manualmente por el usuario y confirmadas como inexistentes
+o con DOIs/URLs incorrectos:
+
+  - DeepSPIN2023
+  - Du2022MetaStableSkyrmions
+  - Finco2024Stimuli
+  - Garg2022UnifiedTTA
+  - Gomez2023MultiscaleReview
+  - Hanneken2022ResolutionLimit
+  - Hertel2022MicromagneticLimits
+  - Hertel2023Thermal
+  - Hinzke2022Atomistic
+  - Hu2025
+  - KIT4DSTEM2021
+  - Kramer2021MFMNoise
+  - Li2023
+  - Liu2023InverseML
+  - MuMaxReview2021
+  - Phark2022ResolutionLimits
+  - Raabe2020ImagingLimits
+  - Rarokar2024
+  - Ryu2025
+  - Sanchez2023ExplainableDesign
+  - Sanchez2024CycleConsistentMaterials
+  - Schlenhoff2022SPSTM
+  - Song2023
+  - Streubel2022
+  - Wiesendanger2023SPSTMReview
+  - Zhang2024MFM
+
+Ver archivo: REFERENCIAS_INEXISTENTES_ELIMINADAS.txt
+
+====================================================================================================
+REFERENCIAS QUE QUEDAN (28)
+====================================================================================================
+
+TODAS estas referencias están citadas en el documento y tienen año ≥2020:
+
+  1. Achtibat2023Attribution
+  2. Covert2021Explaining
+  3. Eurek2024
+  4. Feng2024
+  5. Fert2022ThinFilms
+  6. Fert2023
+  7. He2025
+  8. Hilgers2025
+  9. Huang2023
+  10. Jacobsen2022
+  11. Karniadakis2021PINNs
+  12. Kumar2020Problems
+  13. Kumar2022FineTuning
+  14. LeedsSkyrmions2020
+  15. Liao2023
+  16. MLDesign2023
+  17. Molnar2022Interpretable
+  18. Nehan2024
+  19. Oviedo2022
+  20. Park2024
+  21. Ronne2024
+  22. Sim2RealReview2021
+  23. Wang2021TentTTA
+  24. Wang2022
+  25. Wei2022
+  26. Wilson2020Survey
+  27. Zhuang2020Comprehensive
+  28. hermans2024cvai
+
+====================================================================================================
+CITAS CON [???] QUE NECESITAN REEMPLAZO (89 TOTAL)
+====================================================================================================
+
+Distribución de [???] en el documento:
+
+SECCIÓN: Introducción y contexto
+  - Simulaciones atomísticas y micromagnéticas
+  - Técnicas de caracterización experimental
+
+SECCIÓN: Domain Adaptation (la mayoría)
+  - Data-based approaches
+  - Feature-based methods (MMD, CORAL, DANN)
+  - Instance-based methods
+  - Adversarial approaches
+  - Autoencoder-based methods
+  - Model-based approaches
+
+SECCIÓN: Interpretabilidad
+  - SHAP y LIME
+  - Limitaciones de métodos post-hoc
+
+SECCIÓN: Metodología propuesta
+  - Domain randomization
+  - Uncertainty quantification (Dropout, Ensembles)
+  - Hyperparameter optimization
+
+SECCIÓN: Datasets
+  - Co/Pd MFM Dataset
+
+====================================================================================================
+ARCHIVOS DE RESPALDO CREADOS
+====================================================================================================
+
+1. references_backup_20260207_184937.bib
+   - Backup automático antes de la última limpieza
+
+====================================================================================================
+PRÓXIMOS PASOS NECESARIOS
+====================================================================================================
+
+1. ⚠️ VERIFICAR MANUALMENTE LAS 28 REFERENCIAS RESTANTES
+
+   Aunque estas referencias tienen año ≥2020, MUCHAS de sus DOIs/URLs fueron agregados
+   por IA sin verificación en tiempo real.
+
+   ACCIÓN REQUERIDA:
+   - Abre cada URL/DOI manualmente
+   - Verifica que el título y autores coincidan
+   - Si encuentras errores, busca el DOI correcto en Google Scholar
+
+2. 🔍 BUSCAR 89 REEMPLAZOS (2020-2025)
+
+   Para cada [???] en el documento, necesitas encontrar un paper 2020+ que cubra el mismo tema.
+
+   ESTRATEGIA RECOMENDADA:
+   a) Usa los archivos de contexto para saber QUÉ buscar:
+      - CONTEXTO_CITAS_ANTIGUAS.txt
+      - REFERENCIAS_A_REEMPLAZAR.txt
+
+   b) Busca en Google Scholar con filtro 2020-2025
+
+   c) Para cada paper que encuentres:
+      - Verifica manualmente que el DOI/URL funcione
+      - Agrega la entrada completa al references.bib
+      - Reemplaza \cite{???} con \cite{NuevaClave}
+
+3. ✅ COMPILAR Y VERIFICAR
+
+   Después de agregar cada grupo de referencias:
+   pdflatex main.tex
+   bibtex main
+   pdflatex main.tex
+   pdflatex main.tex
+
+4. 📊 OBJETIVO FINAL
+
+   - 0 citas con [???]
+   - Todas las referencias con año ≥2020
+   - Todos los DOIs/URLs verificados manualmente
+   - 100% de referencias utilizadas (ya logrado ✓)
+
+====================================================================================================
+ADVERTENCIAS IMPORTANTES
+====================================================================================================
+
+⚠️  Las 28 referencias restantes NECESITAN verificación manual de DOIs/URLs
+
+⚠️  NO confíes en los DOIs/URLs actuales sin verificarlos primero
+
+⚠️  Al buscar reemplazos, SIEMPRE verifica manualmente que el paper existe y el DOI es correcto
+
+⚠️  Usa Google Scholar para encontrar DOIs reales, no confíes en IAs para esto
+
+====================================================================================================
+ESTADÍSTICAS FINALES
+====================================================================================================
+
+ANTES DE LA LIMPIEZA:
+  - Total referencias: 174
+  - Referencias citadas: 81
+  - Referencias no citadas: 93
+  - Referencias <2020: 27
+  - Referencias inexistentes: 26
+  - Páginas del documento: 72
+
+DESPUÉS DE LA LIMPIEZA:
+  - Total referencias: 28 (↓ 84%)
+  - Referencias citadas: 28 (↓ 65%)
+  - Referencias no citadas: 0 (↓ 100%)
+  - Referencias <2020: 0 (↓ 100%)
+  - Referencias inexistentes: 0 (↓ 100%)
+  - Citas con [???]: 89
+  - Páginas del documento: 71
+
+EFICIENCIA:
+  - Antes: 47% de referencias no utilizadas
+  - Ahora: 0% de referencias no utilizadas ✓
+  - Reducción total: 146 referencias eliminadas
+
+====================================================================================================

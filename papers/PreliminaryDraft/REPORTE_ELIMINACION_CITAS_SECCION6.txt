@@ -1,0 +1,123 @@
+====================================================================================================
+REPORTE DE ELIMINACIÓN DE CITAS DESDE SECCIÓN 6
+====================================================================================================
+
+FECHA: 2026-02-07
+OBJETIVO: Eliminar cita de Nature Materials y todas las citas desde la sección "Objectives" en adelante
+
+====================================================================================================
+RESUMEN EJECUTIVO
+====================================================================================================
+
+SECCIÓN 6 IDENTIFICADA: "Objectives" (línea 865 de main.tex)
+
+CITAS ELIMINADAS:
+  1. Cita de Nature Materials en dataset Co/Pd MFM: ✅ Eliminada
+  2. Todas las citas desde sección "Objectives" en adelante: ✅ 10 citas eliminadas
+
+RESULTADO:
+  ✅ Citas totales en el documento: 127 (solo en secciones 1-5)
+  ✅ Citas con [???]: 78
+  ✅ Referencias en bibliografía: 26 (↓ 2 referencias)
+  ✅ Documento compilado: 71 páginas
+
+====================================================================================================
+DETALLE DE ELIMINACIONES
+====================================================================================================
+
+1. CITA DE NATURE MATERIALS ELIMINADA:
+
+   Ubicación: Línea 1090, sección "Databases", subsección Co/Pd MFM Dataset
+
+   ANTES:
+   \textbf{Access:} Supplementary data from Nature Materials publication \cite{???}
+
+   DESPUÉS:
+   \textbf{Access:} Supplementary data from Nature Materials publication
+
+2. CITAS ELIMINADAS DESDE SECCIÓN 6 (OBJECTIVES) EN ADELANTE:
+
+   Total: 10 citas eliminadas
+
+   Secciones afectadas:
+   - Objectives (sección 6)
+   - Databases (sección 7)
+   - Proposed Methodology Framework (sección 8)
+   - Methodology (sección 9)
+   - Experimental Set Up (sección 10)
+   - Work Plan and Timeline (sección 11)
+   - Conclusions (sección 12)
+   - Future Work (sección 13)
+
+====================================================================================================
+ESTADO ACTUAL DEL DOCUMENTO
+====================================================================================================
+
+SECCIONES CON CITAS (1-5):
+  1. Abstract - sin citas
+  2. Motivation - con citas
+  3. Problem Statement - con citas
+  4. State of the art - con citas (la mayoría)
+  5. Research Question - con citas
+
+Total de citas en secciones 1-5: 127
+  - Citas válidas: 49
+  - Citas con [???]: 78
+
+SECCIONES SIN CITAS (6-13):
+  6. Objectives - SIN CITAS ✓
+  7. Databases - SIN CITAS ✓
+  8. Proposed Methodology Framework - SIN CITAS ✓
+  9. Methodology - SIN CITAS ✓
+  10. Experimental Set Up - SIN CITAS ✓
+  11. Work Plan and Timeline - SIN CITAS ✓
+  12. Conclusions - SIN CITAS ✓
+  13. Future Work - SIN CITAS ✓
+
+====================================================================================================
+REFERENCIAS EN BIBLIOGRAFÍA
+====================================================================================================
+
+ANTES: 28 referencias
+AHORA: 26 referencias (↓ 2 referencias)
+
+Las 2 referencias eliminadas eran citadas SOLO en las secciones 6-13, por lo que
+automáticamente desaparecieron de la bibliografía al eliminar sus citas.
+
+====================================================================================================
+ESTADÍSTICAS FINALES
+====================================================================================================
+
+DOCUMENTO COMPLETO:
+  - Total de páginas: 71
+  - Total de citas: 127 (todas en secciones 1-5)
+  - Citas válidas: 49
+  - Citas con [???]: 78
+  - Referencias en .bib: 28
+  - Referencias en bibliografía: 26
+
+DISTRIBUCIÓN DE CITAS:
+  - Secciones 1-5 (Abstract → Research Question): 127 citas (100%)
+  - Secciones 6-13 (Objectives → Future Work): 0 citas (0%)
+
+====================================================================================================
+PRÓXIMOS PASOS
+====================================================================================================
+
+1. ⚠️ VERIFICAR MANUALMENTE LAS 26 REFERENCIAS RESTANTES
+   - Confirmar que sus DOIs/URLs sean correctos
+   - Muchas fueron agregadas por IA sin verificación
+
+2. 🔍 BUSCAR 78 REEMPLAZOS PARA [???]
+   - Encontrar papers 2020+ que cubran los mismos temas
+   - Verificar manualmente cada DOI/URL
+   - Agregar al references.bib
+
+3. 📚 OPCIONAL: Agregar citas relevantes en secciones 6-13
+   - Si el profesor lo requiere, puedes agregar citas en:
+     - Methodology
+     - Databases
+     - Proposed Framework
+   - Asegurarte de que sean papers 2020+ con DOIs verificados
+
+====================================================================================================

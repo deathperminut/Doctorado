@@ -1,0 +1,151 @@
+====================================================================================================
+REPORTE DE LIMPIEZA DE REFERENCIAS - OPCIÓN A
+====================================================================================================
+
+FECHA: 2026-02-07
+ACCIÓN: Eliminación de referencias <2020 y reemplazo con [???]
+
+====================================================================================================
+RESUMEN EJECUTIVO
+====================================================================================================
+
+✅ Referencias eliminadas del .bib:        27
+✅ Citas reemplazadas con \cite{???}:     29 (algunas refs se citaban múltiples veces)
+✅ Documento compilado exitosamente:      72 páginas
+⚠️  Referencias que faltan reemplazar:    29 ubicaciones con [???]
+
+====================================================================================================
+LISTA DE 27 REFERENCIAS ELIMINADAS (ORDENADAS POR AÑO)
+====================================================================================================
+
+1996:
+  [Aharoni1996Introduction] - Introduction to the Theory of Ferromagnetism
+
+2005:
+  [Grandvalet2005SemiSupervised] - Semi-supervised Learning by Entropy Minimization
+
+2014:
+  [Evans2014Atomistic] - Atomistic spin model simulations of magnetic nanomaterials
+  [Goodfellow2014GAN] - Generative Adversarial Nets
+
+2016:
+  [Agudelo2016Granular] - Modelamiento y Simulación de Nanoestructuras Magnéticas Granulares
+  [Ganin2016DomainAdversarial] - Domain-Adversarial Training of Neural Networks
+  [Sun2016DeepCORAL] - Deep CORAL: Correlation Alignment for Deep Domain Adaptation
+  [Ghifary2016DeepReconstruction] - Deep Reconstruction-Classification Networks
+  [Liu2016CoupledGAN] - Coupled Generative Adversarial Networks
+  [Gal2016DropoutBayesian] - Dropout as a Bayesian Approximation
+  [Ribeiro2016LIME] - "Why Should I Trust You?": Explaining the Predictions
+
+2017:
+  [Tzeng2017Adversarial] - Adversarial Discriminative Domain Adaptation
+  [Arjovsky2017Wasserstein] - Wasserstein Generative Adversarial Networks
+  [CoPdMFM2018] - Tunable room-temperature magnetic skyrmions (actually 2017)
+  [Tobin2017DomainRandomization] - Domain Randomization for Sim-to-Real Transfer
+  [Lakshminarayanan2017Ensembles] - Simple and Scalable Predictive Uncertainty Estimation
+  [Lundberg2017SHAP] - A Unified Approach to Interpreting Model Predictions
+
+2018:
+  [Hoffman2018CyCADA] - CyCADA: Cycle-Consistent Adversarial Domain Adaptation
+  [Tan2018SurveyDL] - A Survey on Deep Transfer Learning
+  [Long2018ConditionalDA] - Conditional Adversarial Domain Adaptation
+
+2019:
+  [Optuna2022] - Optuna: A Next-generation Hyperparameter Optimization Framework (actually 2019)
+  [Shorten2019DataAugmentation] - A Survey on Image Data Augmentation for Deep Learning
+  [Cubuk2019AutoAugment] - AutoAugment: Learning Augmentation Strategies from Data
+  [Zhao2019LearningTransferable] - Multi-Source Domain Adaptation for Semantic Segmentation
+  [Peng2019MomentMatching] - Moment Matching for Multi-Source Domain Adaptation
+  [Saito2019SemiSupervisedDA] - Semi-Supervised Domain Adaptation via Minimax Entropy
+  [Laugel2019Dangers] - The Dangers of Post-hoc Interpretability
+
+====================================================================================================
+UBICACIONES EN EL DOCUMENTO DONDE APARECEN [???]
+====================================================================================================
+
+Las 29 citas con [???] aparecen en las siguientes páginas (según warnings de LaTeX):
+
+Página 11 (línea 333):  1 cita  - Sección sobre simulaciones atomísticas
+Página 14 (línea 412):  1 cita  - High-Fidelity Forward Simulations
+Página 24 (línea 638):  2 citas - Data-Based Domain Adaptation
+Página 24 (línea 641):  1 cita  - Instance-based methods
+Página 25 (línea 644):  3 citas - Instance-based y feature-based methods
+Página 25 (línea 647):  3 citas - Feature-based methods (MMD, CORAL, DANN)
+Página 25 (línea 650):  3 citas - Adversarial approaches
+Página 25 (línea 653):  1 cita  - Autoencoder-based methods
+Página 25 (línea 656):  3 citas - Model-based approaches
+Página 28 (línea 687):  2 citas - SHAP y LIME
+Página 29 (línea 746):  2 citas - Limitaciones de SHAP/LIME
+Página 29 (línea 748):  1 cita  - Problemas con independence assumption
+Página 41 (línea 1080): 1 cita  - Co/Pd MFM Dataset
+Página 62 (línea 1617): 1 cita  - Domain randomization
+Página 63 (línea 1637): 2 citas - Uncertainty quantification (Dropout, Ensembles)
+Página 77 (línea 2002): 1 cita  - Hyperparameter optimization (Optuna)
+
+====================================================================================================
+ESTADO DEL ARCHIVO references.bib
+====================================================================================================
+
+ANTES:  174 referencias totales
+AHORA:  147 referencias totales
+
+Referencias citadas en el documento: 54 + 29 [???] = 83 total
+
+====================================================================================================
+PRÓXIMOS PASOS NECESARIOS
+====================================================================================================
+
+1. 🔍 BUSCAR REEMPLAZOS (2020-2025):
+   Para cada [???], buscar en Google Scholar un paper 2020+ que cubra el mismo tema.
+
+   Usa el archivo CONTEXTO_CITAS_ANTIGUAS.txt para ver exactamente QUÉ tema necesitas buscar
+   en cada ubicación.
+
+2. ✏️ AGREGAR AL .bib:
+   Una vez encuentres los papers adecuados:
+   - Agrega la entrada completa al references.bib
+   - ASEGÚRATE de que tenga DOI o URL
+   - VERIFICA manualmente que el DOI/URL sea correcto
+
+3. 🔄 REEMPLAZAR EN .tex:
+   Cambia \cite{???} por \cite{NuevaClave2020}
+
+4. ✅ COMPILAR Y VERIFICAR:
+   pdflatex main.tex
+   bibtex main
+   pdflatex main.tex
+   pdflatex main.tex
+
+5. 🌐 VERIFICAR URLs:
+   Las 54 referencias que quedaron también necesitan verificación manual de sus DOIs/URLs
+   para confirmar que sean correctos (muchos fueron agregados sin verificación y pueden
+   estar incorrectos).
+
+====================================================================================================
+ADVERTENCIA IMPORTANTE
+====================================================================================================
+
+⚠️  MUCHOS de los DOIs/URLs en las referencias que quedaron (las 54 que son ≥2020) fueron
+    agregados por IA sin capacidad de verificación en tiempo real.
+
+⚠️  Debes verificar MANUALMENTE cada URL haciendo clic en ella para confirmar que:
+    1. La URL funciona
+    2. Lleva al paper correcto (título y autores coinciden)
+    3. El año es correcto
+
+⚠️  Si encuentras DOIs incorrectos, usa Google Scholar para buscar el DOI real del paper.
+
+====================================================================================================
+ARCHIVOS DE AYUDA DISPONIBLES
+====================================================================================================
+
+1. CONTEXTO_CITAS_ANTIGUAS.txt
+   - Muestra exactamente dónde estaba cada cita y qué tema necesitas buscar
+
+2. REFERENCIAS_A_REEMPLAZAR.txt
+   - Lista de las 27 referencias con sugerencias de búsqueda
+
+3. REFERENCIAS_CITADAS.html
+   - HTML con todas las referencias actuales y links clickeables para verificar
+
+====================================================================================================

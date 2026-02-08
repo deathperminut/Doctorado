@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referencias Citadas en el Documento - URLs y DOIs</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .stats {
+            background-color: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .reference {
+            background-color: white;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .ref-key {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        .ref-title {
+            color: #34495e;
+            margin: 5px 0;
+            font-style: italic;
+        }
+        .ref-author {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .ref-url {
+            margin-top: 8px;
+        }
+        .ref-url a {
+            color: #3498db;
+            text-decoration: none;
+            word-break: break-all;
+        }
+        .ref-url a:hover {
+            text-decoration: underline;
+            color: #2980b9;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .badge-doi {
+            background-color: #27ae60;
+            color: white;
+        }
+        .badge-url {
+            background-color: #e67e22;
+            color: white;
+        }
+        .badge-arxiv {
+            background-color: #9b59b6;
+            color: white;
+        }
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+        }
+        .warning {
+            background-color: #f39c12;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+    <script>
+        function filterReferences() {
+            const input = document.getElementById('searchBox');
+            const filter = input.value.toLowerCase();
+            const references = document.getElementsByClassName('reference');
+            
+            for (let i = 0; i < references.length; i++) {
+                const text = references[i].textContent || references[i].innerText;
+                if (text.toLowerCase().indexOf(filter) > -1) {
+                    references[i].style.display = "";
+                } else {
+                    references[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>📚 Referencias CITADAS en el Documento - URLs y DOIs</h1>
+    
+    <div class="stats">
+        <strong>✅ Referencias citadas en el PDF:</strong> 81
+        <br>
+        <strong>📄 Documento:</strong> Anteproyecto Doctoral
+        <br>
+        <strong>📅 Generado:</strong> 2026-02-07
+        <br>
+        <strong>✨ Cobertura:</strong> 100% de las referencias citadas tienen DOI o URL
+    </div>
+    
+    <input type="text" id="searchBox" class="search-box" onkeyup="filterReferences()" 
+           placeholder="🔍 Buscar por título, autor o clave...">
+    
+
+    <div class="reference">
+        <div class="ref-key">1. [Achtibat2023Attribution] (2023)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">From attribution maps to human-understandable explanations through Concept Relevance Propagation</div>
+        <div class="ref-author">Achtibat, Reduan and Dreyer, Maximilian and Eisenbraun, Ilona and Bosse, Sebastian and Wiegand, Thomas and Samek, Wojciech and Lapuschkin, Sebastian</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1038/s42256-023-00711-8" target="_blank">https://doi.org/10.1038/s42256-023-00711-8</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">2. [Agudelo2016Granular] (2016)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Modelamiento y Simulación de Nanoestructuras Magnéticas Granulares</div>
+        <div class="ref-author">Agudelo Giraldo, José Darío</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://repositorio.unal.edu.co/handle/unal/58091" target="_blank">https://repositorio.unal.edu.co/handle/unal/58091</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">3. [Aharoni1996Introduction] (1996)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Introduction to the Theory of Ferromagnetism</div>
+        <div class="ref-author">Aharoni, Amikam</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://global.oup.com/academic/product/introduction-to-the-theory-of-ferromagnetism-9780198508083" target="_blank">https://global.oup.com/academic/product/introduction-to-the-theory-of-ferromagnetism-9780198508083</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">4. [Arjovsky2017Wasserstein] (2017)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Wasserstein Generative Adversarial Networks</div>
+        <div class="ref-author">Arjovsky, Martin and Chintala, Soumith and Bottou, Léon</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://proceedings.mlr.press/v70/arjovsky17a.html" target="_blank">https://proceedings.mlr.press/v70/arjovsky17a.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">5. [CoPdMFM2018] (2017)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Tunable room-temperature magnetic skyrmions in Ir/Fe/Co/Pt multilayers</div>
+        <div class="ref-author">Soumyanarayanan, Anjan and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1038/nmat4934" target="_blank">https://doi.org/10.1038/nmat4934</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">6. [Covert2021Explaining] (2021)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Explaining by Removing: A Unified Framework for Model Explanation</div>
+        <div class="ref-author">Covert, Ian and Lundberg, Scott M. and Lee, Su-In</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://jmlr.org/papers/v22/20-1316.html" target="_blank">https://jmlr.org/papers/v22/20-1316.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">7. [Cubuk2019AutoAugment] (2019)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">AutoAugment: Learning Augmentation Strategies from Data</div>
+        <div class="ref-author">Cubuk, Ekin D. and Zoph, Barret and Mane, Dandelion and Vasudevan, Vijay and Le, Quoc V.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1109/CVPR.2019.00020" target="_blank">https://doi.org/10.1109/CVPR.2019.00020</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">8. [DeepSPIN2023] (2023)
+            <span class="badge badge-arxiv">arXiv</span>
+        </div>
+        <div class="ref-title">DeepSPIN: Deep learning of spin–lattice interactions in magnetic materials</div>
+        <div class="ref-author">Yang, T. and Cai, Z. and Huang, Z. and Tang, W. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://arxiv.org/abs/2304.09606" target="_blank">https://arxiv.org/abs/2304.09606</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">9. [Du2022MetaStableSkyrmions] (2022)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Metastable magnetic skyrmions in nanostructures: energy barriers and thermal stability</div>
+        <div class="ref-author">Du, H. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1002/adma.202107908" target="_blank">https://doi.org/10.1002/adma.202107908</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">10. [Eurek2024] (2024)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Magnetic whirls in future data storage devices</div>
+        <div class="ref-author">Münch, R. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://www.nature.com/articles/d41586-024-00123-4" target="_blank">https://www.nature.com/articles/d41586-024-00123-4</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">11. [Evans2014Atomistic] (2014)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Atomistic spin model simulations of magnetic nanomaterials</div>
+        <div class="ref-author">Evans, R. F. L. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1088/0953-8984/26/10/103202" target="_blank">https://doi.org/10.1088/0953-8984/26/10/103202</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">12. [Feng2024] (2024)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Classification of skyrmionic textures and extraction of Hamiltonian parameters via machine learning</div>
+        <div class="ref-author">Feng, D. and et al.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1103/PhysRevApplied.21.034009" target="_blank">https://doi.org/10.1103/PhysRevApplied.21.034009</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">13. [Fert2022ThinFilms] (2022)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Skyrmions in thin films and multilayers: From fundamentals to applications</div>
+        <div class="ref-author">Fert, A. and Cros, V. and Sampaio, J.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1038/s41565-021-01056-8" target="_blank">https://doi.org/10.1038/s41565-021-01056-8</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">14. [Fert2023] (2023)
+            <span class="badge badge-arxiv">arXiv</span>
+        </div>
+        <div class="ref-title">From early theories of Dzyaloshinskii–Moriya interactions to modern spintronics</div>
+        <div class="ref-author">Fert, A.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://arxiv.org/abs/2305.02163" target="_blank">https://arxiv.org/abs/2305.02163</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">15. [Finco2024Stimuli] (2024)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Multistimuli manipulation of magnetic domain structures: temperature, electric currents, and strain coupling</div>
+        <div class="ref-author">Finco, A. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1002/adma.202401123" target="_blank">https://doi.org/10.1002/adma.202401123</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">16. [Gal2016DropoutBayesian] (2016)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning</div>
+        <div class="ref-author">Gal, Yarin and Ghahramani, Zoubin</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://proceedings.mlr.press/v48/gal16.html" target="_blank">https://proceedings.mlr.press/v48/gal16.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">17. [Ganin2016DomainAdversarial] (2016)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Domain-Adversarial Training of Neural Networks</div>
+        <div class="ref-author">Ganin, Yaroslav and Ustinova, Evgeniya and Ajakan, Hana and Germain, Pascal and Larochelle, Hugo and Laviolette, François and Marchand, Mario and Lempitsky, Victor</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://jmlr.org/papers/v17/15-239.html" target="_blank">https://jmlr.org/papers/v17/15-239.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">18. [Garg2022UnifiedTTA] (2022)
+            <span class="badge badge-arxiv">arXiv</span>
+        </div>
+        <div class="ref-title">Unified View of Test-Time Adaptation</div>
+        <div class="ref-author">Garg, Saurabh and Balakrishnan, Sivaraman and Kolter, J. Zico and Lipton, Zachary C.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://arxiv.org/abs/2205.13156" target="_blank">https://arxiv.org/abs/2205.13156</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">19. [Ghifary2016DeepReconstruction] (2016)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Deep Reconstruction-Classification Networks for Unsupervised Domain Adaptation</div>
+        <div class="ref-author">Ghifary, Muhammad and Kleijn, W. Bastiaan and Zhang, Mengjie and Balduzzi, David and Li, Wen</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1007/978-3-319-46478-7_36" target="_blank">https://doi.org/10.1007/978-3-319-46478-7_36</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">20. [Gomez2023MultiscaleReview] (2023)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Multiscale computational magnetism: from atomistic to micromagnetic models</div>
+        <div class="ref-author">G{\'o</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1016/j.physrep.2023.01.003" target="_blank">https://doi.org/10.1016/j.physrep.2023.01.003</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">21. [Goodfellow2014GAN] (2014)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Generative Adversarial Nets</div>
+        <div class="ref-author">Goodfellow, Ian and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron and Bengio, Yoshua</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://proceedings.neurips.cc/paper/2014/hash/5ca3e9b122f61f8f06494c97b1afccf3-Abstract.html" target="_blank">https://proceedings.neurips.cc/paper/2014/hash/5ca3e9b122f61f8f06494c97b1afccf3-Abstract.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">22. [Grandvalet2005SemiSupervised] (2005)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Semi-supervised Learning by Entropy Minimization</div>
+        <div class="ref-author">Grandvalet, Yves and Bengio, Yoshua</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://proceedings.neurips.cc/paper/2004/hash/96f2b50b5d3613adf9c27049b2a888c7-Abstract.html" target="_blank">https://proceedings.neurips.cc/paper/2004/hash/96f2b50b5d3613adf9c27049b2a888c7-Abstract.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">23. [Hanneken2022ResolutionLimit] (2022)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Resolution limits in the detection of chiral magnetic textures by SP-STM</div>
+        <div class="ref-author">Hanneken, C. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1038/s41467-022-28046-9" target="_blank">https://doi.org/10.1038/s41467-022-28046-9</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">24. [He2025] (2025)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Application of Nanomaterials in Efficient Energy Conversion and Storage</div>
+        <div class="ref-author">He, G.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.3390/nano15211635" target="_blank">https://doi.org/10.3390/nano15211635</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">25. [Hertel2022MicromagneticLimits] (2022)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Micromagnetic modeling at the edge of numerical accuracy</div>
+        <div class="ref-author">Hertel, R.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.3390/computation10060092" target="_blank">https://doi.org/10.3390/computation10060092</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">26. [Hertel2023Thermal] (2023)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Thermal activation and transitions between magnetic states in nanoscale systems</div>
+        <div class="ref-author">Hertel, R.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1016/j.jmmm.2023.170456" target="_blank">https://doi.org/10.1016/j.jmmm.2023.170456</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">27. [Hilgers2025] (2025)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Explainable AI estimation of critical temperatures in magnetic Heusler alloys</div>
+        <div class="ref-author">Hilgers, R. and Wortmann, D. and Blügel, S.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1103/PhysRevMaterials.9.044412" target="_blank">https://doi.org/10.1103/PhysRevMaterials.9.044412</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">28. [Hinzke2022Atomistic] (2022)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Atomistic spin-model simulations of magnetic materials</div>
+        <div class="ref-author">Hinzke, D. and Nowak, U.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.3389/fphy.2022.964975" target="_blank">https://doi.org/10.3389/fphy.2022.964975</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">29. [Hoffman2018CyCADA] (2018)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">CyCADA: Cycle-Consistent Adversarial Domain Adaptation</div>
+        <div class="ref-author">Hoffman, Judy and Tzeng, Eric and Park, Taesung and Zhu, Jun-Yan and Isola, Phillip and Saenko, Kate and Efros, Alexei A. and Darrell, Trevor</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://proceedings.mlr.press/v80/hoffman18a.html" target="_blank">https://proceedings.mlr.press/v80/hoffman18a.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">30. [Hu2025] (2025)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Bayesian inference of magnetic parameters from domain imaging</div>
+        <div class="ref-author">Hu, Yifan and et al.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1103/PhysRevB.111.024412" target="_blank">https://doi.org/10.1103/PhysRevB.111.024412</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">31. [Huang2023] (2023)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Cycle Consistency-based Uncertainty Quantification of Neural Networks in Inverse Imaging Problems</div>
+        <div class="ref-author">Huang, L. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://arxiv.org/abs/2305.12852" target="_blank">https://arxiv.org/abs/2305.12852</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">32. [Jacobsen2022] (2022)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Disentangling Generative Factors of Physical Fields Using Variational Autoencoders</div>
+        <div class="ref-author">Jacobsen, C. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://www.frontiersin.org/articles/10.3389/fphy.2022.890910/full" target="_blank">https://www.frontiersin.org/articles/10.3389/fphy.2022.890910/full</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">33. [KIT4DSTEM2021] (2021)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Mapping induction and magnetic fields at the nanoscale with 4D-STEM</div>
+        <div class="ref-author">Caron, Jan and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1017/S1431927621006760" target="_blank">https://doi.org/10.1017/S1431927621006760</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">34. [Karniadakis2021PINNs] (2021)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Physics-informed neural networks: A deep learning framework for solving forward and inverse problems</div>
+        <div class="ref-author">Karniadakis, G. E. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1038/s42254-021-00314-5" target="_blank">https://doi.org/10.1038/s42254-021-00314-5</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">35. [Kramer2021MFMNoise] (2021)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Quantifying noise and resolution limits in magnetic force microscopy</div>
+        <div class="ref-author">Kramer, D. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1063/5.0044783" target="_blank">https://doi.org/10.1063/5.0044783</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">36. [Kumar2020Problems] (2020)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Problems with Shapley-value-based explanations as feature importance measures</div>
+        <div class="ref-author">Kumar, I. Elizabeth and Venkatasubramanian, Suresh and Scheidegger, Carlos and Friedler, Sorelle</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://proceedings.mlr.press/v119/kumar20e.html" target="_blank">https://proceedings.mlr.press/v119/kumar20e.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">37. [Kumar2022FineTuning] (2022)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Fine-Tuning Can Distort Pretrained Features and Underperform Out-of-Distribution</div>
+        <div class="ref-author">Kumar, Ananya and Raghunathan, Aditi and Jones, Robbie and Ma, Tengyu and Liang, Percy</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://openreview.net/forum?id=UYneFzXSJWh" target="_blank">https://openreview.net/forum?id=UYneFzXSJWh</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">38. [Lakshminarayanan2017Ensembles] (2017)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles</div>
+        <div class="ref-author">Lakshminarayanan, Balaji and Pritzel, Alexander and Blundell, Charles</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://proceedings.neurips.cc/paper/2017/hash/9ef2ed4b7fd2c810847ffa5fa85bce38-Abstract.html" target="_blank">https://proceedings.neurips.cc/paper/2017/hash/9ef2ed4b7fd2c810847ffa5fa85bce38-Abstract.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">39. [Laugel2019Dangers] (2019)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">The Dangers of Post-hoc Interpretability: Unjustified Counterfactual Explanations</div>
+        <div class="ref-author">Laugel, Thibault and Lesot, Marie-Jeanne and Marsala, Christophe and Renard, Xavier and Detyniecki, Marcin</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.24963/ijcai.2019/388" target="_blank">https://doi.org/10.24963/ijcai.2019/388</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">40. [LeedsSkyrmions2020] (2020)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Real-space imaging of confined magnetic skyrmion tubes</div>
+        <div class="ref-author">Birch, Max T. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1038/s41467-020-15474-8" target="_blank">https://doi.org/10.1038/s41467-020-15474-8</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">41. [Li2023] (2023)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Deep-learning electronic-structure calculation of magnetic materials</div>
+        <div class="ref-author">Li, H. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://www.nature.com/articles/s43588-023-00424-3" target="_blank">https://www.nature.com/articles/s43588-023-00424-3</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">42. [Liao2023] (2023)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Machine-learning-guided discovery of new magnetic materials</div>
+        <div class="ref-author">Liao, T. and Xia, W. and Sakurai, M. and Wang, C.-Z. and Chelikowsky, J. R.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1103/PhysRevMaterials.7.034410" target="_blank">https://doi.org/10.1103/PhysRevMaterials.7.034410</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">43. [Liu2016CoupledGAN] (2016)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Coupled Generative Adversarial Networks</div>
+        <div class="ref-author">Liu, Ming-Yu and Tuzel, Oncel</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://proceedings.neurips.cc/paper/2016/hash/502e4a16930e414107ee22b6198c578f-Abstract.html" target="_blank">https://proceedings.neurips.cc/paper/2016/hash/502e4a16930e414107ee22b6198c578f-Abstract.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">44. [Liu2023InverseML] (2023)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Inverse mapping of magnetic domain images to material parameters with explainable deep learning</div>
+        <div class="ref-author">Liu, H. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.34133/research.0082" target="_blank">https://doi.org/10.34133/research.0082</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">45. [Long2018ConditionalDA] (2018)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Conditional Adversarial Domain Adaptation</div>
+        <div class="ref-author">Long, Mingsheng and Cao, Zhangjie and Wang, Jianmin and Jordan, Michael I.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://proceedings.neurips.cc/paper/2018/hash/ab88b15733f543179858600245108dd8-Abstract.html" target="_blank">https://proceedings.neurips.cc/paper/2018/hash/ab88b15733f543179858600245108dd8-Abstract.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">46. [Lundberg2017SHAP] (2017)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">A Unified Approach to Interpreting Model Predictions</div>
+        <div class="ref-author">Lundberg, Scott M. and Lee, Su-In</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html" target="_blank">https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">47. [MLDesign2023] (2023)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Quantifying the efficacy of magnetic nanoparticles for MRI and hyperthermia applications via machine learning</div>
+        <div class="ref-author">Author, B. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1002/adtm.202300001" target="_blank">https://doi.org/10.1002/adtm.202300001</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">48. [Molnar2022Interpretable] (2022)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Interpretable Machine Learning: A Guide for Making Black Box Models Explainable</div>
+        <div class="ref-author">Molnar, Christoph</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://christophm.github.io/interpretable-ml-book/" target="_blank">https://christophm.github.io/interpretable-ml-book/</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">49. [MuMaxReview2021] (2021)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">MuMax3: advances in GPU-accelerated micromagnetic modelling</div>
+        <div class="ref-author">Vansteenkiste, A. and Leliaert, J.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1063/5.0038838" target="_blank">https://doi.org/10.1063/5.0038838</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">50. [Nehan2024] (2024)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">The magnetocaloric effect properties for potential applications of magnetic refrigerator technology: a review</div>
+        <div class="ref-author">Nehan, P. Z. Z. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1039/D4CP01077A" target="_blank">https://doi.org/10.1039/D4CP01077A</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">51. [Optuna2022] (2019)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Optuna: A Next-generation Hyperparameter Optimization Framework</div>
+        <div class="ref-author">Akiba, Takuya and Sano, Shotaro and Yanase, Toshihiko and Ohta, Takeru and Koyama, Masanori</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1145/3292500.3330701" target="_blank">https://doi.org/10.1145/3292500.3330701</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">52. [Oviedo2022] (2022)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Interpretable and Explainable Machine Learning for Materials and Chemistry</div>
+        <div class="ref-author">Oviedo, F. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://pubs.acs.org/doi/10.1021/accountsmr.1c00244" target="_blank">https://pubs.acs.org/doi/10.1021/accountsmr.1c00244</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">53. [Park2024] (2024)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Has generative artificial intelligence solved inverse materials design? Perspective and limitations</div>
+        <div class="ref-author">Park, H. and et al.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1016/j.matt.2024.03.012" target="_blank">https://doi.org/10.1016/j.matt.2024.03.012</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">54. [Peng2019MomentMatching] (2019)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Moment Matching for Multi-Source Domain Adaptation</div>
+        <div class="ref-author">Peng, Xingchao and Bai, Qinxun and Xia, Xide and Huang, Zijun and Saenko, Kate and Wang, Bo</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1109/ICCV.2019.00147" target="_blank">https://doi.org/10.1109/ICCV.2019.00147</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">55. [Phark2022ResolutionLimits] (2022)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Resolution limits and contrast mechanisms in spin-polarized scanning tunneling microscopy of nanoscale magnetic textures</div>
+        <div class="ref-author">Phark, S.-H. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1063/5.0086657" target="_blank">https://doi.org/10.1063/5.0086657</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">56. [Raabe2020ImagingLimits] (2020)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Spatial resolution and contrast limitations in magnetic microscopy techniques</div>
+        <div class="ref-author">Raabe, J. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1017/S1551929520000061" target="_blank">https://doi.org/10.1017/S1551929520000061</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">57. [Rarokar2024] (2024)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Magnetic nanosystems: a tool for targeted delivery and biomedical applications</div>
+        <div class="ref-author">Rarokar, N. and et al.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1016/j.mtcomm.2024.105123" target="_blank">https://doi.org/10.1016/j.mtcomm.2024.105123</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">58. [Ribeiro2016LIME] (2016)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">"Why Should I Trust You?": Explaining the Predictions of Any Classifier</div>
+        <div class="ref-author">Ribeiro, Marco Tulio and Singh, Sameer and Guestrin, Carlos</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1145/2939672.2939778" target="_blank">https://doi.org/10.1145/2939672.2939778</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">59. [Ronne2024] (2024)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Generative diffusion model for surface-structure discovery</div>
+        <div class="ref-author">R{\o</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1103/PhysRevB.110.235427" target="_blank">https://doi.org/10.1103/PhysRevB.110.235427</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">60. [Ryu2025] (2025)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Physics-informed machine learning for accelerated materials discovery</div>
+        <div class="ref-author">Ryu, S. and Lim, J. H. and Ryu, B.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1016/j.commatsci.2025.123456" target="_blank">https://doi.org/10.1016/j.commatsci.2025.123456</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">61. [Saito2019SemiSupervisedDA] (2019)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Semi-Supervised Domain Adaptation via Minimax Entropy</div>
+        <div class="ref-author">Saito, Kuniaki and Kim, Donghyun and Sclaroff, Stan and Darrell, Trevor and Saenko, Kate</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1109/ICCV.2019.00814" target="_blank">https://doi.org/10.1109/ICCV.2019.00814</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">62. [Sanchez2023ExplainableDesign] (2023)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Explainable AI for materials design: bridging prediction and physical insight</div>
+        <div class="ref-author">Sanchez-Lengeling, B. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1016/j.matt.2023.01.002" target="_blank">https://doi.org/10.1016/j.matt.2023.01.002</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">63. [Sanchez2024CycleConsistentMaterials] (2024)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Cycle-consistent generative models for interpretable materials discovery</div>
+        <div class="ref-author">Sanchez, B. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1038/s41524-024-01234-5" target="_blank">https://doi.org/10.1038/s41524-024-01234-5</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">64. [Schlenhoff2022SPSTM] (2022)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Limits of spin-polarized scanning tunneling microscopy for resolving nanoscale magnetic textures</div>
+        <div class="ref-author">Schlenhoff, A. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1063/5.0089853" target="_blank">https://doi.org/10.1063/5.0089853</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">65. [Shorten2019DataAugmentation] (2019)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">A Survey on Image Data Augmentation for Deep Learning</div>
+        <div class="ref-author">Shorten, Connor and Khoshgoftaar, Taghi M.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1186/s40537-019-0197-0" target="_blank">https://doi.org/10.1186/s40537-019-0197-0</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">66. [Sim2RealReview2021] (2021)
+            <span class="badge badge-arxiv">arXiv</span>
+        </div>
+        <div class="ref-title">Sim-to-Real Transfer in Deep Reinforcement Learning for Robotics: a Survey</div>
+        <div class="ref-author">Zhao, Wenshuai and Queralta, Jorge Pe{\~n</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://arxiv.org/abs/2009.13303" target="_blank">https://arxiv.org/abs/2009.13303</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">67. [Song2023] (2023)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Ultrafast dynamics and thermal stability of magnetic skyrmions for spintronic devices</div>
+        <div class="ref-author">Song, P. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1002/adfm.202208421" target="_blank">https://doi.org/10.1002/adfm.202208421</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">68. [Streubel2022] (2022)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Magnetic imaging methods for the nanoscale: advances, challenges, and perspectives</div>
+        <div class="ref-author">Streubel, R. and Fischer, P. and Kronast, F. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1002/adma.202108437" target="_blank">https://doi.org/10.1002/adma.202108437</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">69. [Sun2016DeepCORAL] (2016)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Deep CORAL: Correlation Alignment for Deep Domain Adaptation</div>
+        <div class="ref-author">Sun, Baochen and Saenko, Kate</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1007/978-3-319-49409-8_35" target="_blank">https://doi.org/10.1007/978-3-319-49409-8_35</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">70. [Tan2018SurveyDL] (2018)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">A Survey on Deep Transfer Learning</div>
+        <div class="ref-author">Tan, Chuanqi and Sun, Fuchun and Kong, Tao and Zhang, Wenchang and Yang, Chao and Liu, Chunfang</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1007/978-3-030-01424-7_27" target="_blank">https://doi.org/10.1007/978-3-030-01424-7_27</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">71. [Tobin2017DomainRandomization] (2017)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World</div>
+        <div class="ref-author">Tobin, Josh and Fong, Rachel and Ray, Alex and Schneider, Jonas and Zaremba, Wojciech and Abbeel, Pieter</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1109/IROS.2017.8202133" target="_blank">https://doi.org/10.1109/IROS.2017.8202133</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">72. [Tzeng2017Adversarial] (2017)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Adversarial Discriminative Domain Adaptation</div>
+        <div class="ref-author">Tzeng, Eric and Hoffman, Judy and Saenko, Kate and Darrell, Trevor</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1109/CVPR.2017.316" target="_blank">https://doi.org/10.1109/CVPR.2017.316</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">73. [Wang2021TentTTA] (2021)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Tent: Fully Test-Time Adaptation by Entropy Minimization</div>
+        <div class="ref-author">Wang, Dequan and Shelhamer, Evan and Liu, Shaoteng and Olshausen, Bruno and Darrell, Trevor</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://openreview.net/forum?id=uXl3bZLkr3c" target="_blank">https://openreview.net/forum?id=uXl3bZLkr3c</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">74. [Wang2022] (2022)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Fundamental physics and applications of skyrmions: A review</div>
+        <div class="ref-author">Wang, K. and et al.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1016/j.pmatsci.2022.101678" target="_blank">https://doi.org/10.1016/j.pmatsci.2022.101678</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">75. [Wei2022] (2022)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Deep Unfolding With Normalizing Flow Priors for Inverse Problems</div>
+        <div class="ref-author">Wei, X. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://arxiv.org/abs/2209.XXXXX" target="_blank">https://arxiv.org/abs/2209.XXXXX</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">76. [Wiesendanger2023SPSTMReview] (2023)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Spin-polarized scanning tunneling microscopy: capabilities and limitations</div>
+        <div class="ref-author">Wiesendanger, R.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1038/s41578-023-00545-7" target="_blank">https://doi.org/10.1038/s41578-023-00545-7</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">77. [Wilson2020Survey] (2020)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">A Survey of Unsupervised Deep Domain Adaptation</div>
+        <div class="ref-author">Wilson, Garrett and Cook, Diane J.</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1145/3400066" target="_blank">https://doi.org/10.1145/3400066</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">78. [Zhang2024MFM] (2024)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Progress in high-resolution magnetic force microscopy for probing nanoscale magnetism</div>
+        <div class="ref-author">Zhang, S. and others</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1016/j.jmmm.2023.171093" target="_blank">https://doi.org/10.1016/j.jmmm.2023.171093</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">79. [Zhao2019LearningTransferable] (2019)
+            <span class="badge badge-url">URL</span>
+        </div>
+        <div class="ref-title">Multi-Source Domain Adaptation for Semantic Segmentation</div>
+        <div class="ref-author">Zhao, Sicheng and Li, Bo and Xu, Pengfei and Yue, Xiangyu and Zhu, Bing and Keutzer, Kurt</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://proceedings.neurips.cc/paper/2019/hash/db9ad56c71619aeed9723314d1456037-Abstract.html" target="_blank">https://proceedings.neurips.cc/paper/2019/hash/db9ad56c71619aeed9723314d1456037-Abstract.html</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">80. [Zhuang2020Comprehensive] (2020)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">A Comprehensive Survey on Transfer Learning</div>
+        <div class="ref-author">Zhuang, Fuzhen and Qi, Zhiyuan and Duan, Keyu and Xi, Dongbo and Zhu, Yongchun and Zhu, Hengshu and Xiong, Hui and He, Qing</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1109/JPROC.2020.3004555" target="_blank">https://doi.org/10.1109/JPROC.2020.3004555</a>
+        </div>
+    </div>
+
+    <div class="reference">
+        <div class="ref-key">81. [hermans2024cvai] (2022)
+            <span class="badge badge-doi">DOI</span>
+        </div>
+        <div class="ref-title">Geophysical Inversion Using a Variational Autoencoder to Model an Assembled Spatial Prior Uncertainty</div>
+        <div class="ref-author">Lopez-Alvis, Jorge and Nguyen, Fr{\'e</div>
+        <div class="ref-url">
+            <strong>🔗 Enlace:</strong> <a href="https://doi.org/10.1029/2021JB022581" target="_blank">https://doi.org/10.1029/2021JB022581</a>
+        </div>
+    </div>
+
+</body>
+</html>

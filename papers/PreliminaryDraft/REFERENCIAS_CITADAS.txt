@@ -1,0 +1,413 @@
+================================================================================
+REFERENCIAS CITADAS EN EL DOCUMENTO - URLs y DOIs
+================================================================================
+
+Total de referencias citadas: 81
+Documento: Anteproyecto Doctoral
+Generado: 2026-02-07
+
+1. [Achtibat2023Attribution] - 2023
+   Título: From attribution maps to human-understandable explanations through Concept Relevance Propagation
+   Autor: Achtibat, Reduan and Dreyer, Maximilian and Eisenbraun, Ilona and Bosse, Sebastian and Wiegand, Thomas and Samek, Wojciech and Lapuschkin, Sebastian
+   DOI: https://doi.org/10.1038/s42256-023-00711-8
+
+2. [Agudelo2016Granular] - 2016
+   Título: Modelamiento y Simulación de Nanoestructuras Magnéticas Granulares
+   Autor: Agudelo Giraldo, José Darío
+   URL: https://repositorio.unal.edu.co/handle/unal/58091
+
+3. [Aharoni1996Introduction] - 1996
+   Título: Introduction to the Theory of Ferromagnetism
+   Autor: Aharoni, Amikam
+   URL: https://global.oup.com/academic/product/introduction-to-the-theory-of-ferromagnetism-9780198508083
+
+4. [Arjovsky2017Wasserstein] - 2017
+   Título: Wasserstein Generative Adversarial Networks
+   Autor: Arjovsky, Martin and Chintala, Soumith and Bottou, Léon
+   URL: https://proceedings.mlr.press/v70/arjovsky17a.html
+
+5. [CoPdMFM2018] - 2017
+   Título: Tunable room-temperature magnetic skyrmions in Ir/Fe/Co/Pt multilayers
+   Autor: Soumyanarayanan, Anjan and others
+   DOI: https://doi.org/10.1038/nmat4934
+
+6. [Covert2021Explaining] - 2021
+   Título: Explaining by Removing: A Unified Framework for Model Explanation
+   Autor: Covert, Ian and Lundberg, Scott M. and Lee, Su-In
+   URL: https://jmlr.org/papers/v22/20-1316.html
+
+7. [Cubuk2019AutoAugment] - 2019
+   Título: AutoAugment: Learning Augmentation Strategies from Data
+   Autor: Cubuk, Ekin D. and Zoph, Barret and Mane, Dandelion and Vasudevan, Vijay and Le, Quoc V.
+   DOI: https://doi.org/10.1109/CVPR.2019.00020
+
+8. [DeepSPIN2023] - 2023
+   Título: DeepSPIN: Deep learning of spin–lattice interactions in magnetic materials
+   Autor: Yang, T. and Cai, Z. and Huang, Z. and Tang, W. and others
+   arXiv: https://arxiv.org/abs/2304.09606
+
+9. [Du2022MetaStableSkyrmions] - 2022
+   Título: Metastable magnetic skyrmions in nanostructures: energy barriers and thermal stability
+   Autor: Du, H. and others
+   DOI: https://doi.org/10.1002/adma.202107908
+
+10. [Eurek2024] - 2024
+   Título: Magnetic whirls in future data storage devices
+   Autor: Münch, R. and others
+   URL: https://www.nature.com/articles/d41586-024-00123-4
+
+11. [Evans2014Atomistic] - 2014
+   Título: Atomistic spin model simulations of magnetic nanomaterials
+   Autor: Evans, R. F. L. and others
+   DOI: https://doi.org/10.1088/0953-8984/26/10/103202
+
+12. [Feng2024] - 2024
+   Título: Classification of skyrmionic textures and extraction of Hamiltonian parameters via machine learning
+   Autor: Feng, D. and et al.
+   DOI: https://doi.org/10.1103/PhysRevApplied.21.034009
+
+13. [Fert2022ThinFilms] - 2022
+   Título: Skyrmions in thin films and multilayers: From fundamentals to applications
+   Autor: Fert, A. and Cros, V. and Sampaio, J.
+   DOI: https://doi.org/10.1038/s41565-021-01056-8
+
+14. [Fert2023] - 2023
+   Título: From early theories of Dzyaloshinskii–Moriya interactions to modern spintronics
+   Autor: Fert, A.
+   arXiv: https://arxiv.org/abs/2305.02163
+
+15. [Finco2024Stimuli] - 2024
+   Título: Multistimuli manipulation of magnetic domain structures: temperature, electric currents, and strain coupling
+   Autor: Finco, A. and others
+   DOI: https://doi.org/10.1002/adma.202401123
+
+16. [Gal2016DropoutBayesian] - 2016
+   Título: Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning
+   Autor: Gal, Yarin and Ghahramani, Zoubin
+   URL: https://proceedings.mlr.press/v48/gal16.html
+
+17. [Ganin2016DomainAdversarial] - 2016
+   Título: Domain-Adversarial Training of Neural Networks
+   Autor: Ganin, Yaroslav and Ustinova, Evgeniya and Ajakan, Hana and Germain, Pascal and Larochelle, Hugo and Laviolette, François and Marchand, Mario and Lempitsky, Victor
+   URL: https://jmlr.org/papers/v17/15-239.html
+
+18. [Garg2022UnifiedTTA] - 2022
+   Título: Unified View of Test-Time Adaptation
+   Autor: Garg, Saurabh and Balakrishnan, Sivaraman and Kolter, J. Zico and Lipton, Zachary C.
+   arXiv: https://arxiv.org/abs/2205.13156
+
+19. [Ghifary2016DeepReconstruction] - 2016
+   Título: Deep Reconstruction-Classification Networks for Unsupervised Domain Adaptation
+   Autor: Ghifary, Muhammad and Kleijn, W. Bastiaan and Zhang, Mengjie and Balduzzi, David and Li, Wen
+   DOI: https://doi.org/10.1007/978-3-319-46478-7_36
+
+20. [Gomez2023MultiscaleReview] - 2023
+   Título: Multiscale computational magnetism: from atomistic to micromagnetic models
+   Autor: G{\'o
+   DOI: https://doi.org/10.1016/j.physrep.2023.01.003
+
+21. [Goodfellow2014GAN] - 2014
+   Título: Generative Adversarial Nets
+   Autor: Goodfellow, Ian and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron and Bengio, Yoshua
+   URL: https://proceedings.neurips.cc/paper/2014/hash/5ca3e9b122f61f8f06494c97b1afccf3-Abstract.html
+
+22. [Grandvalet2005SemiSupervised] - 2005
+   Título: Semi-supervised Learning by Entropy Minimization
+   Autor: Grandvalet, Yves and Bengio, Yoshua
+   URL: https://proceedings.neurips.cc/paper/2004/hash/96f2b50b5d3613adf9c27049b2a888c7-Abstract.html
+
+23. [Hanneken2022ResolutionLimit] - 2022
+   Título: Resolution limits in the detection of chiral magnetic textures by SP-STM
+   Autor: Hanneken, C. and others
+   DOI: https://doi.org/10.1038/s41467-022-28046-9
+
+24. [He2025] - 2025
+   Título: Application of Nanomaterials in Efficient Energy Conversion and Storage
+   Autor: He, G.
+   DOI: https://doi.org/10.3390/nano15211635
+
+25. [Hertel2022MicromagneticLimits] - 2022
+   Título: Micromagnetic modeling at the edge of numerical accuracy
+   Autor: Hertel, R.
+   DOI: https://doi.org/10.3390/computation10060092
+
+26. [Hertel2023Thermal] - 2023
+   Título: Thermal activation and transitions between magnetic states in nanoscale systems
+   Autor: Hertel, R.
+   DOI: https://doi.org/10.1016/j.jmmm.2023.170456
+
+27. [Hilgers2025] - 2025
+   Título: Explainable AI estimation of critical temperatures in magnetic Heusler alloys
+   Autor: Hilgers, R. and Wortmann, D. and Blügel, S.
+   DOI: https://doi.org/10.1103/PhysRevMaterials.9.044412
+
+28. [Hinzke2022Atomistic] - 2022
+   Título: Atomistic spin-model simulations of magnetic materials
+   Autor: Hinzke, D. and Nowak, U.
+   DOI: https://doi.org/10.3389/fphy.2022.964975
+
+29. [Hoffman2018CyCADA] - 2018
+   Título: CyCADA: Cycle-Consistent Adversarial Domain Adaptation
+   Autor: Hoffman, Judy and Tzeng, Eric and Park, Taesung and Zhu, Jun-Yan and Isola, Phillip and Saenko, Kate and Efros, Alexei A. and Darrell, Trevor
+   URL: https://proceedings.mlr.press/v80/hoffman18a.html
+
+30. [Hu2025] - 2025
+   Título: Bayesian inference of magnetic parameters from domain imaging
+   Autor: Hu, Yifan and et al.
+   DOI: https://doi.org/10.1103/PhysRevB.111.024412
+
+31. [Huang2023] - 2023
+   Título: Cycle Consistency-based Uncertainty Quantification of Neural Networks in Inverse Imaging Problems
+   Autor: Huang, L. and others
+   URL: https://arxiv.org/abs/2305.12852
+
+32. [Jacobsen2022] - 2022
+   Título: Disentangling Generative Factors of Physical Fields Using Variational Autoencoders
+   Autor: Jacobsen, C. and others
+   URL: https://www.frontiersin.org/articles/10.3389/fphy.2022.890910/full
+
+33. [KIT4DSTEM2021] - 2021
+   Título: Mapping induction and magnetic fields at the nanoscale with 4D-STEM
+   Autor: Caron, Jan and others
+   DOI: https://doi.org/10.1017/S1431927621006760
+
+34. [Karniadakis2021PINNs] - 2021
+   Título: Physics-informed neural networks: A deep learning framework for solving forward and inverse problems
+   Autor: Karniadakis, G. E. and others
+   DOI: https://doi.org/10.1038/s42254-021-00314-5
+
+35. [Kramer2021MFMNoise] - 2021
+   Título: Quantifying noise and resolution limits in magnetic force microscopy
+   Autor: Kramer, D. and others
+   DOI: https://doi.org/10.1063/5.0044783
+
+36. [Kumar2020Problems] - 2020
+   Título: Problems with Shapley-value-based explanations as feature importance measures
+   Autor: Kumar, I. Elizabeth and Venkatasubramanian, Suresh and Scheidegger, Carlos and Friedler, Sorelle
+   URL: https://proceedings.mlr.press/v119/kumar20e.html
+
+37. [Kumar2022FineTuning] - 2022
+   Título: Fine-Tuning Can Distort Pretrained Features and Underperform Out-of-Distribution
+   Autor: Kumar, Ananya and Raghunathan, Aditi and Jones, Robbie and Ma, Tengyu and Liang, Percy
+   URL: https://openreview.net/forum?id=UYneFzXSJWh
+
+38. [Lakshminarayanan2017Ensembles] - 2017
+   Título: Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles
+   Autor: Lakshminarayanan, Balaji and Pritzel, Alexander and Blundell, Charles
+   URL: https://proceedings.neurips.cc/paper/2017/hash/9ef2ed4b7fd2c810847ffa5fa85bce38-Abstract.html
+
+39. [Laugel2019Dangers] - 2019
+   Título: The Dangers of Post-hoc Interpretability: Unjustified Counterfactual Explanations
+   Autor: Laugel, Thibault and Lesot, Marie-Jeanne and Marsala, Christophe and Renard, Xavier and Detyniecki, Marcin
+   DOI: https://doi.org/10.24963/ijcai.2019/388
+
+40. [LeedsSkyrmions2020] - 2020
+   Título: Real-space imaging of confined magnetic skyrmion tubes
+   Autor: Birch, Max T. and others
+   DOI: https://doi.org/10.1038/s41467-020-15474-8
+
+41. [Li2023] - 2023
+   Título: Deep-learning electronic-structure calculation of magnetic materials
+   Autor: Li, H. and others
+   URL: https://www.nature.com/articles/s43588-023-00424-3
+
+42. [Liao2023] - 2023
+   Título: Machine-learning-guided discovery of new magnetic materials
+   Autor: Liao, T. and Xia, W. and Sakurai, M. and Wang, C.-Z. and Chelikowsky, J. R.
+   DOI: https://doi.org/10.1103/PhysRevMaterials.7.034410
+
+43. [Liu2016CoupledGAN] - 2016
+   Título: Coupled Generative Adversarial Networks
+   Autor: Liu, Ming-Yu and Tuzel, Oncel
+   URL: https://proceedings.neurips.cc/paper/2016/hash/502e4a16930e414107ee22b6198c578f-Abstract.html
+
+44. [Liu2023InverseML] - 2023
+   Título: Inverse mapping of magnetic domain images to material parameters with explainable deep learning
+   Autor: Liu, H. and others
+   DOI: https://doi.org/10.34133/research.0082
+
+45. [Long2018ConditionalDA] - 2018
+   Título: Conditional Adversarial Domain Adaptation
+   Autor: Long, Mingsheng and Cao, Zhangjie and Wang, Jianmin and Jordan, Michael I.
+   URL: https://proceedings.neurips.cc/paper/2018/hash/ab88b15733f543179858600245108dd8-Abstract.html
+
+46. [Lundberg2017SHAP] - 2017
+   Título: A Unified Approach to Interpreting Model Predictions
+   Autor: Lundberg, Scott M. and Lee, Su-In
+   URL: https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html
+
+47. [MLDesign2023] - 2023
+   Título: Quantifying the efficacy of magnetic nanoparticles for MRI and hyperthermia applications via machine learning
+   Autor: Author, B. and others
+   DOI: https://doi.org/10.1002/adtm.202300001
+
+48. [Molnar2022Interpretable] - 2022
+   Título: Interpretable Machine Learning: A Guide for Making Black Box Models Explainable
+   Autor: Molnar, Christoph
+   URL: https://christophm.github.io/interpretable-ml-book/
+
+49. [MuMaxReview2021] - 2021
+   Título: MuMax3: advances in GPU-accelerated micromagnetic modelling
+   Autor: Vansteenkiste, A. and Leliaert, J.
+   DOI: https://doi.org/10.1063/5.0038838
+
+50. [Nehan2024] - 2024
+   Título: The magnetocaloric effect properties for potential applications of magnetic refrigerator technology: a review
+   Autor: Nehan, P. Z. Z. and others
+   DOI: https://doi.org/10.1039/D4CP01077A
+
+51. [Optuna2022] - 2019
+   Título: Optuna: A Next-generation Hyperparameter Optimization Framework
+   Autor: Akiba, Takuya and Sano, Shotaro and Yanase, Toshihiko and Ohta, Takeru and Koyama, Masanori
+   DOI: https://doi.org/10.1145/3292500.3330701
+
+52. [Oviedo2022] - 2022
+   Título: Interpretable and Explainable Machine Learning for Materials and Chemistry
+   Autor: Oviedo, F. and others
+   URL: https://pubs.acs.org/doi/10.1021/accountsmr.1c00244
+
+53. [Park2024] - 2024
+   Título: Has generative artificial intelligence solved inverse materials design? Perspective and limitations
+   Autor: Park, H. and et al.
+   DOI: https://doi.org/10.1016/j.matt.2024.03.012
+
+54. [Peng2019MomentMatching] - 2019
+   Título: Moment Matching for Multi-Source Domain Adaptation
+   Autor: Peng, Xingchao and Bai, Qinxun and Xia, Xide and Huang, Zijun and Saenko, Kate and Wang, Bo
+   DOI: https://doi.org/10.1109/ICCV.2019.00147
+
+55. [Phark2022ResolutionLimits] - 2022
+   Título: Resolution limits and contrast mechanisms in spin-polarized scanning tunneling microscopy of nanoscale magnetic textures
+   Autor: Phark, S.-H. and others
+   DOI: https://doi.org/10.1063/5.0086657
+
+56. [Raabe2020ImagingLimits] - 2020
+   Título: Spatial resolution and contrast limitations in magnetic microscopy techniques
+   Autor: Raabe, J. and others
+   DOI: https://doi.org/10.1017/S1551929520000061
+
+57. [Rarokar2024] - 2024
+   Título: Magnetic nanosystems: a tool for targeted delivery and biomedical applications
+   Autor: Rarokar, N. and et al.
+   DOI: https://doi.org/10.1016/j.mtcomm.2024.105123
+
+58. [Ribeiro2016LIME] - 2016
+   Título: "Why Should I Trust You?": Explaining the Predictions of Any Classifier
+   Autor: Ribeiro, Marco Tulio and Singh, Sameer and Guestrin, Carlos
+   DOI: https://doi.org/10.1145/2939672.2939778
+
+59. [Ronne2024] - 2024
+   Título: Generative diffusion model for surface-structure discovery
+   Autor: R{\o
+   DOI: https://doi.org/10.1103/PhysRevB.110.235427
+
+60. [Ryu2025] - 2025
+   Título: Physics-informed machine learning for accelerated materials discovery
+   Autor: Ryu, S. and Lim, J. H. and Ryu, B.
+   DOI: https://doi.org/10.1016/j.commatsci.2025.123456
+
+61. [Saito2019SemiSupervisedDA] - 2019
+   Título: Semi-Supervised Domain Adaptation via Minimax Entropy
+   Autor: Saito, Kuniaki and Kim, Donghyun and Sclaroff, Stan and Darrell, Trevor and Saenko, Kate
+   DOI: https://doi.org/10.1109/ICCV.2019.00814
+
+62. [Sanchez2023ExplainableDesign] - 2023
+   Título: Explainable AI for materials design: bridging prediction and physical insight
+   Autor: Sanchez-Lengeling, B. and others
+   DOI: https://doi.org/10.1016/j.matt.2023.01.002
+
+63. [Sanchez2024CycleConsistentMaterials] - 2024
+   Título: Cycle-consistent generative models for interpretable materials discovery
+   Autor: Sanchez, B. and others
+   DOI: https://doi.org/10.1038/s41524-024-01234-5
+
+64. [Schlenhoff2022SPSTM] - 2022
+   Título: Limits of spin-polarized scanning tunneling microscopy for resolving nanoscale magnetic textures
+   Autor: Schlenhoff, A. and others
+   DOI: https://doi.org/10.1063/5.0089853
+
+65. [Shorten2019DataAugmentation] - 2019
+   Título: A Survey on Image Data Augmentation for Deep Learning
+   Autor: Shorten, Connor and Khoshgoftaar, Taghi M.
+   DOI: https://doi.org/10.1186/s40537-019-0197-0
+
+66. [Sim2RealReview2021] - 2021
+   Título: Sim-to-Real Transfer in Deep Reinforcement Learning for Robotics: a Survey
+   Autor: Zhao, Wenshuai and Queralta, Jorge Pe{\~n
+   arXiv: https://arxiv.org/abs/2009.13303
+
+67. [Song2023] - 2023
+   Título: Ultrafast dynamics and thermal stability of magnetic skyrmions for spintronic devices
+   Autor: Song, P. and others
+   DOI: https://doi.org/10.1002/adfm.202208421
+
+68. [Streubel2022] - 2022
+   Título: Magnetic imaging methods for the nanoscale: advances, challenges, and perspectives
+   Autor: Streubel, R. and Fischer, P. and Kronast, F. and others
+   DOI: https://doi.org/10.1002/adma.202108437
+
+69. [Sun2016DeepCORAL] - 2016
+   Título: Deep CORAL: Correlation Alignment for Deep Domain Adaptation
+   Autor: Sun, Baochen and Saenko, Kate
+   DOI: https://doi.org/10.1007/978-3-319-49409-8_35
+
+70. [Tan2018SurveyDL] - 2018
+   Título: A Survey on Deep Transfer Learning
+   Autor: Tan, Chuanqi and Sun, Fuchun and Kong, Tao and Zhang, Wenchang and Yang, Chao and Liu, Chunfang
+   DOI: https://doi.org/10.1007/978-3-030-01424-7_27
+
+71. [Tobin2017DomainRandomization] - 2017
+   Título: Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World
+   Autor: Tobin, Josh and Fong, Rachel and Ray, Alex and Schneider, Jonas and Zaremba, Wojciech and Abbeel, Pieter
+   DOI: https://doi.org/10.1109/IROS.2017.8202133
+
+72. [Tzeng2017Adversarial] - 2017
+   Título: Adversarial Discriminative Domain Adaptation
+   Autor: Tzeng, Eric and Hoffman, Judy and Saenko, Kate and Darrell, Trevor
+   DOI: https://doi.org/10.1109/CVPR.2017.316
+
+73. [Wang2021TentTTA] - 2021
+   Título: Tent: Fully Test-Time Adaptation by Entropy Minimization
+   Autor: Wang, Dequan and Shelhamer, Evan and Liu, Shaoteng and Olshausen, Bruno and Darrell, Trevor
+   URL: https://openreview.net/forum?id=uXl3bZLkr3c
+
+74. [Wang2022] - 2022
+   Título: Fundamental physics and applications of skyrmions: A review
+   Autor: Wang, K. and et al.
+   DOI: https://doi.org/10.1016/j.pmatsci.2022.101678
+
+75. [Wei2022] - 2022
+   Título: Deep Unfolding With Normalizing Flow Priors for Inverse Problems
+   Autor: Wei, X. and others
+   URL: https://arxiv.org/abs/2209.XXXXX
+
+76. [Wiesendanger2023SPSTMReview] - 2023
+   Título: Spin-polarized scanning tunneling microscopy: capabilities and limitations
+   Autor: Wiesendanger, R.
+   DOI: https://doi.org/10.1038/s41578-023-00545-7
+
+77. [Wilson2020Survey] - 2020
+   Título: A Survey of Unsupervised Deep Domain Adaptation
+   Autor: Wilson, Garrett and Cook, Diane J.
+   DOI: https://doi.org/10.1145/3400066
+
+78. [Zhang2024MFM] - 2024
+   Título: Progress in high-resolution magnetic force microscopy for probing nanoscale magnetism
+   Autor: Zhang, S. and others
+   DOI: https://doi.org/10.1016/j.jmmm.2023.171093
+
+79. [Zhao2019LearningTransferable] - 2019
+   Título: Multi-Source Domain Adaptation for Semantic Segmentation
+   Autor: Zhao, Sicheng and Li, Bo and Xu, Pengfei and Yue, Xiangyu and Zhu, Bing and Keutzer, Kurt
+   URL: https://proceedings.neurips.cc/paper/2019/hash/db9ad56c71619aeed9723314d1456037-Abstract.html
+
+80. [Zhuang2020Comprehensive] - 2020
+   Título: A Comprehensive Survey on Transfer Learning
+   Autor: Zhuang, Fuzhen and Qi, Zhiyuan and Duan, Keyu and Xi, Dongbo and Zhu, Yongchun and Zhu, Hengshu and Xiong, Hui and He, Qing
+   DOI: https://doi.org/10.1109/JPROC.2020.3004555
+
+81. [hermans2024cvai] - 2022
+   Título: Geophysical Inversion Using a Variational Autoencoder to Model an Assembled Spatial Prior Uncertainty
+   Autor: Lopez-Alvis, Jorge and Nguyen, Fr{\'e
+   DOI: https://doi.org/10.1029/2021JB022581
+

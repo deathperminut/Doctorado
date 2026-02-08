@@ -1,0 +1,41 @@
+================================================================================
+REFERENCIAS INEXISTENTES ELIMINADAS
+================================================================================
+
+FECHA: 2026-02-07
+Total eliminadas: 26
+
+Estas referencias fueron verificadas manualmente por el usuario
+y confirmadas como inexistentes o incorrectas.
+
+Lista de claves eliminadas:
+
+  - DeepSPIN2023
+  - Du2022MetaStableSkyrmions
+  - Finco2024Stimuli
+  - Garg2022UnifiedTTA
+  - Gomez2023MultiscaleReview
+  - Hanneken2022ResolutionLimit
+  - Hertel2022MicromagneticLimits
+  - Hertel2023Thermal
+  - Hinzke2022Atomistic
+  - Hu2025
+  - KIT4DSTEM2021
+  - Kramer2021MFMNoise
+  - Li2023
+  - Liu2023InverseML
+  - MuMaxReview2021
+  - Phark2022ResolutionLimits
+  - Raabe2020ImagingLimits
+  - Rarokar2024
+  - Ryu2025
+  - Sanchez2023ExplainableDesign
+  - Sanchez2024CycleConsistentMaterials
+  - Schlenhoff2022SPSTM
+  - Song2023
+  - Streubel2022
+  - Wiesendanger2023SPSTMReview
+  - Zhang2024MFM
+
+✅ Eliminadas del .bib: 26
+✅ Citas reemplazadas en .tex: 60

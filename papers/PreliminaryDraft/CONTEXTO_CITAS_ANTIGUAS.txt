@@ -1,0 +1,290 @@
+====================================================================================================
+CONTEXTO DE CITAS ANTIGUAS (<2020) EN EL DOCUMENTO
+====================================================================================================
+
+Instrucciones:
+1. Lee el CONTEXTO para entender QUÉ estás citando
+2. Busca en Google Scholar un paper 2020+ que hable de ESO
+3. Dame: [Clave] → [Título] | [Autores] | [Año] | URL]
+
+====================================================================================================
+
+1. [Aharoni1996Introduction] - Línea 746
+   CONTEXTO:
+   fig:shap_lime_concept
+figure
+
+The core limitation arises from the independence assumption inherent in both SHAP and LIME: these methods treat each input feature (in the case of images, each pixel) as an independently perturbable entity whose contribution can be isolated and quantified Kumar2020Problems. This assumption is reasonable for tabular datasets with genuinely independent features (e.g., p
+   
+   REEMPLAZO:
+   Aharoni1996Introduction → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+2. [Grandvalet2005SemiSupervised] - Línea 641
+   CONTEXTO:
+   Data-based approaches modify the training data itself to match the target domain distribution through augmentation (rotation, scaling, noise injection), synthetic degradation mimicking experimental artifacts (blur, resolution reduction), and domain mixing strategies Shorten2019DataAugmentation. While computationally efficient and requiring no architectural changes, these methods depend on accurate
+   
+   REEMPLAZO:
+   Grandvalet2005SemiSupervised → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+3. [Evans2014Atomistic] - Línea 333
+   CONTEXTO:
+   
+On the experimental side, magnetic domain images are inherently indirect representations of the underlying magnetization field. As illustrated in Figure~fig:experimental_domain_shift, techniques such as MFM measure the stray magnetic field above the sample surface through tip-sample interactions, introducing convolution effects, tip-induced artifacts, and resolution-dependent blurring (typically 
+   
+   REEMPLAZO:
+   Evans2014Atomistic → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+4. [Goodfellow2014GAN] - Línea 647
+   CONTEXTO:
+   Feature-based methods align learned representations across domains by minimizing statistical discrepancies in intermediate feature spaces Sun2016DeepCORAL. Common strategies include Maximum Mean Discrepancy (MMD) matching feature moments, CORAL aligning second-order statistics, and Domain-Adversarial Neural Networks (DANN) learning domain-invariant features through adversarial training Ganin2016Do
+   
+   REEMPLAZO:
+   Goodfellow2014GAN → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+5. [Agudelo2016Granular] - Línea 412
+   CONTEXTO:
+   High-Fidelity Forward Simulations.
+Research on the direct problem has traditionally relied on high-fidelity micromagnetic or atomistic simulations capable of capturing the subtle competition between exchange, anisotropy, DMI, dipolar interactions, and applied fields. Tools such as MuMax3, OOMMF, and Spirit have enabled precise modeling of domain walls, skyrmions, vortices, and labyrinthine pattern
+   
+   REEMPLAZO:
+   Agudelo2016Granular → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+6. [Ganin2016DomainAdversarial] - Línea 644
+   CONTEXTO:
+   Instance-based methods adapt at the sample level by reweighting training instances according to their importance for the target domain or generating pseudo-labels for unlabeled target data through self-training Grandvalet2005SemiSupervised. These approaches often incorporate test-time adaptation mechanisms that fine-tune model parameters on-the-fly using target domain statistics Wang2021TentTTA. W
+   
+   REEMPLAZO:
+   Ganin2016DomainAdversarial → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+7. [Sun2016DeepCORAL] - Línea 644
+   CONTEXTO:
+   Instance-based methods adapt at the sample level by reweighting training instances according to their importance for the target domain or generating pseudo-labels for unlabeled target data through self-training Grandvalet2005SemiSupervised. These approaches often incorporate test-time adaptation mechanisms that fine-tune model parameters on-the-fly using target domain statistics Wang2021TentTTA. W
+   
+   REEMPLAZO:
+   Sun2016DeepCORAL → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+8. [Ghifary2016DeepReconstruction] - Línea 650
+   CONTEXTO:
+   Adversarial approaches explicitly train domain discriminators alongside task predictors, leveraging gradient reversal layers to encourage feature extractors to produce domain-confounding representations Tzeng2017Adversarial. The feature extractor maximizes domain confusion while the discriminator attempts to distinguish source from target samples, creating a minimax game driving domain-invariant r
+   
+   REEMPLAZO:
+   Ghifary2016DeepReconstruction → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+9. [Liu2016CoupledGAN] - Línea 650
+   CONTEXTO:
+   Adversarial approaches explicitly train domain discriminators alongside task predictors, leveraging gradient reversal layers to encourage feature extractors to produce domain-confounding representations Tzeng2017Adversarial. The feature extractor maximizes domain confusion while the discriminator attempts to distinguish source from target samples, creating a minimax game driving domain-invariant r
+   
+   REEMPLAZO:
+   Liu2016CoupledGAN → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+10. [Gal2016DropoutBayesian] - Línea 1637
+   CONTEXTO:
+   
+When applying the inverse model to experimental images, rather than producing deterministic point estimates, we will implement uncertainty quantification methods to output parameter regions that reflect both model uncertainty and the inherent ambiguities in experimental observations.
+
+Techniques such as Monte Carlo Dropout Gal2016DropoutBayesian, ensemble predictions Lakshminarayanan2017Ensembles
+   
+   REEMPLAZO:
+   Gal2016DropoutBayesian → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+11. [Ribeiro2016LIME] - Línea 687
+   CONTEXTO:
+       fig:gradcam_attribution
+figure
+
+Beyond gradient-based attribution, model-agnostic explainability frameworks such as SHAP (SHapley Additive exPlanations) Lundberg2017SHAP and LIME (Local Interpretable Model-agnostic Explanations) Ribeiro2016LIME have gained widespread adoption in machine learning applications. SHAP, grounded in cooperative game theory, assigns each input feature an importance v
+   
+   REEMPLAZO:
+   Ribeiro2016LIME → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+12. [Tzeng2017Adversarial] - Línea 647
+   CONTEXTO:
+   Feature-based methods align learned representations across domains by minimizing statistical discrepancies in intermediate feature spaces Sun2016DeepCORAL. Common strategies include Maximum Mean Discrepancy (MMD) matching feature moments, CORAL aligning second-order statistics, and Domain-Adversarial Neural Networks (DANN) learning domain-invariant features through adversarial training Ganin2016Do
+   
+   REEMPLAZO:
+   Tzeng2017Adversarial → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+13. [Arjovsky2017Wasserstein] - Línea 647
+   CONTEXTO:
+   Feature-based methods align learned representations across domains by minimizing statistical discrepancies in intermediate feature spaces Sun2016DeepCORAL. Common strategies include Maximum Mean Discrepancy (MMD) matching feature moments, CORAL aligning second-order statistics, and Domain-Adversarial Neural Networks (DANN) learning domain-invariant features through adversarial training Ganin2016Do
+   
+   REEMPLAZO:
+   Arjovsky2017Wasserstein → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+14. [CoPdMFM2018] - Línea 1080
+   CONTEXTO:
+       fig:leeds_skyrmion_dataset
+figure
+
+Co/Pd MFM Dataset CoPdMFM2018.
+
+Acquisition method: Magnetic Force Microscopy (MFM)
+
+   
+   REEMPLAZO:
+   CoPdMFM2018 → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+15. [Tobin2017DomainRandomization] - Línea 1617
+   CONTEXTO:
+   The domain adaptation strategy will combine data-level augmentation and feature-level alignment techniques to enable sim-to-real transfer. The approach will be integrated into the cycle-consistent forward-inverse framework while preserving physics-informed constraints.
+
+Data-Based Domain Adaptation.
+To reduce the distribution gap between simulated and experimental images, we will explore data augm
+   
+   REEMPLAZO:
+   Tobin2017DomainRandomization → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+16. [Lakshminarayanan2017Ensembles] - Línea 1637
+   CONTEXTO:
+   
+When applying the inverse model to experimental images, rather than producing deterministic point estimates, we will implement uncertainty quantification methods to output parameter regions that reflect both model uncertainty and the inherent ambiguities in experimental observations.
+
+Techniques such as Monte Carlo Dropout Gal2016DropoutBayesian, ensemble predictions Lakshminarayanan2017Ensembles
+   
+   REEMPLAZO:
+   Lakshminarayanan2017Ensembles → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+17. [Lundberg2017SHAP] - Línea 687
+   CONTEXTO:
+       fig:gradcam_attribution
+figure
+
+Beyond gradient-based attribution, model-agnostic explainability frameworks such as SHAP (SHapley Additive exPlanations) Lundberg2017SHAP and LIME (Local Interpretable Model-agnostic Explanations) Ribeiro2016LIME have gained widespread adoption in machine learning applications. SHAP, grounded in cooperative game theory, assigns each input feature an importance v
+   
+   REEMPLAZO:
+   Lundberg2017SHAP → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+18. [Hoffman2018CyCADA] - Línea 650
+   CONTEXTO:
+   Adversarial approaches explicitly train domain discriminators alongside task predictors, leveraging gradient reversal layers to encourage feature extractors to produce domain-confounding representations Tzeng2017Adversarial. The feature extractor maximizes domain confusion while the discriminator attempts to distinguish source from target samples, creating a minimax game driving domain-invariant r
+   
+   REEMPLAZO:
+   Hoffman2018CyCADA → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+19. [Tan2018SurveyDL] - Línea 653
+   CONTEXTO:
+   Autoencoder-based methods learn shared latent representations by training encoders and decoders to reconstruct both source and target domain inputs from a common bottleneck Ghifary2016DeepReconstruction. The reconstruction constraint encourages the latent space to capture domain-invariant structural information while discarding domain-specific noise Liu2016CoupledGAN. Task predictors operate on th
+   
+   REEMPLAZO:
+   Tan2018SurveyDL → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+20. [Long2018ConditionalDA] - Línea 656
+   CONTEXTO:
+   Model-based approaches leverage pre-trained models from source domains and adapt them to target domains through transfer learning, fine-tuning, or feature extraction Zhuang2020Comprehensive. Common strategies include full fine-tuning of all network layers on limited target data, selective fine-tuning of task-specific layers while freezing feature extractors, and using pre-trained features as fixed
+   
+   REEMPLAZO:
+   Long2018ConditionalDA → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+21. [Optuna2022] - Línea 2002
+   CONTEXTO:
+   Despite these encouraging results, this proof-of-concept implementation reveals critical methodological challenges that must be addressed before deployment:
+
+itemize
+    item Hyperparameter Optimization: The current architecture was trained with manually selected hyperparameters. To fully exploit the model's capacity, a systematic Bayesian optimization procedure (e.g., using Optuna~Optuna2022) mus
+   
+   REEMPLAZO:
+   Optuna2022 → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+22. [Shorten2019DataAugmentation] - Línea 638
+   CONTEXTO:
+   figure
+
+Data-Based Domain Adaptation.
+Data-based approaches modify the training data itself to match the target domain distribution through augmentation (rotation, scaling, noise injection), synthetic degradation mimicking experimental artifacts (blur, resolution reduction), and domain mixing strategies Shorten2019DataAugmentation. While computationally efficient and requiring no architectural cha
+   
+   REEMPLAZO:
+   Shorten2019DataAugmentation → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+23. [Cubuk2019AutoAugment] - Línea 638
+   CONTEXTO:
+   figure
+
+Data-Based Domain Adaptation.
+Data-based approaches modify the training data itself to match the target domain distribution through augmentation (rotation, scaling, noise injection), synthetic degradation mimicking experimental artifacts (blur, resolution reduction), and domain mixing strategies Shorten2019DataAugmentation. While computationally efficient and requiring no architectural cha
+   
+   REEMPLAZO:
+   Cubuk2019AutoAugment → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+24. [Zhao2019LearningTransferable] - Línea 644
+   CONTEXTO:
+   Instance-based methods adapt at the sample level by reweighting training instances according to their importance for the target domain or generating pseudo-labels for unlabeled target data through self-training Grandvalet2005SemiSupervised. These approaches often incorporate test-time adaptation mechanisms that fine-tune model parameters on-the-fly using target domain statistics Wang2021TentTTA. W
+   
+   REEMPLAZO:
+   Zhao2019LearningTransferable → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+25. [Peng2019MomentMatching] - Línea 656
+   CONTEXTO:
+   Model-based approaches leverage pre-trained models from source domains and adapt them to target domains through transfer learning, fine-tuning, or feature extraction Zhuang2020Comprehensive. Common strategies include full fine-tuning of all network layers on limited target data, selective fine-tuning of task-specific layers while freezing feature extractors, and using pre-trained features as fixed
+   
+   REEMPLAZO:
+   Peng2019MomentMatching → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+26. [Saito2019SemiSupervisedDA] - Línea 656
+   CONTEXTO:
+   Model-based approaches leverage pre-trained models from source domains and adapt them to target domains through transfer learning, fine-tuning, or feature extraction Zhuang2020Comprehensive. Common strategies include full fine-tuning of all network layers on limited target data, selective fine-tuning of task-specific layers while freezing feature extractors, and using pre-trained features as fixed
+   
+   REEMPLAZO:
+   Saito2019SemiSupervisedDA → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+
+27. [Laugel2019Dangers] - Línea 748
+   CONTEXTO:
+   
+The core limitation arises from the independence assumption inherent in both SHAP and LIME: these methods treat each input feature (in the case of images, each pixel) as an independently perturbable entity whose contribution can be isolated and quantified Kumar2020Problems. This assumption is reasonable for tabular datasets with genuinely independent features (e.g., patient age, blood pressure, c
+   
+   REEMPLAZO:
+   Laugel2019Dangers → __________________ | __________ | ____ | ____________
+
+====================================================================================================
+

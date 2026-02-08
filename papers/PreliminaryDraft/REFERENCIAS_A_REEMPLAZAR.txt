@@ -1,0 +1,169 @@
+====================================================================================================
+LISTA DE REFERENCIAS <2020 QUE NECESITAN REEMPLAZO
+====================================================================================================
+
+Total: 27 referencias
+Instrucciones: Busca cada tema en Google Scholar con filtro 2020-2025
+
+1. [Aharoni1996Introduction] - 1996
+   Título: Introduction to the Theory of Ferromagnetism
+   Tema: Teoría fundamental del ferromagnetismo y micromagnetismo
+   Búsqueda: "Teoría fundamental del ferromagnetismo y micromagnetismo review 2020"
+   Respuesta: Aharoni1996Introduction → ___________________
+
+2. [Grandvalet2005SemiSupervised] - 2005
+   Título: Semi-supervised Learning by Entropy Minimization
+   Tema: Semi-supervised learning con minimización de entropía
+   Búsqueda: "Semi-supervised learning con minimización de entropía review 2020"
+   Respuesta: Grandvalet2005SemiSupervised → ___________________
+
+3. [Evans2014Atomistic] - 2014
+   Título: Atomistic spin model simulations of magnetic nanomaterials
+   Tema: Simulaciones atomísticas de materiales magnéticos
+   Búsqueda: "Simulaciones atomísticas de materiales magnéticos review 2020"
+   Respuesta: Evans2014Atomistic → ___________________
+
+4. [Goodfellow2014GAN] - 2014
+   Título: Generative Adversarial Nets
+   Tema: Generative Adversarial Networks (GANs) - paper original
+   Búsqueda: "Generative Adversarial Networks (GANs) - paper original review 2020"
+   Respuesta: Goodfellow2014GAN → ___________________
+
+5. [Agudelo2016Granular] - 2016
+   Título: Modelamiento y Simulación de Nanoestructuras Magnéticas Granulares
+   Tema: Modelamiento de nanoestructuras magnéticas granulares
+   Búsqueda: "Modelamiento de nanoestructuras magnéticas granulares review 2020"
+   Respuesta: Agudelo2016Granular → ___________________
+
+6. [Ganin2016DomainAdversarial] - 2016
+   Título: Domain-Adversarial Training of Neural Networks
+   Tema: Domain-adversarial training para domain adaptation
+   Búsqueda: "Domain-adversarial training para domain adaptation review 2020"
+   Respuesta: Ganin2016DomainAdversarial → ___________________
+
+7. [Sun2016DeepCORAL] - 2016
+   Título: Deep CORAL: Correlation Alignment for Deep Domain Adaptation
+   Tema: CORAL - Correlation alignment para domain adaptation
+   Búsqueda: "CORAL - Correlation alignment para domain adaptation review 2020"
+   Respuesta: Sun2016DeepCORAL → ___________________
+
+8. [Ghifary2016DeepReconstruction] - 2016
+   Título: Deep Reconstruction-Classification Networks for Unsupervised Domain Adaptation
+   Tema: Autoencoders para domain adaptation no supervisado
+   Búsqueda: "Autoencoders para domain adaptation no supervisado review 2020"
+   Respuesta: Ghifary2016DeepReconstruction → ___________________
+
+9. [Liu2016CoupledGAN] - 2016
+   Título: Coupled Generative Adversarial Networks
+   Tema: Coupled GANs para domain adaptation
+   Búsqueda: "Coupled GANs para domain adaptation review 2020"
+   Respuesta: Liu2016CoupledGAN → ___________________
+
+10. [Gal2016DropoutBayesian] - 2016
+   Título: Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning
+   Tema: Dropout como aproximación bayesiana para incertidumbre
+   Búsqueda: "Dropout como aproximación bayesiana para incertidumbre review 2020"
+   Respuesta: Gal2016DropoutBayesian → ___________________
+
+11. [Ribeiro2016LIME] - 2016
+   Título: "Why Should I Trust You?": Explaining the Predictions of Any Classifier
+   Tema: LIME - Local Interpretable Model-agnostic Explanations
+   Búsqueda: "LIME - Local Interpretable Model-agnostic Explanations review 2020"
+   Respuesta: Ribeiro2016LIME → ___________________
+
+12. [Tzeng2017Adversarial] - 2017
+   Título: Adversarial Discriminative Domain Adaptation
+   Tema: Adversarial discriminative domain adaptation
+   Búsqueda: "Adversarial discriminative domain adaptation review 2020"
+   Respuesta: Tzeng2017Adversarial → ___________________
+
+13. [Arjovsky2017Wasserstein] - 2017
+   Título: Wasserstein Generative Adversarial Networks
+   Tema: Wasserstein GANs - mejora de estabilidad en GANs
+   Búsqueda: "Wasserstein GANs - mejora de estabilidad en GANs review 2020"
+   Respuesta: Arjovsky2017Wasserstein → ___________________
+
+14. [CoPdMFM2018] - 2017
+   Título: Tunable room-temperature magnetic skyrmions in Ir/Fe/Co/Pt multilayers
+   Tema: Skyrmions a temperatura ambiente en multicapas Co/Pd
+   Búsqueda: "Skyrmions a temperatura ambiente en multicapas Co/Pd review 2020"
+   Respuesta: CoPdMFM2018 → ___________________
+
+15. [Tobin2017DomainRandomization] - 2017
+   Título: Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World
+   Tema: Domain randomization para sim-to-real transfer
+   Búsqueda: "Domain randomization para sim-to-real transfer review 2020"
+   Respuesta: Tobin2017DomainRandomization → ___________________
+
+16. [Lakshminarayanan2017Ensembles] - 2017
+   Título: Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles
+   Tema: Deep ensembles para quantificación de incertidumbre
+   Búsqueda: "Deep ensembles para quantificación de incertidumbre review 2020"
+   Respuesta: Lakshminarayanan2017Ensembles → ___________________
+
+17. [Lundberg2017SHAP] - 2017
+   Título: A Unified Approach to Interpreting Model Predictions
+   Tema: SHAP - SHapley Additive exPlanations para interpretabilidad
+   Búsqueda: "SHAP - SHapley Additive exPlanations para interpretabilidad review 2020"
+   Respuesta: Lundberg2017SHAP → ___________________
+
+18. [Hoffman2018CyCADA] - 2018
+   Título: CyCADA: Cycle-Consistent Adversarial Domain Adaptation
+   Tema: CycleGAN-based domain adaptation
+   Búsqueda: "CycleGAN-based domain adaptation review 2020"
+   Respuesta: Hoffman2018CyCADA → ___________________
+
+19. [Tan2018SurveyDL] - 2018
+   Título: A Survey on Deep Transfer Learning
+   Tema: Survey de transfer learning y domain adaptation
+   Búsqueda: "Survey de transfer learning y domain adaptation review 2020"
+   Respuesta: Tan2018SurveyDL → ___________________
+
+20. [Long2018ConditionalDA] - 2018
+   Título: Conditional Adversarial Domain Adaptation
+   Tema: Conditional adversarial domain adaptation
+   Búsqueda: "Conditional adversarial domain adaptation review 2020"
+   Respuesta: Long2018ConditionalDA → ___________________
+
+21. [Optuna2022] - 2019
+   Título: Optuna: A Next-generation Hyperparameter Optimization Framework
+   Tema: Optimización de hiperparámetros bayesiana
+   Búsqueda: "Optimización de hiperparámetros bayesiana review 2020"
+   Respuesta: Optuna2022 → ___________________
+
+22. [Shorten2019DataAugmentation] - 2019
+   Título: A Survey on Image Data Augmentation for Deep Learning
+   Tema: Survey de data augmentation para deep learning
+   Búsqueda: "Survey de data augmentation para deep learning review 2020"
+   Respuesta: Shorten2019DataAugmentation → ___________________
+
+23. [Cubuk2019AutoAugment] - 2019
+   Título: AutoAugment: Learning Augmentation Strategies from Data
+   Tema: AutoAugment - augmentation policies automáticas
+   Búsqueda: "AutoAugment - augmentation policies automáticas review 2020"
+   Respuesta: Cubuk2019AutoAugment → ___________________
+
+24. [Zhao2019LearningTransferable] - 2019
+   Título: Multi-Source Domain Adaptation for Semantic Segmentation
+   Tema: Multi-source domain adaptation
+   Búsqueda: "Multi-source domain adaptation review 2020"
+   Respuesta: Zhao2019LearningTransferable → ___________________
+
+25. [Peng2019MomentMatching] - 2019
+   Título: Moment Matching for Multi-Source Domain Adaptation
+   Tema: Moment matching para domain adaptation
+   Búsqueda: "Moment matching para domain adaptation review 2020"
+   Respuesta: Peng2019MomentMatching → ___________________
+
+26. [Saito2019SemiSupervisedDA] - 2019
+   Título: Semi-Supervised Domain Adaptation via Minimax Entropy
+   Tema: Semi-supervised domain adaptation con minimax entropy
+   Búsqueda: "Semi-supervised domain adaptation con minimax entropy review 2020"
+   Respuesta: Saito2019SemiSupervisedDA → ___________________
+
+27. [Laugel2019Dangers] - 2019
+   Título: The Dangers of Post-hoc Interpretability: Unjustified Counterfactual Explanations
+   Tema: Limitaciones de métodos post-hoc de interpretabilidad
+   Búsqueda: "Limitaciones de métodos post-hoc de interpretabilidad review 2020"
+   Respuesta: Laugel2019Dangers → ___________________
+
