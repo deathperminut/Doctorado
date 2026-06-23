@@ -1,0 +1,288 @@
+{
+  "nodes": [
+    {
+      "id": "notebook:VitFullDataBaseV2",
+      "label": "VitFullDataBaseV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Models/VitFullDataBaseV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:XceptionFullDataBaseV2",
+      "label": "XceptionFullDataBaseV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Models/XceptionFullDataBaseV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:Resnet50FullDatabaseV2",
+      "label": "Resnet50FullDatabaseV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Models/Resnet50FullDatabaseV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:DenseNetFullDatabaseV2",
+      "label": "DenseNetFullDatabaseV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Models/DenseNetFullDatabaseV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:EfficienetFullDatabaseV2",
+      "label": "EfficienetFullDatabaseV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Models/EfficienetFullDatabaseV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:AnalisisEstructurasV2",
+      "label": "AnalisisEstructurasV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Results/AnalisisEstructurasV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:DescriptionRescale",
+      "label": "DescriptionRescale",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/preprocessing/Databasejex2T/DescriptionRescale.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:Construction",
+      "label": "Construction",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/preprocessing/Databasejex2T/Construction.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "paper:VAM_SpinesDL",
+      "label": "VAM_SpinesDL",
+      "type": "research_paper",
+      "description": "Vision/AI Models for Spines Deep Learning - Inverse estimation of magnetic Hamiltonian parameters using deep learning",
+      "confidence": 0.95
+    },
+    {
+      "id": "model:ViT",
+      "label": "Vision Transformer",
+      "type": "architecture",
+      "description": "Best R² (0.91-0.97) for parameter prediction"
+    },
+    {
+      "id": "model:Xception",
+      "label": "Xception",
+      "type": "architecture",
+      "description": "Best MAE (0.039 meV)"
+    },
+    {
+      "id": "model:ResNet50",
+      "label": "ResNet50",
+      "type": "architecture",
+      "description": "Residual network with 50 layers"
+    },
+    {
+      "id": "model:DenseNet",
+      "label": "DenseNet",
+      "type": "architecture",
+      "description": "Dense Connections architecture"
+    },
+    {
+      "id": "model:EfficientNet",
+      "label": "EfficientNet",
+      "type": "architecture",
+      "description": "Efficient scaling architecture"
+    },
+    {
+      "id": "dataset:KDMT",
+      "label": "DatabaseKDMT",
+      "type": "dataset",
+      "description": "164K+ magnetic nanodot images, 1.9GB"
+    },
+    {
+      "id": "dataset:Jex2T",
+      "label": "DatabaseJex2T",
+      "type": "dataset",
+      "description": "218K simulated images, 633MB"
+    },
+    {
+      "id": "concept:DMI",
+      "label": "Dzyaloshinskii-Moriya Interaction",
+      "type": "parameter",
+      "description": "Magnetic parameter (R² = 0.97)"
+    },
+    {
+      "id": "concept:UMAP",
+      "label": "UMAP Analysis",
+      "type": "analysis_technique",
+      "description": "2D feature space visualization"
+    },
+    {
+      "id": "concept:RAMs",
+      "label": "Regression Activation Maps",
+      "type": "method",
+      "description": "Novel interpretability method for continuous regression"
+    },
+    {
+      "id": "concept:Skyrmions",
+      "label": "Skyrmions",
+      "type": "magnetic_texture",
+      "description": "Topological magnetic defects"
+    },
+    {
+      "id": "dir:papers",
+      "label": "papers/",
+      "type": "directory",
+      "description": "LaTeX academic papers"
+    },
+    {
+      "id": "dir:codigo",
+      "label": "codigo/",
+      "type": "directory",
+      "description": "Deep learning code and models"
+    },
+    {
+      "id": "dir:referencias",
+      "label": "Referencias/",
+      "type": "directory",
+      "description": "Bibliography management"
+    },
+    {
+      "id": "tool:LaTeX",
+      "label": "LaTeX",
+      "type": "tool",
+      "description": "Academic paper typesetting"
+    },
+    {
+      "id": "tool:Obsidian",
+      "label": "Obsidian",
+      "type": "tool",
+      "description": "Note-taking system"
+    }
+  ],
+  "edges": [
+    {
+      "source": "paper:VAM_SpinesDL",
+      "target": "model:ViT",
+      "relation": "uses"
+    },
+    {
+      "source": "paper:VAM_SpinesDL",
+      "target": "model:Xception",
+      "relation": "uses"
+    },
+    {
+      "source": "paper:VAM_SpinesDL",
+      "target": "model:ResNet50",
+      "relation": "uses"
+    },
+    {
+      "source": "paper:VAM_SpinesDL",
+      "target": "model:DenseNet",
+      "relation": "uses"
+    },
+    {
+      "source": "paper:VAM_SpinesDL",
+      "target": "model:EfficientNet",
+      "relation": "uses"
+    },
+    {
+      "source": "model:ViT",
+      "target": "dataset:KDMT",
+      "relation": "trained_on"
+    },
+    {
+      "source": "model:Xception",
+      "target": "dataset:KDMT",
+      "relation": "trained_on"
+    },
+    {
+      "source": "model:ResNet50",
+      "target": "dataset:KDMT",
+      "relation": "trained_on"
+    },
+    {
+      "source": "model:DenseNet",
+      "target": "dataset:KDMT",
+      "relation": "trained_on"
+    },
+    {
+      "source": "model:EfficientNet",
+      "target": "dataset:KDMT",
+      "relation": "trained_on"
+    },
+    {
+      "source": "paper:VAM_SpinesDL",
+      "target": "concept:RAMs",
+      "relation": "introduces"
+    },
+    {
+      "source": "concept:RAMs",
+      "target": "concept:DMI",
+      "relation": "analyzes"
+    },
+    {
+      "source": "paper:VAM_SpinesDL",
+      "target": "concept:UMAP",
+      "relation": "uses"
+    },
+    {
+      "source": "concept:UMAP",
+      "target": "concept:Skyrmions",
+      "relation": "visualizes"
+    },
+    {
+      "source": "dir:codigo",
+      "target": "model:ViT",
+      "relation": "contains"
+    },
+    {
+      "source": "dir:papers",
+      "target": "paper:VAM_SpinesDL",
+      "relation": "contains"
+    },
+    {
+      "source": "dir:codigo",
+      "target": "dataset:KDMT",
+      "relation": "processes"
+    },
+    {
+      "source": "dir:referencias",
+      "target": "paper:VAM_SpinesDL",
+      "relation": "supports"
+    }
+  ],
+  "communities": {
+    "0": [
+      "paper:VAM_SpinesDL",
+      "concept:RAMs",
+      "concept:DMI",
+      "model:ViT",
+      "dataset:KDMT",
+      "dir:codigo",
+      "model:Xception",
+      "model:ResNet50",
+      "model:EfficientNet",
+      "model:DenseNet",
+      "dir:papers",
+      "concept:UMAP",
+      "concept:Skyrmions",
+      "dir:referencias"
+    ]
+  },
+  "metadata": {
+    "title": "Doctorado Physics_AI Project",
+    "description": "Deep Learning for Magnetic Domain Analysis",
+    "nodes_count": 25,
+    "edges_count": 18,
+    "communities_count": 1
+  }
+}

@@ -1,0 +1,568 @@
+{
+  "project": "Physics_AI",
+  "description": "Deep learning pipeline for spinal/structural analysis using magnetic spin systems (KDMT and Jex2T databases)",
+  "last_updated": "2026-06-15",
+  "nodes": [
+    {
+      "id": "raw_data_kdmt",
+      "type": "data_source",
+      "name": "Raw KDMT Database",
+      "description": "Raw magnetic spin system data from Kaggle (kdmkankshexrandom dataset)",
+      "source": "Kaggle: kdmkankshexrandom",
+      "format": ".dat files (91 state files)",
+      "parameters": [
+        "Nest",
+        "L",
+        "rd",
+        "So",
+        "T",
+        "Jex",
+        "Jex2",
+        "Jex3",
+        "Jex4",
+        "Kan1",
+        "KanS",
+        "Hex",
+        "kd",
+        "KDM"
+      ],
+      "data_type": "Spin configuration states and structural parameters"
+    },
+    {
+      "id": "raw_data_jex2t",
+      "type": "data_source",
+      "name": "Raw Jex2T Database",
+      "description": "Alternative magnetic spin system dataset focusing on exchange interactions",
+      "source": "Kaggle: spinerstestdataset",
+      "format": ".dat files (sample reference data)",
+      "parameters": [
+        "Temperature",
+        "Exchange parameters",
+        "Anisotropy",
+        "Hexagonal terms"
+      ],
+      "data_type": "Spin configuration states and structural parameters"
+    },
+    {
+      "id": "preprocessing_kdmt_construction",
+      "type": "preprocessing",
+      "name": "DatabaseKDMT Construction",
+      "path": "codigo/Physics_AI/preprocessing/DatabaseKDMT/Construction.ipynb",
+      "description": "Pipeline to load raw .dat files, generate spin images (MS matrices 39x39x1), aggregate parameters",
+      "input": ["raw_data_kdmt"],
+      "output": ["processed_kdmt_raw"],
+      "operations": [
+        "Load .dat files from Kaggle input",
+        "Parse spin positions and Sz values",
+        "Generate 2D image representations (39x39 grids)",
+        "Aggregate physical parameters",
+        "Reshape data for model input (164212 samples, 39x39x1)"
+      ]
+    },
+    {
+      "id": "preprocessing_jex2t_construction",
+      "type": "preprocessing",
+      "name": "DatabaseJex2T Construction",
+      "path": "codigo/Physics_AI/preprocessing/Databasejex2T/Construction.ipynb",
+      "description": "Pipeline for Jex2T database: load, image generation, parameter extraction",
+      "input": ["raw_data_jex2t"],
+      "output": ["processed_jex2t_raw"],
+      "operations": [
+        "Load .dat files from Kaggle input",
+        "Generate spin configuration images",
+        "Extract and aggregate parameters",
+        "Format for downstream processing"
+      ]
+    },
+    {
+      "id": "preprocessing_kdmt_rescale",
+      "type": "preprocessing",
+      "name": "DatabaseKDMT DescriptionRescale",
+      "path": "codigo/Physics_AI/preprocessing/DatabaseKDMT/DescriptionRescale.ipynb",
+      "description": "Normalization and rescaling of KDMT parameters for model training",
+      "input": ["processed_kdmt_raw"],
+      "output": ["processed_kdmt_scaled"],
+      "operations": [
+        "Load physical parameters (T, Jex, Jex2, Jex3, Jex4, KDM, Kanisotropy, etc.)",
+        "Generate histograms for parameter distributions",
+        "Normalize/rescale parameters to suitable ranges",
+        "Downsample to ~60,000 samples for computational efficiency",
+        "Prepare data in 60x60 or alternative dimensions"
+      ]
+    },
+    {
+      "id": "preprocessing_jex2t_rescale",
+      "type": "preprocessing",
+      "name": "DatabaseJex2T DescriptionRescale",
+      "path": "codigo/Physics_AI/preprocessing/Databasejex2T/DescriptionRescale.ipynb",
+      "description": "Normalization and rescaling of Jex2T parameters for model training",
+      "input": ["processed_jex2t_raw"],
+      "output": ["processed_jex2t_scaled"],
+      "operations": [
+        "Load and normalize Jex2T parameters",
+        "Generate parameter distribution analysis",
+        "Apply rescaling transformations",
+        "Prepare balanced training dataset"
+      ]
+    },
+    {
+      "id": "data_kdmt_npz",
+      "type": "data_artifact",
+      "name": "KDMT Database NPZ",
+      "path": "codigo/Physics_AI/datos/DatabaseKDMT/data.npy.npz",
+      "size": "1.9GB",
+      "description": "Preprocessed and packaged KDMT database with all parameters and images",
+      "format": "NumPy compressed archive (.npz)",
+      "arrays": [
+        "MS (image data)",
+        "Nest, L, rd, So, T",
+        "Jex, Jex2, Jex3, Jex4",
+        "Kan1, KanS, Hex, kd, KDM"
+      ]
+    },
+    {
+      "id": "data_jex2t_npz",
+      "type": "data_artifact",
+      "name": "Jex2T Database NPZ",
+      "path": "codigo/Physics_AI/datos/DatabaseJex2T/data.npy.npz",
+      "size": "633MB",
+      "description": "Preprocessed and packaged Jex2T database",
+      "format": "NumPy compressed archive (.npz)",
+      "arrays": [
+        "MS (image data)",
+        "Physical parameters"
+      ]
+    },
+    {
+      "id": "model_vit",
+      "type": "model_training",
+      "name": "Vision Transformer (ViT) Full Database",
+      "path": "codigo/Physics_AI/Models/VitFullDataBaseV2.ipynb",
+      "architecture": "Vision Transformer",
+      "framework": "TensorFlow/PyTorch (Google Colab with H100 GPU)",
+      "training_config": {
+        "accelerator": "GPU (H100)",
+        "colab": true,
+        "machine_shape": "hm (high-memory)"
+      },
+      "input_data": ["data_kdmt_npz", "data_jex2t_npz"],
+      "preprocessing_steps": [
+        "Load image data (39x39 or 60x60)",
+        "Normalize to [0,1] or [-1,1]",
+        "Apply MinMaxScaler",
+        "Optional: UMAP dimensionality reduction for visualization"
+      ],
+      "output": ["vit_model", "vit_latent_space"],
+      "capabilities": [
+        "Image classification/regression",
+        "Latent space analysis",
+        "Structure-parameter mapping"
+      ]
+    },
+    {
+      "id": "model_xception",
+      "type": "model_training",
+      "name": "Xception Full Database",
+      "path": "codigo/Physics_AI/Models/XceptionFullDataBaseV2.ipynb",
+      "architecture": "Xception (depth-wise separable convolutions)",
+      "framework": "TensorFlow/Keras",
+      "input_data": ["data_kdmt_npz", "data_jex2t_npz"],
+      "output": ["xception_model", "xception_features"]
+    },
+    {
+      "id": "model_resnet50",
+      "type": "model_training",
+      "name": "ResNet-50 Full Database",
+      "path": "codigo/Physics_AI/Models/Resnet50FullDatabaseV2.ipynb",
+      "architecture": "ResNet-50 (residual neural network)",
+      "framework": "TensorFlow/Keras",
+      "input_data": ["data_kdmt_npz", "data_jex2t_npz"],
+      "output": ["resnet50_model", "resnet50_features"]
+    },
+    {
+      "id": "model_densenet",
+      "type": "model_training",
+      "name": "DenseNet Full Database",
+      "path": "codigo/Physics_AI/Models/DenseNetFullDatabaseV2.ipynb",
+      "architecture": "DenseNet (densely connected convolutional network)",
+      "framework": "TensorFlow/Keras",
+      "input_data": ["data_kdmt_npz", "data_jex2t_npz"],
+      "output": ["densenet_model", "densenet_features"]
+    },
+    {
+      "id": "model_efficientnet",
+      "type": "model_training",
+      "name": "EfficientNet Full Database",
+      "path": "codigo/Physics_AI/Models/EfficienetFullDatabaseV2.ipynb",
+      "architecture": "EfficientNet (efficient scaling)",
+      "framework": "TensorFlow/Keras",
+      "input_data": ["data_kdmt_npz", "data_jex2t_npz"],
+      "output": ["efficientnet_model", "efficientnet_features"]
+    },
+    {
+      "id": "vit_model",
+      "type": "trained_artifact",
+      "name": "ViT Trained Model",
+      "description": "Trained Vision Transformer weights and architecture",
+      "format": "SavedModel/HDF5 (implicit, stored in Colab)"
+    },
+    {
+      "id": "xception_model",
+      "type": "trained_artifact",
+      "name": "Xception Trained Model",
+      "description": "Trained Xception weights",
+      "format": "SavedModel/HDF5"
+    },
+    {
+      "id": "resnet50_model",
+      "type": "trained_artifact",
+      "name": "ResNet-50 Trained Model",
+      "description": "Trained ResNet-50 weights",
+      "format": "SavedModel/HDF5"
+    },
+    {
+      "id": "densenet_model",
+      "type": "trained_artifact",
+      "name": "DenseNet Trained Model",
+      "description": "Trained DenseNet weights",
+      "format": "SavedModel/HDF5"
+    },
+    {
+      "id": "efficientnet_model",
+      "type": "trained_artifact",
+      "name": "EfficientNet Trained Model",
+      "description": "Trained EfficientNet weights",
+      "format": "SavedModel/HDF5"
+    },
+    {
+      "id": "vit_latent_space",
+      "type": "analysis_output",
+      "name": "ViT Latent Space Embeddings",
+      "description": "2D UMAP reduction of ViT's internal representations",
+      "method": "UMAP (n_components=2, n_neighbors=20, min_dist=0.1)",
+      "visualization_variables": [
+        "Temperature (T)",
+        "Exchange coupling (Jex2, Jex3, Jex4)",
+        "Magnetic anisotropy (KDM, Kanisotropy)"
+      ]
+    },
+    {
+      "id": "xception_features",
+      "type": "analysis_output",
+      "name": "Xception Feature Representations",
+      "description": "Intermediate features extracted from Xception encoder"
+    },
+    {
+      "id": "resnet50_features",
+      "type": "analysis_output",
+      "name": "ResNet-50 Feature Representations",
+      "description": "Intermediate features extracted from ResNet-50"
+    },
+    {
+      "id": "densenet_features",
+      "type": "analysis_output",
+      "name": "DenseNet Feature Representations",
+      "description": "Intermediate features extracted from DenseNet"
+    },
+    {
+      "id": "efficientnet_features",
+      "type": "analysis_output",
+      "name": "EfficientNet Feature Representations",
+      "description": "Intermediate features extracted from EfficientNet"
+    },
+    {
+      "id": "analysis_estructuras",
+      "type": "analysis",
+      "name": "Análisis Estructuras V2",
+      "path": "codigo/Physics_AI/Results/AnalisisEstructurasV2.ipynb",
+      "size": "26MB",
+      "description": "Comprehensive structural and clustering analysis across all trained models",
+      "analysis_components": [
+        "Latent space exploration (2D UMAP projections)",
+        "Clustering analysis across models",
+        "Correlation between predicted and physical parameters",
+        "RAM efficiency comparison",
+        "Model performance comparison metrics"
+      ],
+      "input_models": [
+        "vit_model",
+        "xception_model",
+        "resnet50_model",
+        "densenet_model",
+        "efficientnet_model"
+      ],
+      "input_data": ["data_kdmt_npz", "data_jex2t_npz"],
+      "output_visualizations": [
+        "UMAP latent space plots",
+        "Scatter plots colored by physical parameters",
+        "Clustering dendrograms",
+        "Performance comparison charts",
+        "RAM usage comparisons"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "raw_data_kdmt",
+      "target": "preprocessing_kdmt_construction",
+      "relationship": "input",
+      "description": "Raw .dat files loaded and processed"
+    },
+    {
+      "source": "preprocessing_kdmt_construction",
+      "target": "processed_kdmt_raw",
+      "relationship": "produces",
+      "description": "Generated spin images and parameter arrays"
+    },
+    {
+      "source": "processed_kdmt_raw",
+      "target": "preprocessing_kdmt_rescale",
+      "relationship": "input",
+      "description": "Raw processed data normalized"
+    },
+    {
+      "source": "preprocessing_kdmt_rescale",
+      "target": "processed_kdmt_scaled",
+      "relationship": "produces",
+      "description": "Scaled and ready-for-training data"
+    },
+    {
+      "source": "processed_kdmt_scaled",
+      "target": "data_kdmt_npz",
+      "relationship": "packages_into",
+      "description": "Data packaged as NumPy archive"
+    },
+    {
+      "source": "raw_data_jex2t",
+      "target": "preprocessing_jex2t_construction",
+      "relationship": "input",
+      "description": "Raw Jex2T data loaded"
+    },
+    {
+      "source": "preprocessing_jex2t_construction",
+      "target": "processed_jex2t_raw",
+      "relationship": "produces",
+      "description": "Processed Jex2T images and parameters"
+    },
+    {
+      "source": "processed_jex2t_raw",
+      "target": "preprocessing_jex2t_rescale",
+      "relationship": "input",
+      "description": "Raw Jex2T data normalized"
+    },
+    {
+      "source": "preprocessing_jex2t_rescale",
+      "target": "processed_jex2t_scaled",
+      "relationship": "produces",
+      "description": "Scaled Jex2T training data"
+    },
+    {
+      "source": "processed_jex2t_scaled",
+      "target": "data_jex2t_npz",
+      "relationship": "packages_into",
+      "description": "Data packaged as NumPy archive"
+    },
+    {
+      "source": "data_kdmt_npz",
+      "target": "model_vit",
+      "relationship": "trains_on",
+      "description": "ViT model trains on KDMT data"
+    },
+    {
+      "source": "data_jex2t_npz",
+      "target": "model_vit",
+      "relationship": "trains_on_optional",
+      "description": "ViT optionally uses Jex2T data"
+    },
+    {
+      "source": "model_vit",
+      "target": "vit_model",
+      "relationship": "produces",
+      "description": "Training produces trained model weights"
+    },
+    {
+      "source": "model_vit",
+      "target": "vit_latent_space",
+      "relationship": "extracts",
+      "description": "Latent representations extracted and visualized"
+    },
+    {
+      "source": "data_kdmt_npz",
+      "target": "model_xception",
+      "relationship": "trains_on",
+      "description": "Xception model trains on KDMT data"
+    },
+    {
+      "source": "data_jex2t_npz",
+      "target": "model_xception",
+      "relationship": "trains_on_optional",
+      "description": "Xception optionally uses Jex2T data"
+    },
+    {
+      "source": "model_xception",
+      "target": "xception_model",
+      "relationship": "produces",
+      "description": "Training produces trained model"
+    },
+    {
+      "source": "model_xception",
+      "target": "xception_features",
+      "relationship": "extracts",
+      "description": "Feature representations extracted"
+    },
+    {
+      "source": "data_kdmt_npz",
+      "target": "model_resnet50",
+      "relationship": "trains_on",
+      "description": "ResNet-50 model trains on KDMT data"
+    },
+    {
+      "source": "data_jex2t_npz",
+      "target": "model_resnet50",
+      "relationship": "trains_on_optional",
+      "description": "ResNet-50 optionally uses Jex2T data"
+    },
+    {
+      "source": "model_resnet50",
+      "target": "resnet50_model",
+      "relationship": "produces",
+      "description": "Training produces trained model"
+    },
+    {
+      "source": "model_resnet50",
+      "target": "resnet50_features",
+      "relationship": "extracts",
+      "description": "Feature representations extracted"
+    },
+    {
+      "source": "data_kdmt_npz",
+      "target": "model_densenet",
+      "relationship": "trains_on",
+      "description": "DenseNet model trains on KDMT data"
+    },
+    {
+      "source": "data_jex2t_npz",
+      "target": "model_densenet",
+      "relationship": "trains_on_optional",
+      "description": "DenseNet optionally uses Jex2T data"
+    },
+    {
+      "source": "model_densenet",
+      "target": "densenet_model",
+      "relationship": "produces",
+      "description": "Training produces trained model"
+    },
+    {
+      "source": "model_densenet",
+      "target": "densenet_features",
+      "relationship": "extracts",
+      "description": "Feature representations extracted"
+    },
+    {
+      "source": "data_kdmt_npz",
+      "target": "model_efficientnet",
+      "relationship": "trains_on",
+      "description": "EfficientNet model trains on KDMT data"
+    },
+    {
+      "source": "data_jex2t_npz",
+      "target": "model_efficientnet",
+      "relationship": "trains_on_optional",
+      "description": "EfficientNet optionally uses Jex2T data"
+    },
+    {
+      "source": "model_efficientnet",
+      "target": "efficientnet_model",
+      "relationship": "produces",
+      "description": "Training produces trained model"
+    },
+    {
+      "source": "model_efficientnet",
+      "target": "efficientnet_features",
+      "relationship": "extracts",
+      "description": "Feature representations extracted"
+    },
+    {
+      "source": "vit_model",
+      "target": "analysis_estructuras",
+      "relationship": "used_in_analysis",
+      "description": "ViT model evaluated in comprehensive analysis"
+    },
+    {
+      "source": "xception_model",
+      "target": "analysis_estructuras",
+      "relationship": "used_in_analysis",
+      "description": "Xception model evaluated in comprehensive analysis"
+    },
+    {
+      "source": "resnet50_model",
+      "target": "analysis_estructuras",
+      "relationship": "used_in_analysis",
+      "description": "ResNet-50 model evaluated in comprehensive analysis"
+    },
+    {
+      "source": "densenet_model",
+      "target": "analysis_estructuras",
+      "relationship": "used_in_analysis",
+      "description": "DenseNet model evaluated in comprehensive analysis"
+    },
+    {
+      "source": "efficientnet_model",
+      "target": "analysis_estructuras",
+      "relationship": "used_in_analysis",
+      "description": "EfficientNet model evaluated in comprehensive analysis"
+    },
+    {
+      "source": "data_kdmt_npz",
+      "target": "analysis_estructuras",
+      "relationship": "used_in_analysis",
+      "description": "Original data used for comparison and ground truth"
+    },
+    {
+      "source": "data_jex2t_npz",
+      "target": "analysis_estructuras",
+      "relationship": "used_in_analysis",
+      "description": "Alternative dataset used for validation"
+    }
+  ],
+  "workflow_summary": {
+    "raw_data_acquisition": [
+      "Kaggle: kdmkankshexrandom (91 .dat files, KDMT magnetic system)",
+      "Kaggle: spinerstestdataset (Jex2T magnetic system)"
+    ],
+    "data_processing_pipeline": [
+      "Construction.ipynb: Load .dat files → Generate spin images (39x39) → Extract parameters",
+      "DescriptionRescale.ipynb: Normalize parameters → Downsample → Prepare training tensors"
+    ],
+    "training_phase": [
+      "5 different deep learning architectures trained on preprocessed data",
+      "Vision Transformer (ViT) - transformer-based approach",
+      "Xception - depthwise separable convolutions",
+      "ResNet-50 - residual learning framework",
+      "DenseNet - dense connections",
+      "EfficientNet - compound scaling"
+    ],
+    "analysis_phase": [
+      "Extract latent space representations from each model",
+      "Apply UMAP for 2D visualization",
+      "Analyze correlations with physical parameters (T, Jex, KDM, etc.)",
+      "Compare clustering properties across models",
+      "Evaluate RAM efficiency and model performance"
+    ]
+  },
+  "key_datasets": {
+    "DatabaseKDMT": {
+      "size_raw": "~91 state files from Kaggle",
+      "size_processed": "1.9GB (data.npy.npz)",
+      "sample_count": "164,212 spin configurations",
+      "image_dimensions": "39x39x1 pixels",
+      "parameters": 15,
+      "description": "Magnetic spin systems with KDM (Kitaev-Dzyaloshinskii-Moriya) anisotropy"
+    },
+    "DatabaseJex2T": {
+      "size_raw": "spinerstestdataset from Kaggle",
+      "size_processed": "633MB (data.npy.npz)",
+      "description": "Alternative magnetic system focusing on exchange interactions (Jex2, Jex3, Jex4)"
+    }
+  }
+}

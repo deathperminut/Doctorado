@@ -1,0 +1,39 @@
+{
+  "communities": {
+    "0": [
+      "paper:VAM_SpinesDL",
+      "concept:RAMs",
+      "concept:DMI",
+      "model:ViT",
+      "dataset:KDMT",
+      "dir:codigo",
+      "model:Xception",
+      "model:ResNet50",
+      "model:EfficientNet",
+      "model:DenseNet",
+      "dir:papers",
+      "concept:UMAP",
+      "concept:Skyrmions",
+      "dir:referencias"
+    ]
+  },
+  "cohesion": {
+    "0": 0.75
+  },
+  "gods": [
+    "paper:VAM_SpinesDL",
+    "dir:codigo",
+    "model:ViT"
+  ],
+  "surprises": [
+    "Vision Transformer achieves best R² while Xception has best MAE",
+    "Different architectures excel at different parameter predictions",
+    "Novel RAMs interpretability method bridges classification and regression"
+  ],
+  "questions": [
+    "How do different model architectures compare for magnetic parameter prediction?",
+    "What are the Regression Activation Maps revealing about model predictions?",
+    "How well can the models transfer to different magnetic systems?",
+    "What is the trade-off between MAE and R² across architectures?"
+  ]
+}

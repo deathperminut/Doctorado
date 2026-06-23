@@ -1,0 +1,63 @@
+In confined geometries such as magnetic nanodots, the stability of
+emergent topological textures is governed by a delicate energetic
+competition described by the extended Heisenberg Hamiltonian, primarily
+involving symmetric exchange, the Dzyaloshinskii--Moriya interaction (DMI),
+magnetocrystalline anisotropy, and the Zeeman field. Accurately
+inferring these atomistic parameters from two-dimensional magnetic
+domain visualizations constitutes a crucial inverse problem, yet one
+that is inherently sensitive to noise and small perturbations in the
+data. Distinct combinations of atomistic parameters can produce highly
+degenerate magnetic states with nearly indistinguishable free energies,
+rendering the inverse reconstruction of Hamiltonian parameters
+fundamentally non-unique and severely ill-posed. This structural
+ambiguity limits the effectiveness of traditional empirical fitting
+approaches and computationally intensive simulation-based searches,
+both of which struggle to efficiently discriminate among competing
+solutions. Although deep learning offers a promising route for rapid
+parameter inference, conventional regression models often remain opaque
+black-box predictors that compress the intrinsic multimodality of the
+inverse landscape into oversmoothed point estimates with limited
+physical traceability. To address these challenges, we propose an
+inherently explainable, regression-based deep learning framework for
+the robust inverse estimation of magnetic Hamiltonian parameters. Our
+methodology is built upon a rigorous computational pipeline in which
+Metropolis--Hastings Monte Carlo sampling is employed to generate
+thermodynamically relaxed and highly accurate two-dimensional
+magnetization fields. These physically grounded data are subsequently
+integrated with advanced convolutional neural networks and vision
+transformer architectures to perform inverse estimation of magnetic
+Hamiltonian parameters. To enhance interpretability, we introduce
+RAMs, a novel framework that extends
+gradient-based attribution to continuous-valued physical targets. By
+correlating localized spatial activations with the absolute prediction
+errors associated with inferred physical constants, RAMs provide both
+visual and quantitative insight into how the network's latent
+representations relate to established magnetic phenomena. Extensive
+benchmarking on a custom-generated dataset of $218{,}256$ simulated
+configurations spanning diverse and complex Hamiltonian regimes
+demonstrates that the proposed framework accurately predicts the
+physically dominant parameters, the annealing temperature
+$T^{(0)}$, the second-shell exchange constant $\tilde{J}_2$, and the
+DMI strength $\tilde{K}_{DM}$, with $R^2$ scores reaching $0.91$, $0.93$, and $0.97$ respectively.
+The Vision Transformer attains the highest variance-explained performance
+across seven of the eight Hamiltonian parameters, while Xception
+yields the lowest absolute prediction errors, with MAE values of
+$0.039$~meV for $\tilde{J}_2$ and $\tilde{K}_{DM}$ in their original
+physical units. An unsupervised UMAP-based clustering of the latent
+space identifies four physically meaningful magnetic phase categories,
+within which the predictive accuracy rises substantially in the
+ordered low-temperature regimes, with the labyrinthine \& conical
+phase reaching $R^2 = 0.978$ for $T^{(0)}$ and $R^2 = 0.970$ for
+$\tilde{K}_{DM}$, and the helical phase reaching $R^2 = 0.968$ and
+$R^2 = 0.866$ for the same parameters, while the disordered
+high-temperature regimes concentrate the bulk of the residual error,
+quantitatively confirming that the dominant source of uncertainty is
+the partial observability of the Hamiltonian in the two-dimensional
+$s_z$ projection rather than a deficiency of the models themselves.
+The RAM-based interpretability analysis isolates the degenerate
+magnetic textures, most notably chiral domain walls and skyrmion
+cores, that govern the model's predictive behavior, revealing a
+hierarchical depth-wise decoupling in the convolutional backbone and a
+globally coherent, patch-level attribution in the transformer
+backbone, thereby providing an architecture-agnostic validation of
+the identifiability hierarchy. The proposed framework establishes a reliable, interpretable, and physically traceable strategy for investigating complex nanoscale magnetic systems.

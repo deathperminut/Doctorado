@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Doctorado Knowledge Graph</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        h1 { color: #333; }
+        #graph { width: 100%; height: 600px; border: 1px solid #ddd; background: white; border-radius: 8px; }
+        .info { margin-top: 20px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .node { stroke: #fff; stroke-width: 1.5px; }
+        .node-label { font-size: 11px; pointer-events: none; }
+        .link { stroke: #999; stroke-opacity: 0.6; }
+    </style>
+</head>
+<body>
+    <h1>Doctorado Physics_AI Project - Knowledge Graph</h1>
+    <div id="graph"></div>
+    <div class="info">
+        <h3>Graph Statistics</h3>
+        <p><strong>Nodes:</strong> 25</p>
+        <p><strong>Edges:</strong> 18</p>
+        <p><strong>Communities:</strong> 1 interconnected research network</p>
+        <p><strong>Key Hub:</strong> VAM_SpinesDL Paper (uses 5 model architectures)</p>
+    </div>
+    
+    <script>
+    const width = document.getElementById('graph').clientWidth;
+    const height = document.getElementById('graph').clientHeight;
+    
+    const svg = d3.select('#graph').append('svg')
+        .attr('width', width)
+        .attr('height', height);
+    
+    // Prepare data for D3
+    const nodes = [{"id": "notebook:VitFullDataBaseV2", "label": "VitFullDataBaseV2", "type": "notebook", "source": "codigo/Physics_AI/Models/VitFullDataBaseV2.ipynb", "confidence": 1.0, "extracted_by": "AST"}, {"id": "notebook:XceptionFullDataBaseV2", "label": "XceptionFullDataBaseV2", "type": "notebook", "source": "codigo/Physics_AI/Models/XceptionFullDataBaseV2.ipynb", "confidence": 1.0, "extracted_by": "AST"}, {"id": "notebook:Resnet50FullDatabaseV2", "label": "Resnet50FullDatabaseV2", "type": "notebook", "source": "codigo/Physics_AI/Models/Resnet50FullDatabaseV2.ipynb", "confidence": 1.0, "extracted_by": "AST"}, {"id": "notebook:DenseNetFullDatabaseV2", "label": "DenseNetFullDatabaseV2", "type": "notebook", "source": "codigo/Physics_AI/Models/DenseNetFullDatabaseV2.ipynb", "confidence": 1.0, "extracted_by": "AST"}, {"id": "notebook:EfficienetFullDatabaseV2", "label": "EfficienetFullDatabaseV2", "type": "notebook", "source": "codigo/Physics_AI/Models/EfficienetFullDatabaseV2.ipynb", "confidence": 1.0, "extracted_by": "AST"}, {"id": "notebook:AnalisisEstructurasV2", "label": "AnalisisEstructurasV2", "type": "notebook", "source": "codigo/Physics_AI/Results/AnalisisEstructurasV2.ipynb", "confidence": 1.0, "extracted_by": "AST"}, {"id": "notebook:DescriptionRescale", "label": "DescriptionRescale", "type": "notebook", "source": "codigo/Physics_AI/preprocessing/Databasejex2T/DescriptionRescale.ipynb", "confidence": 1.0, "extracted_by": "AST"}, {"id": "notebook:Construction", "label": "Construction", "type": "notebook", "source": "codigo/Physics_AI/preprocessing/Databasejex2T/Construction.ipynb", "confidence": 1.0, "extracted_by": "AST"}, {"id": "paper:VAM_SpinesDL", "label": "VAM_SpinesDL", "type": "research_paper", "description": "Vision/AI Models for Spines Deep Learning - Inverse estimation of magnetic Hamiltonian parameters using deep learning", "confidence": 0.95}, {"id": "model:ViT", "label": "Vision Transformer", "type": "architecture", "description": "Best R\u00b2 (0.91-0.97) for parameter prediction"}, {"id": "model:Xception", "label": "Xception", "type": "architecture", "description": "Best MAE (0.039 meV)"}, {"id": "model:ResNet50", "label": "ResNet50", "type": "architecture", "description": "Residual network with 50 layers"}, {"id": "model:DenseNet", "label": "DenseNet", "type": "architecture", "description": "Dense Connections architecture"}, {"id": "model:EfficientNet", "label": "EfficientNet", "type": "architecture", "description": "Efficient scaling architecture"}, {"id": "dataset:KDMT", "label": "DatabaseKDMT", "type": "dataset", "description": "164K+ magnetic nanodot images, 1.9GB"}, {"id": "dataset:Jex2T", "label": "DatabaseJex2T", "type": "dataset", "description": "218K simulated images, 633MB"}, {"id": "concept:DMI", "label": "Dzyaloshinskii-Moriya Interaction", "type": "parameter", "description": "Magnetic parameter (R\u00b2 = 0.97)"}, {"id": "concept:UMAP", "label": "UMAP Analysis", "type": "analysis_technique", "description": "2D feature space visualization"}, {"id": "concept:RAMs", "label": "Regression Activation Maps", "type": "method", "description": "Novel interpretability method for continuous regression"}, {"id": "concept:Skyrmions", "label": "Skyrmions", "type": "magnetic_texture", "description": "Topological magnetic defects"}, {"id": "dir:papers", "label": "papers/", "type": "directory", "description": "LaTeX academic papers"}, {"id": "dir:codigo", "label": "codigo/", "type": "directory", "description": "Deep learning code and models"}, {"id": "dir:referencias", "label": "Referencias/", "type": "directory", "description": "Bibliography management"}, {"id": "tool:LaTeX", "label": "LaTeX", "type": "tool", "description": "Academic paper typesetting"}, {"id": "tool:Obsidian", "label": "Obsidian", "type": "tool", "description": "Note-taking system"}];
+    const links = [{"source": "paper:VAM_SpinesDL", "target": "model:ViT", "relation": "uses"}, {"source": "paper:VAM_SpinesDL", "target": "model:Xception", "relation": "uses"}, {"source": "paper:VAM_SpinesDL", "target": "model:ResNet50", "relation": "uses"}, {"source": "paper:VAM_SpinesDL", "target": "model:DenseNet", "relation": "uses"}, {"source": "paper:VAM_SpinesDL", "target": "model:EfficientNet", "relation": "uses"}, {"source": "model:ViT", "target": "dataset:KDMT", "relation": "trained_on"}, {"source": "model:Xception", "target": "dataset:KDMT", "relation": "trained_on"}, {"source": "model:ResNet50", "target": "dataset:KDMT", "relation": "trained_on"}, {"source": "model:DenseNet", "target": "dataset:KDMT", "relation": "trained_on"}, {"source": "model:EfficientNet", "target": "dataset:KDMT", "relation": "trained_on"}, {"source": "paper:VAM_SpinesDL", "target": "concept:RAMs", "relation": "introduces"}, {"source": "concept:RAMs", "target": "concept:DMI", "relation": "analyzes"}, {"source": "paper:VAM_SpinesDL", "target": "concept:UMAP", "relation": "uses"}, {"source": "concept:UMAP", "target": "concept:Skyrmions", "relation": "visualizes"}, {"source": "dir:codigo", "target": "model:ViT", "relation": "contains"}, {"source": "dir:papers", "target": "paper:VAM_SpinesDL", "relation": "contains"}, {"source": "dir:codigo", "target": "dataset:KDMT", "relation": "processes"}, {"source": "dir:referencias", "target": "paper:VAM_SpinesDL", "relation": "supports"}];
+    
+    // Create node map for linking
+    const nodeMap = {};
+    nodes.forEach(n => nodeMap[n.id] = n);
+    
+    // Convert to numeric indices
+    const simLinks = links.map(l => ({
+        source: nodes.findIndex(n => n.id === l.source),
+        target: nodes.findIndex(n => n.id === l.target),
+        type: l.relation
+    })).filter(l => l.source >= 0 && l.target >= 0);
+    
+    const simulation = d3.forceSimulation(nodes)
+        .force('link', d3.forceLink(simLinks).id(d => d.id).distance(80))
+        .force('charge', d3.forceManyBody().strength(-300))
+        .force('center', d3.forceCenter(width / 2, height / 2));
+    
+    const link = svg.append('g').selectAll('line').data(simLinks).enter().append('line')
+        .attr('class', 'link')
+        .attr('stroke-width', d => Math.sqrt(1));
+    
+    const node = svg.append('g').selectAll('circle').data(nodes).enter().append('circle')
+        .attr('class', 'node')
+        .attr('r', d => d.type === 'research_paper' ? 8 : 5)
+        .attr('fill', d => {
+            if (d.type === 'research_paper') return '#ff6b6b';
+            if (d.type === 'architecture') return '#4ecdc4';
+            if (d.type === 'dataset') return '#45b7d1';
+            if (d.type === 'directory') return '#ffa07a';
+            return '#95e1d3';
+        })
+        .call(d3.drag()
+            .on('start', dragstarted)
+            .on('drag', dragged)
+            .on('end', dragended));
+    
+    node.append('title').text(d => d.label);
+    
+    const labels = svg.append('g').selectAll('text').data(nodes).enter().append('text')
+        .attr('class', 'node-label')
+        .attr('text-anchor', 'middle')
+        .attr('dy', '.3em')
+        .text(d => d.label.substring(0, 8));
+    
+    simulation.on('tick', () => {
+        link.attr('x1', d => d.source.x)
+            .attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x)
+            .attr('y2', d => d.target.y);
+        
+        node.attr('cx', d => d.x)
+            .attr('cy', d => d.y);
+        
+        labels.attr('x', d => d.x)
+              .attr('y', d => d.y);
+    });
+    
+    function dragstarted(event, d) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+    }
+    
+    function dragged(event, d) {
+        d.fx = event.x;
+        d.fy = event.y;
+    }
+    
+    function dragended(event, d) {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+    }
+    </script>
+</body>
+</html>

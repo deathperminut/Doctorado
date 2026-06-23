@@ -1,0 +1,652 @@
+{
+  "project": {
+    "name": "Doctorado",
+    "type": "Research Management System",
+    "description": "Centralized system for managing doctoral research: papers, code, notes, references, and experiments",
+    "author": "Juan Sebastián Méndez Rondón",
+    "status": "Active",
+    "started": "2024",
+    "tools": ["Git", "LaTeX", "Python", "Jupyter", "Obsidian", "Zotero", "Google Colab", "GitHub"],
+    "storage": ["GitHub", "Google Drive", "Kaggle"]
+  },
+  "nodes": [
+    {
+      "id": "doctorado",
+      "label": "Doctorado Project",
+      "type": "project",
+      "description": "Root node representing the entire doctoral research management system",
+      "properties": {
+        "repo_url": "https://github.com/deathperminut/Doctorado",
+        "location": "/Users/juansebastianmendezrondon/Projects/Doctorado"
+      }
+    },
+    {
+      "id": "papers_dir",
+      "label": "papers/ Directory",
+      "type": "component",
+      "description": "Contains all academic papers in LaTeX format",
+      "properties": {
+        "path": "papers/",
+        "format": "LaTeX",
+        "tools": ["LaTeX Workshop", "VS Code", "Overleaf", "pdflatex", "BibTeX"]
+      }
+    },
+    {
+      "id": "physics_ai_paper",
+      "label": "Physics_AI Paper",
+      "type": "research_output",
+      "description": "Deep learning paper on predicting Hamiltonian parameters in magnetic domains using Vision Transformers, ResNet, DenseNet, etc.",
+      "properties": {
+        "path": "papers/Physics_AI/",
+        "main_file": "main.tex",
+        "status": "In Progress",
+        "focus": "Magnetic domain analysis using deep learning"
+      }
+    },
+    {
+      "id": "preliminary_draft",
+      "label": "Preliminary Draft",
+      "type": "research_output",
+      "description": "Preliminary draft paper with foundational research",
+      "properties": {
+        "path": "papers/PreliminaryDraft/",
+        "status": "Draft"
+      }
+    },
+    {
+      "id": "codigo_dir",
+      "label": "codigo/ Directory",
+      "type": "component",
+      "description": "Contains scripts, models, and reusable utilities for the research",
+      "properties": {
+        "path": "codigo/",
+        "contains": ["preprocessing", "Models", "Results"]
+      }
+    },
+    {
+      "id": "physics_ai_codigo",
+      "label": "Physics_AI Code",
+      "type": "codebase",
+      "description": "Deep learning models and experiments for Hamiltonian parameter prediction",
+      "properties": {
+        "path": "codigo/Physics_AI/",
+        "subdirectories": ["preprocessing", "Models", "Results"]
+      }
+    },
+    {
+      "id": "preprocessing_module",
+      "label": "Preprocessing Module",
+      "type": "code_module",
+      "description": "Data construction and normalization for magnetic spin simulations",
+      "properties": {
+        "path": "codigo/Physics_AI/preprocessing/",
+        "databases": ["DatabaseJex2T", "DatabaseKDMT"],
+        "key_notebooks": ["Construction.ipynb", "DescriptionRescale.ipynb"]
+      }
+    },
+    {
+      "id": "models_module",
+      "label": "Models Module",
+      "type": "code_module",
+      "description": "Deep learning model implementations and training",
+      "properties": {
+        "path": "codigo/Physics_AI/Models/",
+        "architectures": ["DenseNet121", "ResNet50", "EfficientNetB2", "EfficientNetB7", "InceptionNetV3"],
+        "best_model": "DenseNet121",
+        "frameworks": ["TensorFlow", "Keras"]
+      }
+    },
+    {
+      "id": "results_module",
+      "label": "Results Module",
+      "type": "code_module",
+      "description": "Analysis and interpretability experiments",
+      "properties": {
+        "path": "codigo/Physics_AI/Results/",
+        "analysis_techniques": ["UMAP", "Grad-CAM", "Ablation studies"]
+      }
+    },
+    {
+      "id": "database_jex2t",
+      "label": "DatabaseJex2T",
+      "type": "dataset",
+      "description": "Magnetic simulation database with varying Jex2 (exchange interaction) and Temperature parameters",
+      "properties": {
+        "parameters": ["Jex2", "Temperature"],
+        "image_size": "39x39 pixels",
+        "total_samples": 54044,
+        "target_prediction": ["Jex2", "Temperature"]
+      }
+    },
+    {
+      "id": "database_kdmt",
+      "label": "DatabaseKDMT",
+      "type": "dataset",
+      "description": "Magnetic simulation database with varying KDM (Dzyaloshinskii-Moriya anisotropy) and Temperature parameters",
+      "properties": {
+        "parameters": ["KDM", "Temperature"],
+        "image_size": "39x39 pixels",
+        "target_prediction": ["KDM", "Temperature"]
+      }
+    },
+    {
+      "id": "referencias_dir",
+      "label": "Referencias/ Directory",
+      "type": "component",
+      "description": "Bibliography management and reference storage",
+      "properties": {
+        "path": "Referencias/",
+        "main_file": "biblioteca.bib",
+        "tool": "Zotero + Better BibTeX",
+        "storage": "Google Drive (PDFs)"
+      }
+    },
+    {
+      "id": "notas_dir",
+      "label": "notas/ Directory",
+      "type": "component",
+      "description": "Note-taking system using Obsidian vault",
+      "properties": {
+        "path": "notas/",
+        "tool": "Obsidian",
+        "format": "Markdown",
+        "subdirectories": ["literatura", "ideas", "meetings", "daily-notes"],
+        "versionControl": "Git"
+      }
+    },
+    {
+      "id": "datos_dir",
+      "label": "datos/ Directory",
+      "type": "component",
+      "description": "Data download scripts and dataset management",
+      "properties": {
+        "path": "datos/",
+        "storage": ["Kaggle", "Google Drive"]
+      }
+    },
+    {
+      "id": "densenet121_model",
+      "label": "DenseNet121 Model",
+      "type": "model",
+      "description": "Best performing deep learning model for parameter prediction (R² > 0.97)",
+      "properties": {
+        "architecture": "Densely Connected Convolutional Network",
+        "r2_score": 0.9753,
+        "mape": "18.64%",
+        "training_framework": "TensorFlow/Keras",
+        "transfer_learning": "ImageNet weights",
+        "parameters": "~7M trainable"
+      }
+    },
+    {
+      "id": "resnet50_model",
+      "label": "ResNet50 Model",
+      "type": "model",
+      "description": "Residual network alternative architecture",
+      "properties": {
+        "architecture": "Residual Network",
+        "framework": "TensorFlow/Keras"
+      }
+    },
+    {
+      "id": "tensorflow_tool",
+      "label": "TensorFlow/Keras",
+      "type": "technology",
+      "description": "Deep learning framework used for model training",
+      "properties": {
+        "version": "2.x",
+        "purpose": "Neural network implementation and training"
+      }
+    },
+    {
+      "id": "python_tool",
+      "label": "Python",
+      "type": "technology",
+      "description": "Primary programming language",
+      "properties": {
+        "version": "3.10+",
+        "libraries": ["NumPy", "Pandas", "Matplotlib", "Seaborn", "scikit-learn", "OpenCV", "UMAP-learn"]
+      }
+    },
+    {
+      "id": "jupyter_tool",
+      "label": "Jupyter Notebooks",
+      "type": "technology",
+      "description": "Interactive computing environment for experiments and analysis",
+      "properties": {
+        "use_cases": ["Data exploration", "Model training", "Results analysis", "Visualization"]
+      }
+    },
+    {
+      "id": "latex_tool",
+      "label": "LaTeX",
+      "type": "technology",
+      "description": "Document preparation system for academic papers",
+      "properties": {
+        "tools": ["LaTeX Workshop", "VS Code", "Overleaf", "pdflatex", "BibTeX"]
+      }
+    },
+    {
+      "id": "obsidian_tool",
+      "label": "Obsidian",
+      "type": "technology",
+      "description": "Note-taking application with knowledge graph features",
+      "properties": {
+        "format": "Markdown",
+        "location": "notas/ vault"
+      }
+    },
+    {
+      "id": "zotero_tool",
+      "label": "Zotero + Better BibTeX",
+      "type": "technology",
+      "description": "Bibliography management system with automatic BibTeX export",
+      "properties": {
+        "plugin": "Better BibTeX",
+        "export_format": "BibTeX",
+        "auto_update": true
+      }
+    },
+    {
+      "id": "git_tool",
+      "label": "Git",
+      "type": "technology",
+      "description": "Version control system",
+      "properties": {
+        "remote": "GitHub",
+        "main_branch": "main"
+      }
+    },
+    {
+      "id": "github_storage",
+      "label": "GitHub",
+      "type": "storage",
+      "description": "Remote repository hosting code, LaTeX, and Markdown",
+      "properties": {
+        "repository": "https://github.com/deathperminut/Doctorado",
+        "contents": ["code", "papers", "notes"]
+      }
+    },
+    {
+      "id": "google_drive_storage",
+      "label": "Google Drive",
+      "type": "storage",
+      "description": "Cloud storage for large files and multimedia",
+      "properties": {
+        "contents": ["PDFs", "datasets", "multimedia"]
+      }
+    },
+    {
+      "id": "kaggle_storage",
+      "label": "Kaggle",
+      "type": "storage",
+      "description": "Platform for hosting public datasets",
+      "properties": {
+        "contents": ["datasets", "scripts"]
+      }
+    },
+    {
+      "id": "google_colab_platform",
+      "label": "Google Colab",
+      "type": "technology",
+      "description": "Cloud computing environment for GPU-accelerated training",
+      "properties": {
+        "purpose": "Model training and experiments",
+        "gpu_access": true
+      }
+    },
+    {
+      "id": "umap_technique",
+      "label": "UMAP",
+      "type": "analysis_technique",
+      "description": "Uniform Manifold Approximation and Projection for dimensionality reduction",
+      "properties": {
+        "use_case": "Feature visualization and activation analysis",
+        "reference": "McInnes et al. (2018)"
+      }
+    },
+    {
+      "id": "gradcam_technique",
+      "label": "Grad-CAM",
+      "type": "analysis_technique",
+      "description": "Gradient-weighted Class Activation Mapping for model interpretability",
+      "properties": {
+        "use_case": "Visual explanations of model decisions",
+        "outputs": ["Heatmaps", "attention regions"],
+        "reference": "Selvaraju et al. (2017)"
+      }
+    },
+    {
+      "id": "ablation_technique",
+      "label": "Ablation Studies",
+      "type": "analysis_technique",
+      "description": "Systematic removal of features to measure their impact",
+      "properties": {
+        "use_case": "Region masking and importance measurement"
+      }
+    },
+    {
+      "id": "magnetic_physics",
+      "label": "Magnetic Domain Physics",
+      "type": "domain",
+      "description": "Physics domain knowledge about magnetic simulations and parameters",
+      "properties": {
+        "parameters": ["Jex2 (exchange interaction)", "KDM (anisotropy)", "Temperature"],
+        "phenomena": ["Domain formation", "Spin configurations"]
+      }
+    },
+    {
+      "id": "workflow_process",
+      "label": "Workflow Process",
+      "type": "process",
+      "description": "Daily research workflow structure",
+      "properties": {
+        "stages": ["Start of day (git pull)", "During day (write, code, experiment)", "End of day (git push)"],
+        "frequency": "Daily commits minimum"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "doctorado",
+      "target": "papers_dir",
+      "relationship": "contains",
+      "type": "structural"
+    },
+    {
+      "source": "doctorado",
+      "target": "codigo_dir",
+      "relationship": "contains",
+      "type": "structural"
+    },
+    {
+      "source": "doctorado",
+      "target": "referencias_dir",
+      "relationship": "contains",
+      "type": "structural"
+    },
+    {
+      "source": "doctorado",
+      "target": "notas_dir",
+      "relationship": "contains",
+      "type": "structural"
+    },
+    {
+      "source": "doctorado",
+      "target": "datos_dir",
+      "relationship": "contains",
+      "type": "structural"
+    },
+    {
+      "source": "papers_dir",
+      "target": "physics_ai_paper",
+      "relationship": "includes",
+      "type": "structural"
+    },
+    {
+      "source": "papers_dir",
+      "target": "preliminary_draft",
+      "relationship": "includes",
+      "type": "structural"
+    },
+    {
+      "source": "codigo_dir",
+      "target": "physics_ai_codigo",
+      "relationship": "includes",
+      "type": "structural"
+    },
+    {
+      "source": "physics_ai_codigo",
+      "target": "preprocessing_module",
+      "relationship": "contains",
+      "type": "structural"
+    },
+    {
+      "source": "physics_ai_codigo",
+      "target": "models_module",
+      "relationship": "contains",
+      "type": "structural"
+    },
+    {
+      "source": "physics_ai_codigo",
+      "target": "results_module",
+      "relationship": "contains",
+      "type": "structural"
+    },
+    {
+      "source": "preprocessing_module",
+      "target": "database_jex2t",
+      "relationship": "processes",
+      "type": "data"
+    },
+    {
+      "source": "preprocessing_module",
+      "target": "database_kdmt",
+      "relationship": "processes",
+      "type": "data"
+    },
+    {
+      "source": "models_module",
+      "target": "densenet121_model",
+      "relationship": "implements",
+      "type": "algorithmic"
+    },
+    {
+      "source": "models_module",
+      "target": "resnet50_model",
+      "relationship": "implements",
+      "type": "algorithmic"
+    },
+    {
+      "source": "database_jex2t",
+      "target": "models_module",
+      "relationship": "feeds",
+      "type": "data"
+    },
+    {
+      "source": "database_kdmt",
+      "target": "models_module",
+      "relationship": "feeds",
+      "type": "data"
+    },
+    {
+      "source": "models_module",
+      "target": "results_module",
+      "relationship": "outputs_to",
+      "type": "process"
+    },
+    {
+      "source": "results_module",
+      "target": "umap_technique",
+      "relationship": "uses",
+      "type": "methodological"
+    },
+    {
+      "source": "results_module",
+      "target": "gradcam_technique",
+      "relationship": "uses",
+      "type": "methodological"
+    },
+    {
+      "source": "results_module",
+      "target": "ablation_technique",
+      "relationship": "uses",
+      "type": "methodological"
+    },
+    {
+      "source": "physics_ai_paper",
+      "target": "models_module",
+      "relationship": "documents",
+      "type": "research"
+    },
+    {
+      "source": "physics_ai_paper",
+      "target": "results_module",
+      "relationship": "uses_results_from",
+      "type": "research"
+    },
+    {
+      "source": "physics_ai_paper",
+      "target": "referencias_dir",
+      "relationship": "references",
+      "type": "scholarly"
+    },
+    {
+      "source": "models_module",
+      "target": "tensorflow_tool",
+      "relationship": "uses",
+      "type": "technological"
+    },
+    {
+      "source": "models_module",
+      "target": "jupyter_tool",
+      "relationship": "runs_in",
+      "type": "technological"
+    },
+    {
+      "source": "preprocessing_module",
+      "target": "python_tool",
+      "relationship": "written_in",
+      "type": "technological"
+    },
+    {
+      "source": "physics_ai_codigo",
+      "target": "python_tool",
+      "relationship": "written_in",
+      "type": "technological"
+    },
+    {
+      "source": "physics_ai_paper",
+      "target": "latex_tool",
+      "relationship": "written_in",
+      "type": "technological"
+    },
+    {
+      "source": "notas_dir",
+      "target": "obsidian_tool",
+      "relationship": "managed_by",
+      "type": "technological"
+    },
+    {
+      "source": "referencias_dir",
+      "target": "zotero_tool",
+      "relationship": "managed_by",
+      "type": "technological"
+    },
+    {
+      "source": "doctorado",
+      "target": "git_tool",
+      "relationship": "version_controlled_by",
+      "type": "technological"
+    },
+    {
+      "source": "git_tool",
+      "target": "github_storage",
+      "relationship": "pushes_to",
+      "type": "storage"
+    },
+    {
+      "source": "doctorado",
+      "target": "github_storage",
+      "relationship": "backed_up_in",
+      "type": "storage"
+    },
+    {
+      "source": "doctorado",
+      "target": "google_drive_storage",
+      "relationship": "backed_up_in",
+      "type": "storage"
+    },
+    {
+      "source": "doctorado",
+      "target": "kaggle_storage",
+      "relationship": "backed_up_in",
+      "type": "storage"
+    },
+    {
+      "source": "models_module",
+      "target": "google_colab_platform",
+      "relationship": "trained_on",
+      "type": "technological"
+    },
+    {
+      "source": "densenet121_model",
+      "target": "database_jex2t",
+      "relationship": "trained_on",
+      "type": "data"
+    },
+    {
+      "source": "densenet121_model",
+      "target": "tensorflow_tool",
+      "relationship": "implemented_in",
+      "type": "technological"
+    },
+    {
+      "source": "physics_ai_codigo",
+      "target": "magnetic_physics",
+      "relationship": "applies",
+      "type": "domain"
+    },
+    {
+      "source": "preprocessing_module",
+      "target": "magnetic_physics",
+      "relationship": "based_on",
+      "type": "domain"
+    },
+    {
+      "source": "doctorado",
+      "target": "workflow_process",
+      "relationship": "follows",
+      "type": "process"
+    }
+  ],
+  "communities": [
+    {
+      "id": "research_papers",
+      "name": "Research Papers",
+      "nodes": ["physics_ai_paper", "preliminary_draft", "latex_tool", "referencias_dir"],
+      "description": "All academic paper writing and bibliography management"
+    },
+    {
+      "id": "deep_learning_pipeline",
+      "name": "Deep Learning Pipeline",
+      "nodes": ["preprocessing_module", "models_module", "results_module", "database_jex2t", "database_kdmt", "densenet121_model", "tensorflow_tool"],
+      "description": "Complete ML workflow from data to results"
+    },
+    {
+      "id": "analysis_interpretability",
+      "name": "Analysis & Interpretability",
+      "nodes": ["results_module", "umap_technique", "gradcam_technique", "ablation_technique", "jupyter_tool"],
+      "description": "Model analysis and interpretation methods"
+    },
+    {
+      "id": "knowledge_management",
+      "name": "Knowledge Management",
+      "nodes": ["notas_dir", "obsidian_tool", "referencias_dir", "zotero_tool"],
+      "description": "Note-taking and reference organization"
+    },
+    {
+      "id": "version_storage",
+      "name": "Version Control & Storage",
+      "nodes": ["git_tool", "github_storage", "google_drive_storage", "kaggle_storage"],
+      "description": "Version control and backup systems"
+    }
+  ],
+  "key_findings": {
+    "project_status": "Active - doctoral research in progress",
+    "primary_focus": "Predicting Hamiltonian parameters in magnetic domains using deep learning",
+    "best_model": "DenseNet121 with R² = 0.9753",
+    "databases": ["DatabaseJex2T (54,044 samples)", "DatabaseKDMT (variable samples)"],
+    "main_technologies": ["Python 3.10+", "TensorFlow/Keras", "Jupyter", "LaTeX", "Obsidian", "Zotero"],
+    "storage_strategy": "GitHub (code/papers/notes) + Google Drive (PDFs/datasets) + Kaggle (public datasets)",
+    "workflow": "Daily git pull → write/code/experiment → git push (minimum daily commits)",
+    "backup_levels": ["GitHub (automated)", "Google Drive (manual)", "Time Machine (local full backup)"]
+  },
+  "metadata": {
+    "created": "2026-06-15",
+    "graph_format": "JSON Knowledge Graph",
+    "total_nodes": 36,
+    "total_edges": 48,
+    "communities": 5
+  }
+}

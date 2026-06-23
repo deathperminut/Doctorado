@@ -1,0 +1,87 @@
+{
+  "nodes": [
+    {
+      "id": "notebook:VitFullDataBaseV2",
+      "label": "VitFullDataBaseV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Models/VitFullDataBaseV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:XceptionFullDataBaseV2",
+      "label": "XceptionFullDataBaseV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Models/XceptionFullDataBaseV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:Resnet50FullDatabaseV2",
+      "label": "Resnet50FullDatabaseV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Models/Resnet50FullDatabaseV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:DenseNetFullDatabaseV2",
+      "label": "DenseNetFullDatabaseV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Models/DenseNetFullDatabaseV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:EfficienetFullDatabaseV2",
+      "label": "EfficienetFullDatabaseV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Models/EfficienetFullDatabaseV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:AnalisisEstructurasV2",
+      "label": "AnalisisEstructurasV2",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/Results/AnalisisEstructurasV2.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:DescriptionRescale",
+      "label": "DescriptionRescale",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/preprocessing/Databasejex2T/DescriptionRescale.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:Construction",
+      "label": "Construction",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/preprocessing/Databasejex2T/Construction.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:DescriptionRescale",
+      "label": "DescriptionRescale",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/preprocessing/DatabaseKDMT/DescriptionRescale.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    },
+    {
+      "id": "notebook:Construction",
+      "label": "Construction",
+      "type": "notebook",
+      "source": "codigo/Physics_AI/preprocessing/DatabaseKDMT/Construction.ipynb",
+      "confidence": 1.0,
+      "extracted_by": "AST"
+    }
+  ],
+  "edges": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
