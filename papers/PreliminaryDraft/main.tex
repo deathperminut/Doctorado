@@ -31,6 +31,13 @@
 \usetikzlibrary{arrows.meta}% Soport\e gráfico adicional
 \usepackage{epstopdf}
 \usepackage{float}
+% --- float placement tuning (reduce half-empty pages, allow two figures to share a page) ---
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{totalnumber}{4}
 \usepackage{mathptmx} 
 \usepackage{times} 
 \usepackage{amsmath}
@@ -113,6 +120,8 @@
 \definecolor{inputgreen}{RGB}{230, 245, 230}  % Green for definitions
 \definecolor{processblue}{RGB}{230, 245, 255}  % Blue for physics/simulation
 \definecolor{outputorange}{RGB}{255, 245, 230} % Orange for final data
+\definecolor{subAcol}{RGB}{60, 120, 200}       % checkerboard sublattice A
+\definecolor{subBcol}{RGB}{235, 150, 60}       % checkerboard sublattice B
 %\usepackage{subcaption}
 
 %\usepackage[hyperindex, colorlinks, citecolor=blue, linkcolor=blue, breaklinks=true, bookmarksopen]{hyperref}
@@ -211,11 +220,11 @@ Co-Advisor: Prof. Jorge Ivan Montes\\ \small{Universidad Nacional de Colombia - 
 
 Magnetic domain structures in nanoscale materials play a central role in spintronics, biomedicine, and energy storage technologies. Magnetic nanoparticles and nanodots exhibit complex spin textures—vortices, skyrmions, and stripe domains—whose functional properties depend critically on Hamiltonian parameters such as exchange, anisotropy, Dzyaloshinskii–Moriya interaction, temperature, and external fields. Understanding and controlling these states requires establishing robust mappings between physical parameters and spatial spin configurations.
 
-Three fundamental challenges complicate this effort. First, the nonlinearity and high dimensionality of parameter-to-configuration mappings prevent direct analytical inversion. Second, degeneracy arises when distinct parameter combinations produce visually similar magnetic textures, hindering unique identification. Third, experimental limitations—including noise, finite probe resolution, and tip–sample convolution in microscopy techniques—compromise quantitative interpretation of magnetic domain images.
+Three fundamental challenges make this an inherently ill-posed problem. First, the nonlinearity and high dimensionality of the parameter-to-configuration mapping render it non-injective: distinct parameter combinations relax into energetically comparable, visually similar magnetic textures, so unique parameters cannot be recovered by direct analytical inversion (degeneracy). Second, the accessible and low-cost experimental modalities—a single magnetic force microscopy or polar-Kerr image, or a single normal-incidence STXM scan—resolve only one scalar projection of the magnetization vector, typically the out-of-plane component $s_z$; recovering the full three-dimensional texture requires multi-acquisition protocols (vector-MOKE, tilt-series STXM tomography) that entail greater instrumental complexity and machine time and are not always feasible for a given material or setup. This single-axis observation discards information and aggravates the ill-conditioning: for instance, reversing the sign of the antisymmetric Dzyaloshinskii–Moriya interaction mirrors the in-plane chirality while leaving $s_z$ invariant, so configurations of opposite handedness become indistinguishable, and parameters that shape the in-plane structure rather than the $s_z$ contrast become weakly identifiable. Third, experimental data are scarce and costly to acquire, whereas synthetic data—although abundant and fully labelled—are idealized and diverge from experiment through instrumental noise, finite probe resolution, and tip–sample convolution, so models trained on simulations may fail to transfer, defining a sim-to-real gap.
 
-Deep learning has shown promise in addressing these problems. The inverse problem of inferring physical parameters from magnetic images has been tackled with convolutional neural networks and explainable regression frameworks, while the forward problem of generating domain configurations from parameters has been explored using variational autoencoders and conditional generative adversarial networks. However, critical gaps remain: parameter degeneracy prevents robust inverse estimation, data quality degradation from experimental noise and simulation artifacts limits model reliability, and lack of physics-based interpretability obscures connections between learned representations and fundamental magnetic interactions. Existing generative approaches suffer from poor interpretability, instability under noise, and insufficient physical constraints.
+Deep learning has shown promise in addressing these problems. The inverse problem of inferring physical parameters from magnetic images has been tackled with convolutional neural networks and explainable regression frameworks, while the forward problem of generating domain configurations from parameters has been explored using variational autoencoders and conditional generative adversarial networks. However, critical gaps remain: parameter degeneracy together with the partial observability of single-axis ($s_z$) measurements prevents robust inverse estimation, the sim-to-real gap between idealized synthetic data and noisy, scarce experimental images limits model reliability, and lack of physics-based interpretability obscures connections between learned representations and fundamental magnetic interactions. Existing generative approaches suffer from poor interpretability, instability under noise, and insufficient physical constraints.
 
-This work proposes a unified deep learning framework that integrates variational methodologies with physics-informed regularization to address degeneracy, bridge the simulation-to-experiment gap, and ensure interpretability. The approach combines image-based parameter estimation with generative modeling of magnetic states, incorporating domain-aware training strategies to maintain validity across synthetic and experimental imaging modalities while employing post-hoc attribution methods to identify spatially relevant features underlying domain configurations.
+This work proposes a unified, physics-informed deep learning framework that couples parameter estimation from magnetic images with conditional generative modelling to mitigate parameter degeneracy and characterize the chirality ambiguity intrinsic to single-axis observation, bridge the simulation-to-experiment gap, and ensure interpretability. Rather than conditioning generation on static parameters alone, the framework exploits how magnetic textures transition under controlled changes of ambient conditions—temperature and external field—using these trajectories as additional physical information to disambiguate parameter combinations that would otherwise yield near-identical static textures. Learning is guided by physically grounded objectives defined on magnetic observables rather than pixel-level similarity alone, together with domain-aware strategies that preserve validity across synthetic and experimental modalities. The supporting data-generation engine is reformulated algebraically and parallelized to accelerate simulation without altering the underlying physics, while post-hoc attribution methods reveal the spatial features driving each prediction. Finally, these components are integrated into a single, unified framework that autonomous agents can reuse.
 
 This research addresses critical national and regional technological needs by advancing Colombia's capabilities in materials characterization and intelligent data processing. The framework supports development of next-generation magnetic memory and energy storage systems, identified as strategic innovation priorities. By integrating physics-informed deep learning with experimental microscopy workflows, this work bridges fundamental materials science and industrial spintronics applications. Furthermore, it aligns with the mission of the Digital Signal and Control Processing Group, extending the group's expertise in digital image processing to nanoscale materials characterization and fostering interdisciplinary collaboration between materials physics, machine learning, and computational imaging.
 
@@ -260,16 +269,18 @@ In recent years, the integration of AI with computational physics has opened new
 This work is developed within the Research Signal Processing and Recognition (GCPDS), which has extensive experience in the design and implementation of intelligent systems for signal and image analysis. The group has explored artificial intelligence methodologies across multiple domains, including image processing, temporal series analysis, and, more recently, EEG signal interpretation. Building on this background, GCPDS is currently expanding its research toward the application of AI in computational physics, focusing on the intersection between data-driven learning and physical modeling. This research effort is supported by the project "Machine Learning Applied to the Efficient Prediction of Magnetic Properties of Nanoparticles as Support for the Generation of Electronic Devices," funded by the Faculty of Engineering and Architecture of Universidad Nacional de Colombia, Manizales Campus, under the 2024 Call for Research Project Support. Current efforts involve the integration of generative models, interpretability mechanisms, transformer-based architectures, and optimization strategies to develop hybrid frameworks capable of revealing underlying physical principles from complex experimental data. This interdisciplinary approach establishes a foundation for applying advanced machine learning to the understanding and design of magnetic systems at the nanoscale.
 
 
-\section{Problem Statement}
+\section{Problem Statement}\label{sec:problem_statement}
 %%%% Experimental and Theoretical Approaches to Magnetic Nanostructures
  
 The study of magnetic nanostructures integrates two complementary approaches: the \textbf{experimental} and the \textbf{theoretical-simulation} pathways \cite{Andreu2020Anisotropic}. The experimental route focuses on the physical synthesis, visualization, and measurement of magnetic systems \cite{Nistico2020Magnetic}, whereas the theoretical approach aims to model and predict their magnetic behavior from first principles or phenomenological descriptions \cite{Li2023Magnetic}.
 
 
-From the experimental perspective, research begins with the \textit{sample preparation} of thin films, multilayers, or nanostructures that define the system's geometry and magnetic anisotropy \cite{Fert2022ThinFilms}. These samples are then characterized through advanced \textit{magnetic imaging techniques} such as Lorentz TEM, MFM, and Kerr microscopy, which reveal the domain patterns at nanometer resolution \cite{Li2023Magnetic}. The resulting data are complemented by \textit{acquisition and analysis} of external stimuli, including magnetic and electric fields (STT and SOT effects), strain fields, and temperature variations, which allow for the control and manipulation of domain structures \cite{Shao2021SOT}. However, experimental images often contain noise, contrast distortions, and limited resolution, making quantitative parameter extraction challenging \cite{Nistico2020Magnetic}. As a result, bridging the gap between simulated and observed magnetic configurations remains an open problem that hinders both predictive modeling and materials discovery \cite{Raviolo2020Angular}.
+From the experimental perspective, research begins with the \textit{sample preparation} of thin films, multilayers, or nanostructures that define the system's geometry and magnetic anisotropy \cite{Fert2022ThinFilms}. These samples are then characterized through advanced \textit{magnetic imaging techniques} such as Lorentz TEM, MFM, and Kerr microscopy, which reveal the domain patterns at nanometer resolution \cite{Li2023Magnetic}. The resulting data are complemented by \textit{acquisition and analysis} of external stimuli, including magnetic and electric fields (STT and SOT effects), strain fields, and temperature variations, which allow for the control and manipulation of domain structures \cite{Shao2021SOT}. However, experimental images often contain noise, contrast distortions, and limited resolution, making quantitative parameter extraction challenging \cite{Nistico2020Magnetic}. Moreover, the most accessible and low-cost acquisitions—a single MFM or polar-Kerr image, or a single normal-incidence STXM scan—resolve only one scalar projection of the magnetization vector, typically its out-of-plane component $s_z$; recovering the full three-dimensional spin texture demands multi-acquisition protocols such as vector-MOKE or tilt-series tomography, which add instrumental complexity and machine time and are not always feasible for a given material or setup \cite{Li2023Magnetic}. Relying on a single projection discards part of the physical information: the in-plane degrees of freedom, and in particular the handedness fixed by the sign of the antisymmetric Dzyaloshinskii–Moriya coupling, leave the observed $s_z$ pattern unchanged. This partial observability, compounded by the scarcity and cost of experimental measurements, stands alongside noise and finite resolution as a core experimental limitation. As a result, bridging the gap between simulated and observed magnetic configurations remains an open problem that hinders both predictive modeling and materials discovery \cite{Raviolo2020Angular}.
 
 
 In parallel, the theoretical and computational approach seeks to describe these systems at different scales. At the \textit{atomistic level}, models such as the Heisenberg Hamiltonian and Monte Carlo simulations capture spin interactions with atomic precision \cite{Chrobak2020Atomic}. Moving to larger scales, \textit{micromagnetic simulations} employ the LLG equation to model the continuous magnetization field, implemented through frameworks like MuMax3, OOMMF, and Spirit \cite{Li2023Magnetic}.
+
+These simulation methods, however, are computationally demanding, and this cost becomes the limiting factor when generating the large, densely sampled datasets that data-driven approaches require. Reaching a thermodynamically relaxed configuration for a single parameter set entails a sequential Monte Carlo relaxation: thousands of sweeps over the lattice, each attempting a local spin update whose acceptance depends on the previous state, typically wrapped in a simulated-annealing schedule that slowly lowers the temperature to avoid metastable trapping \cite{Chrobak2020Atomic}. Because the Markov chain is inherently sequential and must be repeated over many stochastic replicas and across a high-dimensional grid of Hamiltonian parameters, the total cost grows rapidly, and conventional implementations---often relying on site-by-site loops in general-purpose scientific code---leave much of the available hardware parallelism unused \cite{Misiurev2024Modeling}. This computational bottleneck constrains how finely the parameter space can be explored and motivates reformulations of the sampling procedure that preserve the underlying physics while exploiting modern parallel hardware.
 
 Together, these methodologies constitute a multi-scale, multi-modal ecosystem that bridges empirical observation and theoretical understanding, as illustrated in Figure~\ref{fig:problem_statement}, providing the foundation for modern research in magnetic materials \cite{Misiurev2024Modeling}.
 
@@ -311,7 +322,7 @@ The direct problem involves predicting or generating the magnetic domain configu
   a/.style={-{Latex[length=3mm]}, line width=1.2pt}]
  % --- Direct problem ---
  \node[font=\large\bfseries] at (4,2.2) {Direct problem};
- \node[pbox] (p1) at (0,0) {\textbf{Hamiltonian parameters}\\[2pt] $\bullet$ exchange\\ $\bullet$ anisotropy\\ $\bullet$ DMI\\ $\bullet$ field, $T$};
+ \node[pbox] (p1) at (0,0) {\textbf{Physical inputs}\\[2pt] $\bullet$ couplings: exchange, anisotropy, DMI\\ $\bullet$ external conditions: field, temperature};
  \node[font=\small] (c1lab) at (8,0.7) {Domain configuration};
  \node[draw, fill=gray!35, minimum size=1.3cm] (c1img) at (8,-0.55) {};
  \node[draw, thick, rounded corners=4pt, fit=(c1lab)(c1img), inner sep=5pt] (c1) {};
@@ -321,10 +332,10 @@ The direct problem involves predicting or generating the magnetic domain configu
  \node[font=\small] (c2lab) at (0,-4.3) {Domain configuration};
  \node[draw, fill=gray!35, minimum size=1.3cm] (c2img) at (0,-5.55) {};
  \node[draw, thick, rounded corners=4pt, fit=(c2lab)(c2img), inner sep=5pt] (c2) {};
- \node[pbox] (p2) at (8,-5.0) {\textbf{Hamiltonian parameters}\\[2pt] $\bullet$ exchange\\ $\bullet$ anisotropy\\ $\bullet$ DMI\\ $\bullet$ field, $T$};
+ \node[pbox] (p2) at (8,-5.0) {\textbf{Physical inputs}\\[2pt] $\bullet$ couplings: exchange, anisotropy, DMI\\ $\bullet$ external conditions: field, temperature};
  \draw[a] (c2.east) -- node[above]{Compute} node[below]{domain energy} (p2.west);
 \end{tikzpicture}}
-    \caption{Unified framework illustrating the direct and inverse magnetic domain problems. The direct problem (top path) maps physical parameters—exchange interaction, anisotropy, DMI, external field, and temperature—to magnetic domain configurations through energy minimization or simulation. The inverse problem (bottom path) infers parameters from observed domain textures obtained via experimental techniques such as MFM or SP-STM. Bridging both directions through cycle-consistency ensures physical coherence and enables explainable, data-driven modeling of nanoscale magnetic systems.}
+    \caption{Unified framework illustrating the direct and inverse magnetic domain problems. The direct problem (top path) maps the intrinsic magnetic couplings (exchange, anisotropy, DMI) together with the external conditions (applied field and temperature) to magnetic domain configurations through energy minimization or thermally-sampled simulation; note that temperature does not enter the Hamiltonian and acts only through the statistical sampling of configurations. The inverse problem (bottom path) infers these couplings and conditions from observed domain textures obtained via experimental techniques such as MFM or SP-STM. Bridging both directions through cycle-consistency ensures physical coherence and enables explainable, data-driven modeling of nanoscale magnetic systems.}
     \label{fig:framework}
 \end{figure}
 
@@ -334,24 +345,24 @@ Overall, the study of magnetic nanodots is constrained by three fundamental chal
 
 \vspace{0.5cm}
 
-\subsection{Degeneracy of Magnetic States}
+\subsection{Degeneracy and Non-Uniqueness of Magnetic States}
 
 
 \vspace{0.5cm}
 
 Theoretical and computational approaches based on Hamiltonian formulations have become the dominant framework for studying magnetic nanodots due to their ability to provide physically grounded predictions under controlled parameter conditions. Micromagnetic simulations and atomistic spin dynamics solve the LLG equation or minimize the magnetic Hamiltonian to predict equilibrium and dynamic states \cite{Li2023Magnetic}. This approach offers several critical advantages: it enables exploration of parameter regimes inaccessible to experiment, provides complete three-dimensional vector field information at arbitrary resolution, and allows systematic investigation of competing magnetic interactions—exchange, anisotropy, DMI, Zeeman coupling—without measurement-induced perturbations \cite{Misiurev2024Modeling}. Moreover, simulations can incorporate thermal fluctuations, boundary conditions, and time-dependent external fields with explicit physical control, making them indispensable for understanding emergent phenomena such as skyrmion nucleation, domain wall dynamics, and magnetization reversal pathways \cite{Reichhardt2022Skyrmions}.
 
-However, despite their physical rigor, Hamiltonian-based simulations reveal a fundamental challenge: the degeneracy of magnetic states. Different combinations of parameters—such as exchange interaction, anisotropy, and DMI—can produce visually similar or energetically comparable magnetic patterns \cite{Feng2024}. As illustrated in Figure~\ref{fig:degeneracy_problem}, spin configurations sampled across the KDM (a proxy for DMI strength) and temperature parameter space exhibit striking visual similarity across distinct parameter regimes. This degeneracy arises because the magnetic energy landscape contains multiple local minima corresponding to metastable spin textures—vortices, skyrmions, stripe domains—that can be stabilized under different parameter sets \cite{Reichhardt2022Skyrmions}. Small compensations between competing interactions can preserve the overall energy balance: for instance, an increase in anisotropy may be offset by stronger exchange or weaker DMI, yielding morphologically indistinguishable configurations \cite{Swindells2020Proximity}. The visual similarity of domain textures across this parameter space creates fundamental ambiguity in inverse estimation tasks, complicating the unique identification of physical parameters from observed configurations and limiting the predictive power of both simulation-based and data-driven workflows \cite{Park2024}.
+However, despite their physical rigor, Hamiltonian-based simulations expose a first fundamental source of non-uniqueness: the energetic degeneracy of magnetic states. Distinct combinations of parameters—exchange, anisotropy, and DMI—can relax into energetically comparable and visually similar magnetic patterns \cite{Feng2024}. Figure~\ref{fig:degeneracy_problem} illustrates this empirically: representative spin textures laid out over pairs of Hamiltonian parameters—temperature against a competing (frustrated) exchange interaction and against the DMI proxy $K_{DM}$—exhibit striking visual similarity across distinct parameter regimes, creating fundamental ambiguity for inverse estimation \cite{Park2024}.
 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.80\textwidth]{Figures/TvsKDM.png}
-    \caption{Visual inspection of spin configurations over the KDM parameter space conditioned on temperature. Multiple parameter combinations produce visually similar magnetic textures, evidencing the degeneracy problem that complicates unique parameter identification from domain observations.}
+    \includegraphics[width=\textwidth]{Figures/phase_diagrams}
+    \caption{Two-dimensional phase diagrams of the magnetization texture as a function of pairs of Hamiltonian parameters: \textbf{(a)}~temperature $T^{(0)}$ versus a competing (frustrated) exchange interaction, and \textbf{(b)}~temperature $T^{(0)}$ versus the DMI proxy $K_{DM}$. Each cell shows an enlarged, representative magnetization image over a coarse sampling grid, with the background color encoding the vertical-axis parameter. Across broad regions the textures remain visually similar despite distinct parameter combinations, evidencing the degeneracy that complicates unique parameter identification from domain observations.}
     \label{fig:degeneracy_problem}
 \end{figure}
 
-In nanoscale magnetic systems, the relationship between the Hamiltonian parameters and the resulting domain configurations is highly nonlinear and often degenerate \cite{Feng2024}. This degeneracy arises because different combinations of exchange coupling (J), magnetic anisotropy (K), and Dzyaloshinskii–Moriya interaction (D) can produce equilibrium states with similar total energy and comparable spatial magnetization patterns \cite{MimicaFigari2020DMI}. From a physical perspective, as illustrated in Figure~\ref{fig:energy_landscape}, the energy landscape of the magnetic Hamiltonian contains multiple local minima corresponding to metastable spin textures—such as vortices, skyrmions, or labyrinthine domains—that can be stabilized under different parameter sets \cite{Zhou2020Topological}. In practice, this means that small compensations between parameters can preserve the overall balance of competing interactions: for example, an increase in anisotropy can be offset by a stronger exchange term or a weaker DMI, yielding morphologically indistinguishable configurations \cite{Solovyev2021Exchange}. Thermal fluctuations and boundary effects further blur these distinctions by allowing transitions between nearby minima, effectively broadening the range of parameter combinations that generate similar observable textures \cite{Verma2020Picosecond}. As a result, the mapping from physical parameters to domain patterns is non-injective, complicating the inverse identification of Hamiltonian parameters from experimental images and introducing intrinsic ambiguity in inverse modeling tasks \cite{Besnard2025Magnetic}.
+Physically, this degeneracy originates in the structure of the magnetic energy landscape. As sketched in Figure~\ref{fig:energy_landscape}, the Hamiltonian admits multiple local minima corresponding to metastable spin textures—vortices, skyrmions, stripe or labyrinthine domains—that can be stabilized under different parameter sets \cite{Zhou2020Topological,Reichhardt2022Skyrmions}. Small compensations between competing interactions preserve the overall energy balance: an increase in anisotropy may be offset by stronger exchange or weaker DMI, yielding morphologically indistinguishable configurations \cite{Solovyev2021Exchange,Swindells2020Proximity}. Thermal fluctuations and boundary effects further blur these distinctions by enabling transitions between nearby minima \cite{Verma2020Picosecond}. As a result, the mapping from physical parameters to domain patterns is non-injective, introducing intrinsic ambiguity into the inverse identification of Hamiltonian parameters \cite{Besnard2025Magnetic}.
 
 
 \begin{figure}[H]
@@ -361,11 +372,75 @@ In nanoscale magnetic systems, the relationship between the Hamiltonian paramete
     \label{fig:energy_landscape}
 \end{figure}
 
+It is worth making the notion of degeneracy physically precise, since the term is often used loosely to mean mere visual similarity. In its strict sense, two configurations are degenerate when they share the same energy, $\mathcal{H}(\mathbf{S})=\mathcal{H}(\mathbf{S}')$, and such exact degeneracies are generically the signature of a symmetry of the Hamiltonian: whenever a transformation $g$ leaves $\mathcal{H}$ invariant, $\mathbf{S}$ and $g\mathbf{S}$ are strictly degenerate. Within this framework the ambiguity relevant to inverse estimation separates into three physically distinct regimes. \textbf{(i)}~\emph{Symmetry-induced (exact) degeneracy}, in which configurations related by a symmetry operation—global spin rotation for isotropic exchange, lattice translation of a domain pattern, or the mirror/parity operation that exchanges the two chiralities when the antisymmetric coupling vanishes—are rigorously iso-energetic. \textbf{(ii)}~\emph{Frustration-induced degeneracy}, in which competing interactions that cannot be simultaneously minimized (as in the exchange-frustrated regime governed by the second-neighbour coupling) flatten the energy landscape into a manifold of nearly iso-energetic textures. \textbf{(iii)}~\emph{Accidental (quasi-)degeneracy}, in which distinct parameter sets happen to yield comparable energies without any underlying symmetry, through compensations such as increased anisotropy offset by stronger exchange. The visual indistinguishability emphasized above is the observable fingerprint of these three mechanisms rather than their definition, and recognizing which one dominates a given region of parameter space is what makes the ambiguity physically interpretable rather than a generic nuisance. Figure~\ref{fig:degeneracy_taxonomy} contrasts the three regimes through their characteristic energy landscapes.
+
+\begin{figure}[H]
+\centering
+\resizebox{0.98\textwidth}{!}{
+\begin{tikzpicture}[
+   ax/.style={-{Latex[length=2mm]}, gray!55!black, line width=0.7pt},
+   ecurve/.style={line width=1.1pt, blue!55!black},
+   emin/.style={circle, fill=orange!85!red, draw=black, inner sep=0pt, minimum size=3.4pt},
+   lvl/.style={dashed, red!60!black, line width=0.6pt},
+   clab/.style={font=\footnotesize, align=center},
+   tag/.style={font=\footnotesize\bfseries},
+   font=\footnotesize]
+
+% ============ Panel (i) Symmetry-induced (exact) ============
+\begin{scope}
+  \draw[ax] (0,0) -- (4.2,0) node[right, font=\scriptsize] {config.};
+  \draw[ax] (0,0) -- (0,2.9) node[above, font=\scriptsize] {$\mathcal{H}$};
+  % symmetric double well, both minima at same height y=0.55
+  \draw[ecurve] plot[smooth, tension=0.75] coordinates
+    {(0.35,2.55) (0.9,1.15) (1.5,0.55) (2.1,1.55) (2.7,0.55) (3.3,1.15) (3.85,2.55)};
+  \draw[lvl] (1.5,0.55) -- (2.7,0.55);
+  \node[emin] at (1.5,0.55) {};
+  \node[emin] at (2.7,0.55) {};
+  \draw[-{Latex[length=1.6mm]}, thick] (1.7,0.9) to[bend left=45] node[above=1pt, font=\scriptsize]{$g$} (2.5,0.9);
+  \node[clab] at (2.1,-0.55) {\textbf{(i) Symmetry (exact)}\\ $\mathcal{H}(\mathbf{S})=\mathcal{H}(g\mathbf{S})$\\ e.g.\ mirror / chirality at $K_{DM}\!=\!0$};
+\end{scope}
+
+% ============ Panel (ii) Frustration-induced ============
+\begin{scope}[xshift=5.7cm]
+  \draw[ax] (0,0) -- (4.2,0) node[right, font=\scriptsize] {config.};
+  \draw[ax] (0,0) -- (0,2.9) node[above, font=\scriptsize] {$\mathcal{H}$};
+  % flat degenerate manifold (broad wiggly basin near same low energy)
+  \draw[ecurve] plot[smooth, tension=0.6] coordinates
+    {(0.35,2.55) (0.9,1.0) (1.35,0.55) (1.8,0.62) (2.25,0.5) (2.7,0.6) (3.15,0.55) (3.45,1.0) (3.85,2.55)};
+  \draw[lvl] (1.2,0.55) -- (3.25,0.55);
+  \foreach \x in {1.35,1.8,2.25,2.7,3.15} {\node[emin] at (\x,0.53) {};}
+  \node[clab] at (2.1,-0.55) {\textbf{(ii) Frustration}\\ flat manifold of\\ near-degenerate states\\ (competing $J_1$/$J_2$)};
+\end{scope}
+
+% ============ Panel (iii) Accidental (quasi) ============
+\begin{scope}[xshift=11.4cm]
+  \draw[ax] (0,0) -- (4.2,0) node[right, font=\scriptsize] {parameter $\theta$};
+  \draw[ax] (0,0) -- (0,2.9) node[above, font=\scriptsize] {$\mathcal{H}$};
+  % two wells at different theta, comparable but unequal depth
+  \draw[ecurve] plot[smooth, tension=0.7] coordinates
+    {(0.35,2.4) (0.95,0.6) (1.5,1.75) (2.05,1.55) (2.75,0.85) (3.4,2.55)};
+  \node[emin] at (0.95,0.6) {};
+  \node[emin] at (2.75,0.85) {};
+  \draw[lvl] (0.55,0.6) -- (0.95,0.6);
+  \draw[lvl] (2.75,0.85) -- (3.15,0.85);
+  \draw[{Latex[length=1.4mm]}-{Latex[length=1.4mm]}, red!60!black, line width=0.6pt] (0.62,0.6) -- (0.62,0.85) node[midway,left,font=\scriptsize]{$\Delta\mathcal{H}\!\approx\!0$};
+  \node[clab] at (2.0,-0.55) {\textbf{(iii) Accidental}\\ distinct $\theta$, comparable\\ energy, \emph{no} symmetry\\ (anisotropy $\leftrightarrow$ exchange)};
+\end{scope}
+
+\end{tikzpicture}}
+\caption{Three physically distinct regimes of degeneracy, contrasted through their energy landscapes $\mathcal{H}$ over a configuration or parameter coordinate. \textbf{(i)}~Symmetry-induced (exact) degeneracy: two states related by a symmetry operation $g$ (e.g.\ the mirror exchanging chiralities when $K_{DM}\!=\!0$) are rigorously iso-energetic (equal-height minima on the dashed level). \textbf{(ii)}~Frustration-induced degeneracy: competing interactions flatten the landscape into a manifold of near-degenerate textures. \textbf{(iii)}~Accidental (quasi-)degeneracy: distinct parameter sets yield comparable but not exactly equal energy ($\Delta\mathcal{H}\!\approx\!0$) without any underlying symmetry. Only~(i) is exact; (ii) and~(iii) are approximate, yet all three project onto visually similar $s_z$ textures.}
+\label{fig:degeneracy_taxonomy}
+\end{figure}
+
+The inverse problem is non-unique for a second, distinct reason that arises not from the energy landscape but from the observable itself. Because the accessible measurement resolves only the out-of-plane component $s_z$, it is blind to the in-plane handedness of the texture: reversing the sign of the Dzyaloshinskii–Moriya interaction mirrors the in-plane spins and inverts the chirality while leaving the observed $s_z$ pattern unchanged \cite{MimicaFigari2020DMI}. Consequently, configurations of opposite chirality—though physically distinct and both experimentally realizable—map to identical $s_z$ observations, so the sign of the antisymmetric coupling is intrinsically unrecoverable from a single projection. This chiral degeneracy is a property of the measurement rather than of the simulation, and it becomes an exact energetic degeneracy in the achiral limit ($K_{DM}\to 0$), where both chiralities are equally probable.
+
 \subsection{Sim-to-Real Gap}\label{sec:sim2real}
 
 The study of magnetic domain structures is fundamentally constrained by a persistent discrepancy between computational predictions and experimental observations—a phenomenon known as the sim-to-real gap \cite{Wagenmaker2024SimToReal}. Computational modeling, whether based on atomistic spin dynamics or continuum micromagnetics, provides idealized representations of magnetic configurations derived from well-defined Hamiltonians and controlled numerical environments \cite{MacielDeMenezes2021Skyrmionics}. In contrast, experimental characterization techniques capture the physical reality of magnetic textures, but do so through indirect, technique-dependent measurements that are inevitably affected by instrumental artifacts, environmental perturbations, and the intrinsic limitations of each imaging modality \cite{Nistico2020Magnetic}. This fundamental asymmetry introduces systematic biases that manifest as domain-specific characteristics in both simulated and experimental data: computational approaches tend to produce smooth, noise-free, and boundary-condition-constrained spin fields, while experimental images exhibit instrumental noise, resolution-dependent blurring, contrast distortions, and measurement-induced perturbations \cite{Feng2024}. The resulting discrepancy poses a critical challenge for data-driven frameworks trained predominantly on synthetic datasets but intended for deployment in experimental workflows, as learned representations may fail to generalize across the simulation-experiment divide \cite{Hilgers2025}.
 
 On the experimental side, magnetic domain images are inherently indirect representations of the underlying magnetization field. As illustrated in Figure~\ref{fig:experimental_domain_shift}, techniques such as MFM measure the stray magnetic field above the sample surface through tip-sample interactions, introducing convolution effects, tip-induced artifacts, and resolution-dependent blurring (typically 30–50 nm) that obscure the true spin structure \cite{Jaber2023Magnetic}. SP-STM, despite offering atomic-scale resolution (~1 nm), is sensitive to electronic density of states and tunnel current asymmetries, which modulate the observed magnetic contrast in ways that depend on tip magnetization, bias voltage, and surface electronic structure; however, it requires ultra-high vacuum (UHV) and cryogenic conditions, making it operationally expensive (800–1500 USD/hour) and inaccessible for routine characterization \cite{Odobesko2024STM}. Lorentz transmission electron microscopy (5–10 nm resolution) captures projected magnetic induction, suffering from defocus-dependent phase shifts, integration effects along the beam path, and complex sample preparation requirements \cite{Plitzko2024Lorentz}. As summarized in Table~\ref{tab:experimental_costs_monetary}, each technique presents a distinct trade-off between spatial resolution, quantitative accuracy, operational complexity, and cost. Moreover, environmental factors—substrate roughness, thermal drift, electromagnetic interference—introduce pixel-level noise and spatial distortions that vary across measurement sessions and experimental setups \cite{Mukhatov2023Comprehensive}. Collectively, these effects mean that experimental datasets are not direct snapshots of magnetic configurations, but rather domain-specific transformations shaped by the physical principles and technical limitations of each imaging modality.
+
+Beyond noise and finite resolution, the deepest component of the gap is not statistical but structural: an \emph{observable} gap between what the simulation knows and what the instrument records. A simulation resolves the full three-dimensional spin field $\mathbf{s}_i=(s_{x},s_{y},s_{z})$ at every site, whereas an accessible measurement returns a single scalar projection, so the comparison is mediated by an observation operator that discards information irreversibly. Crucially, this operator is technique-dependent and does not return the raw magnetization: magnetic force microscopy senses the out-of-plane derivative of the stray field above the surface rather than $\mathbf{s}$ itself; polar Kerr and normal-incidence STXM report essentially the out-of-plane component $s_{z}$; Lorentz transmission electron microscopy integrates the in-plane magnetic induction along the beam; and dichroic techniques project the magnetization onto the beam direction. There is therefore no single ``experimental observable'' but a family of projection operators, none of which coincides with the vector field produced by the simulation. Each projection is moreover convolved with the instrument transfer function (tip or point-spread response), a deterministic transformation absent from the idealized simulation even in the complete absence of noise. Consequently, closing the sim-to-real gap cannot be reduced to injecting noise into synthetic images: it requires modelling the observation operator itself—a physics-based forward model of the measurement—so that simulated and experimental data are compared in the same observable space.
 
 On the computational side, numerical simulations introduce their own domain-specific characteristics. Atomistic spin dynamics operate on discrete lattices with fixed exchange interactions and often employ simplified anisotropy models or neglect long-range dipolar fields for computational tractability \cite{Holt2025Virtual}. Micromagnetic solvers discretize the continuum magnetization field into finite elements or finite differences, smoothing out sub-mesh-scale features and introducing numerical diffusion through time-stepping schemes in LLG integration \cite{Pfeiler2022Numerical}. Boundary conditions—periodic, open, or fixed-spin—impose artificial constraints that can suppress edge effects or nucleation phenomena relevant to finite-sized nanodots. Thermal fluctuations are either omitted entirely or approximated via stochastic fields whose amplitude and correlation properties depend on the chosen numerical protocol \cite{Sudsom2021Micromagnetic}. Consequently, even among simulated datasets, variations in discretization, solver algorithms, and physical approximations create distinct "computational domains" with systematically different textural features, contrast, and statistical properties compared to experimental counterparts \cite{Feng2024}. This simulation-induced domain bias is further amplified when models trained on one computational framework are applied to data generated by another, or when synthetic training data fail to capture the stochastic, defect-driven, and measurement-limited nature of real experimental observations \cite{Hilgers2025}.
 
@@ -452,19 +527,69 @@ chirality \cite{Ahmadi2024PhysicsInformed}. Furthermore, when combined with nois
 parameter spaces, black-box models may produce accurate reconstructions without
 preserving causal or physically meaningful dependencies \cite{Liao2023}. Consequently, the absence
 of interpretability not only limits the scientific reliability of such approaches but also
-hinders their use in guiding material design and hypothesis generation \cite{Sahin2025Unlocking}. Bridging this
-gap requires the integration of physics-informed constraints, explainable architectures,
-and cycle-consistent frameworks that ensure alignment between learned representations
-and physically observable quantities \cite{Wu2024PhysicsInformed}.
+hinders their use in guiding material design and hypothesis generation \cite{Sahin2025Unlocking}.
+
+A further, more subtle difficulty concerns \emph{how} interpretability is obtained. As sketched in Figure~\ref{fig:interpretability_challenge}, the prevailing strategy is \emph{post hoc}: an opaque model is trained first and then probed externally by attribution methods (Grad-CAM, regression activation maps, or Shapley-value analysis) to estimate which input regions drove a prediction. Such explanations are valuable but only \emph{describe} a fixed model; they cannot \emph{guarantee} that its internal reasoning respects the governing physics, and in degenerate or noisy regimes they may even attribute importance to spurious correlations that the model exploited to fit the data. An alternative is to make interpretability \emph{intrinsic}, embedding physical structure—symmetries, conservation constraints, or physically meaningful observables—directly into the architecture so that consistency with the underlying physics is enforced by construction rather than inspected after the fact. Which of these routes is appropriate, and to what extent physically hard-wired design can complement or replace post-hoc analysis for Hamiltonian parameter estimation, is itself an open question that this work must confront; a detailed comparison of the available techniques is deferred to Section~\ref{sec:state_art_interp}.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{Figures/Interpretability.png}
-    \caption{Interpretability Challenges}
-    \label{fig:interpretability_challenge}
+\centering
+\resizebox{0.92\textwidth}{!}{
+\begin{tikzpicture}[
+  imgb/.style={draw, thick, minimum size=1.0cm, inner sep=0pt},
+  io/.style={font=\footnotesize, align=center},
+  bbox/.style={draw, thick, rounded corners=3pt, fill=gray!78, text=white, align=center, minimum width=2.6cm, minimum height=1.5cm, font=\footnotesize\bfseries},
+  pbox/.style={draw, thick, rounded corners=3pt, fill=green!12, align=center, minimum width=2.6cm, minimum height=1.5cm, font=\footnotesize},
+  sub/.style={draw, rounded corners=1.5pt, fill=green!22, font=\scriptsize, minimum width=1.9cm, minimum height=0.34cm, inner sep=1pt},
+  note/.style={font=\footnotesize, align=center},
+  ar/.style={-{Latex[length=2.2mm]}, line width=0.8pt},
+  arp/.style={-{Latex[length=2.2mm]}, line width=0.8pt, dashed, red!55!black},
+  font=\footnotesize]
+
+% ===== (a) Post-hoc on a black box =====
+\begin{scope}
+  \shade[inner color=gray!10, outer color=gray!55] (-0.5,-0.5) rectangle (0.5,0.5);
+  \node[imgb] (ia) at (0,0) {};
+  \node[io, above=0.5mm of ia] {$s_z$ image};
+  \node[bbox] (ba) at (2.3,0) {Opaque model\\[1pt]\Large ?};
+  \node[io] (oa) at (4.7,0) {$\hat{\boldsymbol{\theta}}$};
+  \draw[ar] (ia) -- (ba);
+  \draw[ar] (ba) -- (oa);
+  % external probe
+  \node[draw, rounded corners=2pt, fill=orange!15, font=\scriptsize, align=center, minimum width=3.2cm] (pa) at (2.3,-1.9) {Post-hoc attribution\\ (Grad-CAM, RAMs, SHAP)};
+  \draw[arp] (pa) -- (ba);
+  \node[note] at (2.3,1.7) {\textbf{(a) Post-hoc explanation}\\ probed \emph{after} training, externally};
+\end{scope}
+
+% ===== (b) Physics-guided, intrinsic =====
+\begin{scope}[xshift=8.4cm]
+  \shade[inner color=gray!10, outer color=gray!55] (-0.5,-0.5) rectangle (0.5,0.5);
+  \node[imgb] (ib) at (0,0) {};
+  \node[io, above=0.5mm of ib] {$s_z$ image};
+  \node[pbox] (pb) at (2.3,0) {};
+  \node[sub] at (2.3,0.45) {symmetry / equivariance};
+  \node[sub] at (2.3,0.0) {energy \& constraints};
+  \node[sub] at (2.3,-0.45) {physical observables};
+  \node[io] (ob) at (4.7,0) {$\hat{\boldsymbol{\theta}}$};
+  \draw[ar] (ib) -- (pb);
+  \draw[ar] (pb) -- (ob);
+  \node[note] at (2.3,1.7) {\textbf{(b) Physics-guided model}\\ interpretable \emph{by construction}};
+  \node[note, green!45!black] at (2.3,-1.9) {physics embedded in the\\ architecture, not inspected afterwards};
+\end{scope}
+
+\end{tikzpicture}}
+\caption{Two routes to interpretability in data-driven magnetic inference. \textbf{(a)}~A black-box model maps the $s_z$ image to parameters $\hat{\boldsymbol{\theta}}$ with opaque internals; interpretability is recovered \emph{post hoc}, by external attribution methods (Grad-CAM, RAMs, SHAP) probing an already-trained network. \textbf{(b)}~A physics-guided model instead embeds physical structure—symmetry/equivariance, energy terms and constraints, physically meaningful observables—directly into the architecture, so that consistency with the underlying physics is enforced by construction rather than merely inspected afterwards. Post-hoc analysis explains a model; intrinsic design constrains it.}
+\label{fig:interpretability_challenge}
 \end{figure}
 
-The three outlined challenges---parameter degeneracy, data degradation, and lack of interpretability---are deeply interconnected within the study of magnetic domain systems \cite{Feng2024}. Parameter degeneracy reflects the intrinsic non-uniqueness of the physical mapping between Hamiltonian parameters and magnetic configurations, producing multiple metastable states with similar energy and morphology \cite{Meissner2021Potts}. Data degradation, in turn, limits the quality and reliability of both experimental and simulated observations, as noise, instrumental artifacts, and numerical discretization blur the underlying spin structures \cite{Misiurev2024Modeling}. Finally, the lack of interpretability in data-driven models prevents the extraction of causal or physically meaningful relationships from these imperfect datasets, reducing their scientific value and applicability \cite{Park2024}. Together, these issues define a complex landscape where conventional simulation-based approaches struggle with scalability and uncertainty, while purely data-driven models risk overfitting and opacity \cite{Luo2020Current}. This convergence of physical ambiguity, informational degradation, and epistemic opacity motivates the development of hybrid, physics-informed frameworks capable of enforcing physical consistency while enabling explainable inference across the direct and inverse magnetic domain problems \cite{Wu2024PhysicsInformed}.
+The three outlined challenges---degeneracy and non-uniqueness, the sim-to-real gap, and the lack of physics-based interpretability---are deeply interconnected within the study of magnetic domain systems \cite{Feng2024}. Degeneracy reflects the intrinsic non-uniqueness of the mapping between Hamiltonian parameters and magnetic configurations, arising both from energetic mechanisms (symmetry, frustration, and accidental compensation) and from the partial observability of single-axis measurements, which conflates configurations of opposite chirality \cite{Meissner2021Potts}. The sim-to-real gap, in turn, separates idealized synthetic data from scarce and costly experimental images---not only through noise, instrumental artifacts, and discretization, but more fundamentally through the observation operator that projects the full spin field onto the single scalar quantity each technique records \cite{Misiurev2024Modeling}. Finally, the lack of interpretability in data-driven models prevents the extraction of causal, physically meaningful relationships from these imperfect and ambiguous datasets, and raises the further question of whether physical consistency should be enforced by construction or only inspected post hoc \cite{Park2024}. Together, these issues define a landscape where conventional simulation-based approaches struggle with scalability and uncertainty, while purely data-driven models risk overfitting and opacity \cite{Luo2020Current}. This convergence of physical ambiguity, observational limitation, and epistemic opacity motivates the development of hybrid, physics-informed frameworks capable of enforcing physical consistency while enabling explainable inference across the direct and inverse magnetic domain problems \cite{Wu2024PhysicsInformed}.
+
+\subsection{Fragmentation and Non-Reusability of Domain Knowledge}
+
+The three challenges above are typically addressed in isolation, and even when solved they yield fragmented artifacts: a simulation engine, an inverse estimator, a generative model, and a set of interpretability tools, each living in a separate codebase, trained under its own conventions, and documented across heterogeneous scripts and publications. This fragmentation is itself a barrier. The physical knowledge encoded in these modules---how a texture responds to a parameter, which regions drive a prediction, how a configuration transitions under temperature or field---remains locked in disconnected, expert-operated pipelines, with no unified, queryable representation through which the modules can be composed, reused, or reasoned over as a coherent whole. This mirrors a broader concern in materials science, where fragmented data systems, non-standardized formats, and the absence of shared metadata and ontologies are recognized as central obstacles to interoperability and reproducibility \cite{brinson2023community,ghiringhelli2023shared}.
+
+As a consequence, reproducing a result or chaining these capabilities (e.g., simulate $\rightarrow$ estimate $\rightarrow$ interpret $\rightarrow$ regenerate) requires deep, tacit expertise and manual glue code, which limits accessibility for non-specialists and prevents autonomous systems from exploiting the workflow. In adjacent fields, standardized, protocol-based interfaces have begun to expose analytical tools as composable capabilities that external orchestrators---including AI agents---can invoke in a controlled, auditable way \cite{hou2025mcp,gridach2025agentic}, and physics-aware multi-agent systems have already been demonstrated for materials design tasks such as alloy discovery \cite{ghafarollahi2024atomagents}; no such substrate exists for nanoscale magnetic-domain analysis, where the tooling is bespoke and physics-specific. The absence of an interoperable knowledge layer therefore stands as a distinct, integrative challenge: not a lack of individual models, but the lack of a coherent, reusable representation that unifies them.
+
+Addressing it turns the collection of methods developed for the previous objectives from a loose set of tools into a single, coherent, and reusable system, and is the natural capstone that binds the direct problem, the inverse problem, and their interpretation into one physically grounded workflow.
 
 \bigskip
 
@@ -486,40 +611,78 @@ The three outlined challenges---parameter degeneracy, data degradation, and lack
 The state of the art has therefore evolved along two complementary lines of work: efforts to make the forward mapping more discriminative and physically grounded, and efforts to make the inverse mapping more expressive, uncertainty-aware, and physically constrained. What follows is a synthesis of the major developments, their strengths and limitations, and the structural gaps that motivate new approaches.
 
 \paragraph{High-Fidelity Forward Simulations.}
-Research on the direct problem has traditionally relied on high-fidelity micromagnetic or atomistic simulations capable of capturing the subtle competition between exchange, anisotropy, DMI, dipolar interactions, and applied fields. Tools such as MuMax3, OOMMF, and Spirit have enabled precise modeling of domain walls, skyrmions, vortices, and labyrinthine patterns under a wide range of physical conditions \cite{Scholl2023Erasure}. These approaches are widely used in both micrometer-scale and nanoscale magnetism, particularly in the study of skyrmions, chiral domain walls, and confined spin textures in ultrathin films. When coupled with forward-rendering models that explicitly account for instrument response—such as the point-spread function of MFM, the tunneling convolution kernel in SP-STM, or noise induced by probe electronics—these simulators generate synthetic images that closely resemble their experimental counterparts \cite{Li2023Magnetic}. This integration has been essential in applications such as skyrmion detection, micromagnetic parameter inference, and interpretation of high-resolution imaging data.
+Research on the direct problem has traditionally relied on high-fidelity micromagnetic or atomistic simulations capable of capturing the subtle competition between exchange, anisotropy, DMI, dipolar interactions, and applied fields. Tools such as MuMax3, OOMMF, and Spirit have enabled precise modeling of domain walls, skyrmions, vortices, and labyrinthine patterns under a wide range of physical conditions \cite{Li2023Magnetic}. These approaches are widely used in both micrometer-scale and nanoscale magnetism, particularly in the study of skyrmions, chiral domain walls, and confined spin textures in ultrathin films. When coupled with forward-rendering models that explicitly account for instrument response—such as the point-spread function of MFM, the tunneling convolution kernel in SP-STM, or noise induced by probe electronics—these simulators generate synthetic images that closely resemble their experimental counterparts \cite{Li2023Magnetic}. This integration has been essential in applications such as skyrmion detection, micromagnetic parameter inference, and interpretation of high-resolution imaging data.
 
 A complementary approach to continuum micromagnetics is the use of classical Monte Carlo methods combined with Heisenberg-type Hamiltonians, particularly effective for modeling nanogranular magnetic structures. Agudelo Giraldo \cite{AgudeloGiraldo2018} developed a comprehensive framework for simulating nanogranular magnetic thin films, where virtual grains were generated following lognormal volume distributions consistent with experimental observations. The structural relaxation at grain boundaries was modeled using the Morse potential under Monte Carlo relaxation, while magnetic interactions were simulated via the classical Heisenberg model with cubic magnetocrystalline anisotropy. The Hamiltonian incorporated four key contributions: (i) nearest-neighbor exchange interaction with distance-dependent coupling, (ii) magnetocrystalline, surface, and grain-boundary anisotropy, (iii) external magnetic field influence, and (iv) dipolar interactions computed via a hybrid spin-spin and spin-cell approach with a cutoff radius. Disorder at grain boundaries was introduced through anisotropy vectors dependent on lattice deformations, and temperature-dependent anisotropy effects were explicitly accounted for. Magnetic state relaxation was performed using the Metropolis algorithm, and the code was parallelized to handle the computational cost, with samples divided into cells with shared memory access. This methodology successfully reproduced monodomain-to-multidomain transitions as a function of grain volume, film thickness, and boundary anisotropy parameters, revealing superparamagnetic effects and blocking temperatures in scenarios with strong interfacial anisotropy, as illustrated in Figure~\ref{fig:monte_carlo_flow}. Such physically accurate models substantially reduce non-physical degeneracies arising from oversimplified imaging assumptions.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.83\textwidth]{Figures/monte_carlo_granular_flow.pdf}
-    \caption{Monte Carlo simulation workflow for nanogranular magnetic structures (Agudelo Giraldo 2016): from structural generation with lognormal grain distributions through Hamiltonian construction (incorporating exchange, anisotropy, external field, and dipolar interactions) to magnetic state relaxation via Metropolis algorithm. The framework successfully reproduces monodomain-to-multidomain transitions, superparamagnetic effects, and blocking temperature phenomena in nanogranular thin films.}
+\begin{figure}[!t]
+\centering
+\resizebox{0.98\textwidth}{!}{
+\begin{tikzpicture}[
+  stg/.style={draw, thick, rounded corners=3pt, fill=blue!12, align=center, font=\footnotesize, text width=2.55cm, minimum height=1.6cm, inner sep=3pt},
+  outb/.style={draw, thick, rounded corners=3pt, fill=orange!12, draw=orange!60!black, align=center, font=\footnotesize},
+  ar/.style={-{Latex[length=2.4mm]}, line width=0.9pt},
+  font=\footnotesize]
+ \node[stg] (s1) at (0,0)    {\textbf{1.\ Structural generation}\\[1pt]{\scriptsize lognormal grains}};
+ \node[stg] (s2) at (3.05,0) {\textbf{2.\ Grain-boundary relaxation}\\[1pt]{\scriptsize Morse potential (MC)}};
+ \node[stg] (s3) at (6.1,0)  {\textbf{3.\ Hamiltonian construction}\\[1pt]{\scriptsize exchange, anisotropy, field, dipolar}};
+ \node[stg] (s4) at (9.15,0) {\textbf{4.\ Magnetic-state relaxation}\\[1pt]{\scriptsize Metropolis algorithm}};
+ \node[stg] (s5) at (12.2,0) {\textbf{5.\ Parallelization}\\[1pt]{\scriptsize cell decomposition}};
+ \node[stg] (s6) at (15.25,0){\textbf{6.\ Results \& analysis}\\[1pt]{\scriptsize $M(T)$, hysteresis}};
+ \foreach \a/\b in {s1/s2,s2/s3,s3/s4,s4/s5,s5/s6}{\draw[ar] (\a)--(\b);}
+ \node[outb, text width=15cm, font=\large] (out) at (7.6,-2.7)
+   {\textbf{Key physical effects reproduced:}\\ monodomain$\to$multidomain transition (grain volume, film thickness, boundary anisotropy) $\cdot$ superparamagnetism $\cdot$ blocking temperature under strong interfacial anisotropy};
+ \draw[ar] (s6.south) |- (out.east);
+\end{tikzpicture}}
+    \caption{Monte Carlo simulation workflow for nanogranular magnetic structures \cite{AgudeloGiraldo2018}: from structural generation (lognormal grain distributions) through Hamiltonian construction (exchange, anisotropy, external field, and dipolar interactions) to magnetic-state relaxation via the Metropolis algorithm, with domain decomposition for parallel execution. The framework reproduces monodomain-to-multidomain transitions, superparamagnetic effects, and blocking-temperature phenomena in nanogranular thin films.}
     \label{fig:monte_carlo_flow}
 \end{figure}
 
 Nevertheless, these simulator-based approaches—whether continuum or atomistic—are computationally expensive and sensitive to numerical discretization, initialization conditions, and solver choices, all of which can artificially inflate the observed degeneracy. More importantly, even perfect numerical solvers cannot eliminate intrinsic degeneracy: distinct combinations of DMI, anisotropy, exchange, and dipolar strengths may legitimately yield nearly indistinguishable patterns. Thus, while forward simulations reveal the structure of degeneracy, they cannot resolve it.
 
 \paragraph{Differentiable and Surrogate Models.}
-To mitigate these limitations, recent work has turned to differentiable and surrogate forward models. Neural surrogates, variational approximators, and differentiable micromagnetic solvers offer orders-of-magnitude speedups and enable gradient-based calibration and end-to-end integration into machine-learning frameworks \cite{GallardoRomero2025Differentiable}. A typical neural surrogate architecture (Figure~\ref{fig:neural_surrogate_flow}) processes input physical parameters through dense layers to create feature embeddings, which are then upsampled via transposed convolutions to generate predicted spin configurations. These methods have been applied in problems such as rapid skyrmion-profile generation, uncertainty-aware forward prediction, and coarse-to-fine parameter scanning. While these models enable exploration of high-dimensional parameter spaces that are intractable for brute-force simulations, their accuracy is fundamentally limited by the diversity and physical realism of the training set. As a result, surrogate models may hallucinate non-physical spin textures or fail to generalize outside the training manifold. Consequently, this research line—although actively growing—is not yet considered a mature or commonly adopted tool for nanoscale domain reconstruction, highlighting the field's lack of physics-faithful, constraint-preserving differentiable solvers.
+To mitigate these limitations, recent work has turned to differentiable and surrogate forward models. Neural surrogates, variational approximators, and differentiable solvers offer orders-of-magnitude speedups and enable gradient-based calibration and end-to-end integration into machine-learning frameworks; it should be noted, however, that these differentiable-surrogate methodologies have been consolidated largely in \emph{other} physics and engineering domains---for example, surrogate optimization of large experimental facilities \cite{GallardoRomero2025Differentiable}---rather than for nanoscale magnetic-domain modeling, where their adoption is still incipient. A typical neural surrogate architecture (upper branch of Figure~\ref{fig:surrogate_pinn}) processes input physical parameters through dense layers to create feature embeddings, which are then upsampled via transposed convolutions to generate predicted spin configurations. These methods have been applied in problems such as rapid skyrmion-profile generation, uncertainty-aware forward prediction, and coarse-to-fine parameter scanning. While these models enable exploration of high-dimensional parameter spaces that are intractable for brute-force simulations, their accuracy is fundamentally limited by the diversity and physical realism of the training set. As a result, surrogate models may hallucinate non-physical spin textures or fail to generalize outside the training manifold. Consequently, this research line—although actively growing—is not yet considered a mature or commonly adopted tool for nanoscale domain reconstruction, highlighting the field's lack of physics-faithful, constraint-preserving differentiable solvers.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.83\textwidth]{Figures/neural_surrogate_flow.pdf}
-    \caption{Neural surrogate model architecture for fast forward mapping from physical parameters to spin configurations. The network processes input parameters through dense layers to create feature embeddings, then upsamples via transposed convolutions to generate predicted magnetic domain images.}
-    \label{fig:neural_surrogate_flow}
-\end{figure} 
+\begin{figure}[!t]
+\centering
+\resizebox{0.92\textwidth}{!}{
+\begin{tikzpicture}[
+  bx/.style={draw, thick, rounded corners=2pt, align=center, font=\footnotesize, minimum height=0.95cm, inner sep=3pt},
+  par/.style={bx, fill=green!14},
+  net/.style={bx, fill=blue!12},
+  outb/.style={bx, fill=orange!14},
+  loss/.style={bx, fill=red!10, draw=red!55!black},
+  phys/.style={draw, thick, rounded corners=3pt, fill=violet!8, draw=violet!55!black, align=center, font=\footnotesize, inner sep=5pt},
+  ar/.style={-{Latex[length=2mm]}, line width=0.8pt},
+  arp/.style={-{Latex[length=2mm]}, line width=0.8pt, violet!60!black},
+  font=\footnotesize]
+ % ---- shared surrogate pipeline ----
+ \node[font=\footnotesize\bfseries] at (4.3,1.15) {Neural surrogate: data-driven forward map $f_\Theta:\boldsymbol{\theta}\mapsto\hat{\mathbf{I}}$};
+ \node[par] (p) at (0,0)    {$\boldsymbol{\theta}$\\{\scriptsize params}};
+ \node[net] (d) at (1.8,0)  {Dense};
+ \node[net] (f) at (3.5,0)  {Feature\\ embed.\ $F_0$};
+ \node[net] (c) at (5.9,0)  {Transposed\\ conv (upsample)};
+ \node[outb] (o) at (8.5,0)  {$\hat{\mathbf{I}}$\\{\scriptsize predicted}};
+ \draw[ar] (p)--(d); \draw[ar] (d)--(f); \draw[ar] (f)--(c); \draw[ar] (c)--(o);
+ % ---- data loss ----
+ \node[loss] (ld) at (8.5,-1.9) {$\mathcal{L}_{\text{data}}=\lVert \mathbf{I}-\hat{\mathbf{I}}\rVert^2$};
+ \draw[ar] (o)--(ld);
+ % ---- PINN extension (distinct, dashed) ----
+ \node[phys, align=center, text width=6.2cm] (pinn) at (3.0,-2.6)
+   {\textbf{PINN extension} (adds physics):\\ collocation points $\{t,\mathbf{r}\}$ $\rightarrow$ LLG residual $\mathbf{R}_{\text{LLG}}$\\ $\Rightarrow\ \mathcal{L}_{\text{phys}}=\lVert \mathbf{R}_{\text{LLG}}\rVert^2$};
+ \draw[arp, dashed] (c.south) |- (pinn.east);
+ % ---- total objective ----
+ \node[loss] (tot) at (8.5,-3.5) {$\mathcal{L}=\mathcal{L}_{\text{data}}+\lambda\,\mathcal{L}_{\text{phys}}$};
+ \draw[ar] (ld)--(tot);
+ \draw[arp, dashed] (pinn.south) |- (tot.west);
+\end{tikzpicture}}
+    \caption{Data-driven forward surrogate and its physics-informed (PINN) extension. A neural surrogate maps physical parameters $\boldsymbol{\theta}$ through dense and transposed-convolution layers to a predicted spin configuration $\hat{\mathbf{I}}$, trained on a data loss $\mathcal{L}_{\text{data}}$ (fast, but can produce non-physical textures outside the training manifold). A physics-informed neural network keeps the same architecture and \emph{adds} a physics loss $\mathcal{L}_{\text{phys}}$ enforcing the Landau--Lifshitz--Gilbert residual at collocation points, restricting solutions to physically plausible ones---at the cost of training stiffness, and within the continuum/dynamic regime rather than the atomistic Hamiltonian-inference task of this work.}
+    \label{fig:surrogate_pinn}
+\end{figure}
 
 
 \paragraph{Physics-Informed Neural Networks.}
-In parallel, physics-informed neural networks (PINNs) and hybrid modeling frameworks have gained traction by embedding the Landau–Lifshitz–Gilbert (LLG) equation or energetic constraints directly into the learning objective \cite{Karniadakis2021PINNs}. As illustrated in Figure~\ref{fig:pinns_flow}, PINNs augment the standard neural surrogate architecture with physics-based loss terms that enforce the LLG equation at collocation points throughout the spatiotemporal domain. These approaches have been tested in applications such as reconstructing domain-wall dynamics, modeling low-dimensional magnetic textures, or enforcing physical plausibility in neural surrogate outputs. By injecting physical laws into the learning process, they help reduce the feasible set of solutions and thereby restrict degeneracy. However, PINNs for magnetic systems remain difficult to train due to the stiffness of the LLG equation, challenges in balancing data fidelity and physics terms, and poor scalability to realistic thin-film geometries and finite-temperature regimes. Their use in nanoscale magnetic domain reconstruction remains exploratory rather than widely adopted.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.82\textwidth]{Figures/pinns_flow.pdf}
-    \caption{Physics-informed neural network (PINN) architecture incorporating Landau–Lifshitz–Gilbert equation constraints. The training objective combines data-driven loss with physics-based residuals evaluated at collocation points, enforcing both accuracy and physical consistency.}
-    \label{fig:pinns_flow}
-\end{figure}
-
+In parallel, physics-informed neural networks (PINNs) and hybrid modeling frameworks have gained traction by embedding the Landau–Lifshitz–Gilbert (LLG) equation or energetic constraints directly into the learning objective \cite{Karniadakis2021PINNs}. As shown in the lower branch of Figure~\ref{fig:surrogate_pinn}, PINNs augment the standard neural surrogate architecture with physics-based loss terms that enforce the LLG equation at collocation points throughout the spatiotemporal domain. It is essential to note that this family of methods operates in a fundamentally different regime from the task addressed here: the LLG residual describes the \emph{continuum, time-dependent} micromagnetic dynamics of the magnetization field, so LLG-based PINNs have been tested on complementary problems at other scales---reconstructing domain-wall dynamics, modeling low-dimensional continuum textures, or enforcing plausibility in surrogate outputs---and \emph{not} on the estimation of the parameters of an atomistic, extended-Heisenberg Hamiltonian from static thermally-relaxed images, which is the problem of this work. By injecting physical laws into the learning process they help restrict the feasible solution set, but PINNs for magnetic systems remain difficult to train due to the stiffness of the LLG equation, the balancing of data-fidelity and physics terms, and poor scalability to realistic thin-film geometries and finite-temperature regimes. Their use even within continuum magnetic modeling remains exploratory rather than widely adopted, and no PINN formulation has been reported for the atomistic Hamiltonian-inference task considered here.
 
 The objective in using Deep Learning for the Forward Mapping (Surrogate Model) in micromagnetics is to construct a function that rapidly maps a low-dimensional input vector of Hamiltonian parameters to the resulting high-dimensional spin configuration image, bypassing slow micromagnetic simulations. Given a vector of $P$ physical parameters $\mathbf{y}_n \in \mathbb{R}^{P}$ (e.g., $D$, $K$, $J$, $H_{\text{ext}}$), the task is to predict the image $\mathbf{\hat{I}}_n \in \mathbb{R}^{H \times \tilde{W} \times C}$. The core of the standard Deep Learning approach is to construct a deterministic function $\mathbf{\hat{I}}_n = f_{\Theta}(\mathbf{y}_n)$, where $f_{\Theta} : \mathbb{R}^{P} \to \mathbb{R}^{H \times \tilde{W} \times C}$ is parameterized by a Deep Neural Network (DNN), such as a Generative Adversarial Network (GAN) or an up-sampling network (like a transposed CNN or U-Net variant). The architecture uses dense layers to process the input vector $\mathbf{y}_n$ into an initial feature map, followed by transposed convolutions ($\otimes^T$) to increase the spatial resolution:
 
@@ -565,54 +728,100 @@ By minimizing this physics-informed loss, the network is constrained to produce 
 
 
 
-A qualitatively different perspective has emerged with the use of conditional generative models—including conditional VAEs, conditional GANs, and more recently diffusion-based conditional generators. These models treat the forward mapping as a conditional probability distribution instead of a deterministic function, enabling explicit representation of multimodality \cite{Ronne2024}. Figure~\ref{fig:cvae_baseline} illustrates a representative conditional VAE architecture for magnetic domain generation. Such techniques have been used primarily in large-scale imaging tasks, inverse scattering, and materials microstructure synthesis, with only very recent work beginning to apply them to magnetic textures, particularly in simulating ensembles of metastable states or producing uncertainty-aware synthetic datasets. Their ability to sample multiple plausible outputs for a given parameter set directly reflects the inherent degeneracy of magnetic states. Nevertheless, the existing efforts that apply conditional generative models to spin systems remain confined to substantially simpler settings than the one addressed in this work. Recent representative studies generate states from datasets produced by minimal spin models---such as Ising-type or single-axis (X/Y) Hamiltonians---rather than the extended Heisenberg Hamiltonian considered here \cite{lee2025thermodynamic, jha2026topological}. In these works the generator is typically conditioned on a single scalar, most often the temperature, so that no parameter degeneracy is actually at play: with temperature as the only control variable, the conditioning is effectively one-to-one and the multimodality intrinsic to a multi-parameter Hamiltonian never arises. Moreover, these studies address only the forward generation step in isolation and do not close the full forward--inverse cycle, leaving the question of parameter identifiability unaddressed. By contrast, the present work conditions the generators on the complete eight-dimensional parameter vector $\boldsymbol{\theta}$ of an extended Heisenberg Hamiltonian and embeds them within a closed cycle that explicitly confronts parameter degeneracy. More broadly, generative models lack physical guarantees unless combined with physics-based constraints or energy-informed discriminators, and their outputs may deviate significantly from micromagnetic ground truth. To date, they remain promising but immature tools within nanoscale magnetism, with substantial gaps in validation, benchmarking, and physical consistency.
+A qualitatively different perspective has emerged with the use of generative models---variational autoencoders (VAEs), generative adversarial networks (GANs), and more recently diffusion models. Rather than a deterministic function, these models learn a probability distribution over configurations, enabling the explicit representation of multimodality. In their established form they are applied \emph{unconditionally}, sampling plausible structures from a learned prior, and have proven successful mostly in \emph{other} materials domains---for instance, diffusion-based discovery of atomic surface structures \cite{Ronne2024}---rather than for magnetic textures. Among these, denoising diffusion probabilistic models (DDPMs) have recently become the most competitive family: a fixed forward process gradually corrupts a configuration with Gaussian noise, and a U-Net learns to reverse it, optionally conditioned on external variables. Figure~\ref{fig:ddpm_baseline} illustrates such a conditional DDPM, following the architecture of Lee \emph{et al.}~\cite{lee2025thermodynamic}, which is adopted as the generative backbone replicated and extended in this work. The step of \emph{conditioning} such generators on physical parameters, which is central to the present work, has so far barely been explored for spin systems. Their ability to sample multiple plausible outputs for a given parameter set directly reflects the inherent degeneracy of magnetic states. Nevertheless, the existing efforts that apply conditional generative models to spin systems remain confined to substantially simpler settings than the one addressed in this work. Tellingly, the most recent representative studies are tied to \emph{simplified, low-dimensional spin models}: they generate states from datasets produced by the discrete $\mathbb{Z}_2$ Ising model or the planar (XY) model---systems with a single scalar coupling and a binary or single-angle degree of freedom---rather than the continuous, three-dimensional, multi-parameter extended Heisenberg Hamiltonian considered here \cite{lee2025thermodynamic, jha2026topological}. These reduced settings sidestep the very difficulties this work targets: they involve neither the eight-dimensional parameter space, nor the vector spin texture, nor the antisymmetric (DMI) chirality that drive degeneracy in realistic magnetic nanodots. In these works the generator is typically conditioned on a single scalar, most often the temperature, so that no parameter degeneracy is actually at play: with temperature as the only control variable, the conditioning is effectively one-to-one and the multimodality intrinsic to a multi-parameter Hamiltonian never arises. Moreover, these studies address only the forward generation step in isolation and do not close the full forward--inverse cycle, leaving the question of parameter identifiability unaddressed. By contrast, the present work conditions the generators on the complete eight-dimensional parameter vector $\boldsymbol{\theta}$ of an extended Heisenberg Hamiltonian and embeds them within a closed cycle that explicitly confronts parameter degeneracy. More broadly, generative models lack physical guarantees unless combined with physics-based constraints or energy-informed discriminators, and their outputs may deviate significantly from micromagnetic ground truth. To date, they remain promising but immature tools within nanoscale magnetism, with substantial gaps in validation, benchmarking, and physical consistency.
 
-\begin{figure}[H]
+\begin{figure}[!t]
 \centering
-\resizebox{0.9\textwidth}{!}{
+\resizebox{0.82\textwidth}{!}{
 \begin{tikzpicture}[
-  b/.style={rectangle, draw, thick, rounded corners=2pt, align=center, inner sep=5pt},
-  io/.style={b, fill=green!12, minimum height=2.4cm, minimum width=1.7cm},
-  lat/.style={b, fill=yellow!25, minimum width=1.1cm}, zb/.style={b, fill=red!25},
-  cond/.style={b, fill=gray!25, minimum width=1.1cm},
-  enc/.style={trapezium, draw, thick, fill=orange!35, trapezium angle=62, shape border rotate=270, minimum width=2.0cm, minimum height=2.2cm, align=center},
-  dec/.style={trapezium, draw, thick, fill=blue!30, trapezium angle=62, shape border rotate=90, minimum width=2.0cm, minimum height=2.2cm, align=center},
-  a/.style={-{Latex[length=2.2mm]}, thick}]
- \node[io]  (in)  at (0,0)    {Input\\$\mathbf{x}$\\$(x_1,\dots,x_N)$};
- \node[enc] (enc) at (3.0,0)  {Encoder\\$q_{\phi}(\mathbf{z}|\mathbf{x},\mathbf{c})$};
- \node[lat] (mu)  at (5.4,1.0){$\boldsymbol{\mu}$};
- \node[lat] (sig) at (5.4,-1.0){$\boldsymbol{\sigma}$};
- \node[zb]  (z)   at (7.0,0)  {$\mathbf{z}$};
- \node[dec] (dec) at (9.0,0)  {Decoder\\$p_{\theta}(\mathbf{x}|\mathbf{z},\mathbf{c})$};
- \node[io]  (out) at (12.0,0) {Reconstructed\\$\hat{\mathbf{x}}$\\$(\hat{x}_1,\dots,\hat{x}_N)$};
- \node[cond](c1)  at (1.5,-2.8){$\mathbf{c}$};
- \node[cond](c2)  at (8.0,-2.8){$\mathbf{c}$};
- \draw[a] (in) -- (enc);
- \draw[a] (enc.east) |- (mu);
- \draw[a] (enc.east) |- (sig);
- \draw[a] (mu) -| (z);
- \draw[a] (sig) -| (z);
- \draw[a] (z) -- (dec);
- \draw[a] (dec) -- (out);
- \draw[a] (c1) |- ($(enc.south west)!0.5!(enc.west)$);
- \draw[a] (c2) |- (dec.west);
- \node[font=\footnotesize, below=1.5mm of c1] {Covariate (condition) information};
+  img/.style={draw, thick, minimum size=1.4cm, inner sep=0pt},
+  slab/.style={font=\footnotesize, fill=white, inner sep=1.2pt, rounded corners=1pt},
+  ttl/.style={font=\footnotesize\bfseries, align=center},
+  unet/.style={draw, thick, rounded corners=3pt, fill=blue!12, align=center, minimum width=3.0cm, minimum height=1.1cm, font=\footnotesize},
+  cbox/.style={draw, thick, rounded corners=3pt, fill=gray!18, align=center, font=\footnotesize, minimum width=3.0cm, minimum height=1.1cm},
+  fwd/.style={-{Latex[length=2.4mm]}, line width=1pt, red!60!black},
+  rev/.style={-{Latex[length=2.4mm]}, line width=1pt, green!45!black},
+  font=\footnotesize]
+ % --- image frames ---
+ \node[img] (im0) at (0,0) {};
+ \node[img] (imt) at (4.6,0) {};
+ \node[img] (imT) at (9.2,0) {};
+ % --- fills (clipped to each frame, local coords via shift) ---
+ \begin{scope}[shift={(0,0)}]\clip (-0.7,-0.7) rectangle (0.7,0.7);
+   \shade[inner color=gray!12, outer color=gray!55] (-0.7,-0.7) rectangle (0.7,0.7);
+   \foreach \p in {(-0.4,-0.3),(0.25,0.25),(-0.15,0.05),(0.35,-0.4),(-0.35,0.4)}{\fill[gray!55] \p circle (0.08);}
+ \end{scope}
+ \begin{scope}[shift={(4.6,0)}]\clip (-0.7,-0.7) rectangle (0.7,0.7);
+   \fill[gray!22] (-0.7,-0.7) rectangle (0.7,0.7);
+   \foreach \p in {(-0.45,-0.35),(0.3,0.3),(0.0,0.45),(0.4,-0.45),(-0.3,0.15),(0.15,-0.2),(-0.1,-0.5),(0.45,0.1),(-0.45,0.45),(0.2,0.0),(-0.25,-0.15),(0.35,0.4)}{\fill[gray!55] \p circle (0.065);}
+ \end{scope}
+ \begin{scope}[shift={(9.2,0)}]\clip (-0.7,-0.7) rectangle (0.7,0.7);
+   \fill[gray!30] (-0.7,-0.7) rectangle (0.7,0.7);
+   \foreach \p in {(-0.5,-0.4),(0.35,0.35),(0.05,0.5),(0.45,-0.5),(-0.35,0.2),(0.2,-0.25),(-0.15,-0.55),(0.5,0.15),(-0.5,0.5),(0.25,0.05),(-0.28,-0.2),(0.4,0.45),(0.0,-0.3),(-0.4,-0.05),(0.15,0.28)}{\fill[gray!60] \p circle (0.06);}
+ \end{scope}
+ % --- state labels centered on frames ---
+ \node[slab] at (im0) {$\mathbf{x}_0$};
+ \node[slab] at (imt) {$\mathbf{x}_t$};
+ \node[slab] at (imT) {$\mathbf{x}_T$};
+ % --- forward arcs (top, no text) ---
+ \draw[fwd] (im0.north) to[out=60,in=120] (imt.north);
+ \draw[fwd] (imt.north) to[out=60,in=120] (imT.north);
+ \node[ttl, red!60!black] at (4.6,2.25) {Forward diffusion $q(\mathbf{x}_t\mid\mathbf{x}_{t-1})$ --- fixed: progressively adds Gaussian noise};
+ % --- reverse arcs (bottom, no text) ---
+ \draw[rev] (imT.south) to[out=-120,in=-60] (imt.south);
+ \draw[rev] (imt.south) to[out=-120,in=-60] (im0.south);
+ \node[ttl, green!45!black] at (4.6,-2.15) {Reverse process $p_\theta(\mathbf{x}_{t-1}\mid\mathbf{x}_t,\mathbf{c})$ --- learned denoising};
+ % --- U-Net + condition (bottom row) ---
+ \node[unet] (unet) at (2.8,-3.7) {U-Net denoiser\\$\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,\,t,\,\mathbf{c})$};
+ \node[cbox] (cond) at (6.8,-3.7) {condition $\mathbf{c}$\\{\scriptsize Hamiltonian params / temperature}};
+ \draw[-{Latex[length=2mm]}, line width=0.9pt, gray!60!black] (cond) -- (unet);
 \end{tikzpicture}}
-    \caption{Conditional VAE baseline architecture for magnetic domain generation. The encoder $q_{\phi}(\mathbf{z}|\mathbf{x},\mathbf{c})$ maps the input to a Gaussian latent $(\boldsymbol{\mu},\boldsymbol{\sigma})$, a code $\mathbf{z}$ is sampled, and the decoder $p_{\theta}(\mathbf{x}|\mathbf{z},\mathbf{c})$ reconstructs the configuration; the covariate $\mathbf{c}$ conditions both encoder and decoder.}
-    \label{fig:cvae_baseline}
+    \caption{Conditional denoising diffusion probabilistic model (DDPM) for magnetic domain generation, following the architecture of Lee \emph{et al.}~\cite{lee2025thermodynamic}. A fixed forward process $q(\mathbf{x}_t|\mathbf{x}_{t-1})$ progressively adds Gaussian noise to a spin configuration $\mathbf{x}_0$ until it becomes pure noise $\mathbf{x}_T$; a U-Net $\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t,\mathbf{c})$ learns the reverse denoising process $p_\theta(\mathbf{x}_{t-1}|\mathbf{x}_t,\mathbf{c})$, conditioned on $\mathbf{c}$. In the original work $\mathbf{c}$ is a single scalar (temperature) for the Ising system; the present work extends the conditioning to the full multi-parameter vector of an extended Heisenberg Hamiltonian.}
+    \label{fig:ddpm_baseline}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.82\textwidth]{Figures/simulation_evolution.pdf}
-    \caption{Evolution of forward simulation approaches for magnetic domain modeling: from traditional high-fidelity simulations (continuum micromagnetics and atomistic Monte Carlo) to modern data-driven frameworks (neural surrogates, physics-informed networks, and conditional generative models). Traditional methods provide physical ground truth but are computationally expensive, while modern approaches offer speedup and multimodality at the cost of generalization and training complexity.}
+\begin{figure}[!t]
+\centering
+\resizebox{0.88\textwidth}{!}{
+\begin{tikzpicture}[
+  tier/.style={font=\footnotesize\bfseries, align=center},
+  trad/.style={draw, thick, rounded corners=3pt, fill=blue!12, align=center, font=\footnotesize, text width=3.6cm, minimum height=1.3cm, inner sep=3pt},
+  mod/.style={draw, thick, rounded corners=3pt, fill=green!12, align=center, font=\footnotesize, text width=3.2cm, minimum height=1.3cm, inner sep=3pt},
+  ar/.style={-{Latex[length=2.4mm]}, line width=0.9pt, gray!55!black},
+  font=\footnotesize]
+ % traditional tier
+ \node[tier] at (2.9,2.4) {Traditional high-fidelity simulations};
+ \node[trad] (t1) at (0.4,1.4) {\textbf{Continuum micromagnetics}\\{\scriptsize MuMax3, OOMMF, Spirit (LLG)}};
+ \node[trad] (t2) at (5.4,1.4) {\textbf{Atomistic Monte Carlo}\\{\scriptsize Heisenberg model, Metropolis}};
+ % efficiency push arrow
+ \node[tier, gray!55!black] (push) at (2.9,-0.1) {computational-efficiency push};
+ \draw[ar] (t1.south) -- (push.north west);
+ \draw[ar] (t2.south) -- (push.north east);
+ % modern tier
+ \node[tier] at (2.9,-1.15) {Modern data-driven \& hybrid approaches};
+ \node[mod] (m1) at (-2.0,-2.7) {\textbf{Neural surrogates}\\{\scriptsize differentiable solvers}};
+ \node[mod] (m2) at (2.9,-2.7)  {\textbf{Physics-informed NNs}\\{\scriptsize LLG-constrained}};
+ \node[mod] (m3) at (7.8,-2.7)  {\textbf{Conditional generative}\\{\scriptsize VAE, GAN, diffusion}};
+ \draw[ar] (push.south) -- (m1.north);
+ \draw[ar] (push.south) -- (m2.north);
+ \draw[ar] (push.south) -- (m3.north);
+\end{tikzpicture}}
+    \caption{Evolution of forward simulation approaches for magnetic domain modeling: from traditional high-fidelity simulations (continuum micromagnetics and atomistic Monte Carlo), which provide physical ground truth but are computationally expensive, to modern data-driven frameworks (neural surrogates, physics-informed networks, and conditional generative models), which offer speed-up and multimodality at the cost of generalization and training complexity.}
     \label{fig:simulation_evolution}
 \end{figure}
 
 
 On the inverse side, early approaches framed parameter estimation as a supervised
 regression problem, typically using convolutional or fully connected neural networks
-trained on large synthetic datasets \cite{Feng2024}. As illustrated in Figure~\ref{fig:supervised_regression}, these models are
+trained on large synthetic datasets \cite{Feng2024}. The closest in-field precedent is the
+work of Feng \emph{et al.} \cite{Feng2024}, which classifies skyrmionic textures and regresses
+Hamiltonian parameters from a two-dimensional Heisenberg model; however, it estimates only
+three couplings (exchange $J$, DMI $D$, and anisotropy $K$) from micromagnetic textures,
+treats classification and regression as separate supervised tasks, and neither closes a
+forward--inverse cycle nor addresses the single-axis ($s_z$) observability and chirality
+degeneracy central to this proposal. It thus illustrates the feasibility of the inverse
+mapping while leaving open precisely the harder, higher-dimensional, and identifiability-aware
+problem addressed here. As illustrated in Figure~\ref{fig:supervised_regression}, these models are
 computationally efficient and capable of predicting parameters in real time, making
 them attractive for high-throughput applications in micromagnetism, spintronics, and
 magnetic materials characterization. However, strict regression collapses the inherent
@@ -650,50 +859,20 @@ by the accuracy, coverage, and numerical stability of the forward simulator.
 
 The limitations of deterministic regression have motivated a transition toward Bayesian
 inference methodologies, which represent the inverse mapping as a posterior
-distribution instead of a single estimate \cite{Yang2024Bayesian}. Figure~\ref{fig:bayesian_inference} illustrates the Bayesian framework for parameter estimation. By explicitly modeling uncertainty and
-multi-modality, Bayesian methods reveal the underlying degeneracy rather than hiding
+distribution instead of a single estimate. Formally, a prior $P(\boldsymbol{\theta})$ and a likelihood $P(\mathcal{D}\,|\,\boldsymbol{\theta})$ combine into a posterior $P(\boldsymbol{\theta}\,|\,\mathcal{D})$ whose multiple modes---a dominant peak at the maximum-a-posteriori estimate alongside secondary peaks at alternative, equally plausible parameter sets---directly expose the degeneracy as a multimodal, high-variance distribution. By explicitly modeling uncertainty and
+multi-modality, Bayesian methods \emph{expose} the underlying degeneracy rather than hiding
 it, offering richer insights into confidence levels, plausible parameter regions, and
-non-identifiability. These frameworks have gained traction in the analysis of
-magnetization textures, phase boundary detection, and materials discovery.
-Nevertheless, Bayesian inference remains computationally expensive because it
+non-identifiability---but it must be stressed that quantifying a multimodal posterior
+characterizes the ambiguity without \emph{resolving} it: the estimator reports that several
+parameter sets are compatible with the observation, yet still cannot single out the true one.
+Such surrogate-accelerated Bayesian inversion is well established in adjacent inverse problems---for
+instance, geo-electromagnetic data inversion \cite{Yang2024Bayesian}---but has seen only limited
+application to nanoscale magnetic-domain Hamiltonian estimation.
+Moreover, Bayesian inference remains computationally expensive because it
 requires repeated forward evaluations—each often involving a full micromagnetic
 simulation or a surrogate model. Posterior accuracy also depends critically on the form
 of the likelihood and prior, which are difficult to specify for systems governed by the
 Landau–Lifshitz–Gilbert equation and subject to complex magnetic interactions.
-
-\begin{figure}[H]
-\centering
-\resizebox{0.82\textwidth}{!}{
-\begin{tikzpicture}[
-   box/.style={rectangle, draw, thick, rounded corners=3pt, align=center, inner sep=6pt, minimum height=1.2cm, minimum width=2.8cm, fill=blue!12},
-   arr/.style={-{Latex[length=2.5mm]}, very thick, blue!70}]
- % top chain
- \node[box] (prior) at (0,2.6)  {\textbf{Prior}\\$P(\boldsymbol{\theta})$};
- \node[box] (like)  at (4,2.6)  {\textbf{Likelihood}\\$P(\mathcal{D}\,|\,\boldsymbol{\theta})$};
- \node[box] (post)  at (8,2.6)  {\textbf{Posterior}\\$P(\boldsymbol{\theta}\,|\,\mathcal{D})$};
- \draw[arr] (prior) -- (like);
- \draw[arr] (like) -- (post);
- % posterior distribution
- \node[font=\bfseries] at (4,1.2) {Bayesian posterior distribution};
- \draw[-{Latex[length=2mm]}] (1.0,-2.0) -- (8.0,-2.0);
- \draw[-{Latex[length=2mm]}] (1.3,-2.1) -- (1.3,0.7);
- \draw[thick, blue!70, fill=blue!18, smooth] plot coordinates
-   {(1.4,-2.0) (2.3,-1.5) (3.0,-0.5) (3.6,0.2) (4.2,-0.5) (4.9,-0.7) (5.4,-0.45) (6.0,-1.0) (6.9,-1.6) (7.6,-2.0)} -- (1.4,-2.0) -- cycle;
- % MAP peak
- \draw[dashed] (3.6,0.2) -- (3.6,-2.0);
- \node[font=\footnotesize, align=center] at (2.55,0.15) {$\theta_{\mathrm{MAP}}$\\(most probable)};
- \node[font=\footnotesize] at (3.6,-2.35) {$\theta_{\mathrm{MAP}}$};
- % alternative solution
- \draw[dashed] (5.4,-0.45) -- (5.4,-2.0);
- \node[font=\footnotesize, anchor=west] (alt) at (5.7,0.0) {Alternative solution};
- \draw[-{Latex[length=1.6mm]}] (alt.west) -- (5.45,-0.4);
- % variance / plausible region
- \draw[{Latex[length=1.6mm]}-{Latex[length=1.6mm]}] (3.6,-1.5) -- (5.4,-1.5);
- \node[font=\footnotesize, align=center, anchor=west] at (5.7,-1.4) {Variance / uncertainty\\(plausible solutions region)};
-\end{tikzpicture}}
-    \caption{Bayesian inference approach for inverse parameter estimation. Instead of point estimates, Bayesian methods compute posterior distributions over parameters, explicitly representing uncertainty and multimodality inherent in degenerate magnetic systems.}
-    \label{fig:bayesian_inference}
-\end{figure}
 
 To address these challenges, cycle-consistent frameworks have recently emerged as a
 promising direction. These approaches couple a forward surrogate with an inverse
@@ -719,12 +898,14 @@ unstable in strongly degenerate regimes.
 Hybrid inverse methods represent a more recent development, combining statistical
 inference with physics-informed constraints. These include Bayesian Physics-Informed
 Neural Networks (PINNs), energy-regularized inverse networks, and approaches that
-penalize violations of the LLG equation or magnetic free-energy minimization
-\cite{Lu2024CGLS}. By embedding physical priors directly in
+penalize violations of the LLG equation or magnetic free-energy minimization. By embedding physical priors directly in
 the inference process, these methods restrict predictions to physically interpretable and
-energetically plausible regions of parameter space. Such strategies have demonstrated
-promise in nanoscale magnetometry, skyrmion parameter identification, and
-magnetization-dynamics inversion. Their main drawbacks lie in computational cost,
+energetically plausible regions of parameter space. Here too, however, the demonstrated
+applications lie in \emph{adjacent} problems---macroscopic magnetic-target and geophysical
+inversion \cite{Lu2024CGLS}, or continuum magnetization-dynamics inversion governed by the
+LLG equation---rather than in the estimation of an atomistic extended-Heisenberg Hamiltonian
+from thermally-relaxed $s_z$ images; the LLG-based variants, in particular, again presuppose
+the continuum dynamical regime that does not describe the present task. Their main drawbacks lie in computational cost,
 training stiffness, and the difficulty of sampling complex posteriors that remain highly
 multimodal in degenerate regimes. Table~\ref{tab:sota_inverse_magnetism} provides a comprehensive comparison of these inverse modeling approaches.
 
@@ -821,13 +1002,103 @@ Hybrid approaches combine multiple adaptation strategies to leverage their compl
     \label{fig:da_taxonomy}
 \end{figure}
 
-The choice among these domain adaptation strategies depends on the specific characteristics of the sim-to-real gap in magnetic domain imaging: the availability of target domain data, the nature and magnitude of distribution shifts, computational constraints, and the interpretability requirements of the application \cite{Wilson2020Survey}. For magnetic nanodot systems, where experimental data is expensive and limited, while simulation data is abundant but systematically biased, hybrid approaches combining model-based transfer learning with feature-level alignment and data-level augmentation offer a promising path toward robust sim-to-real generalization \cite{Hilgers2025}.
+\paragraph{Beyond statistical alignment: physics-aware and self-supervised alternatives.}
+The strategies reviewed above---data, instance, feature, adversarial, autoencoder, model, and hybrid adaptation---share a common premise: they treat the domain gap as a \emph{statistical} discrepancy to be minimized in a black-box feature space (typically through MMD or CORAL moment matching), largely agnostic to the physics that generated the images. This is a limitation, because in magnetic-domain imaging the shift is not arbitrary but governed by the physics of the measurement (Section~\ref{sec:sim2real}). A complementary and increasingly prominent family of methods instead exploits domain knowledge, and four such alternatives are especially relevant here.
+
+\subparagraph{Physics-Based Forward Modeling.} Rather than aligning distributions after the fact, this approach models the \emph{observation operator} itself---the physical image-formation process of the instrument (projection, point-spread function, noise statistics)---so that synthetic data are rendered into the same observable space as experiment. The imaging physics-based data-synthesis paradigm has been formalized for magnetic-resonance imaging, where signals are generated directly from the governing physical equations to train models with little or no real data \cite{yang2023physics}. This route is the natural counterpart to the observable gap identified in Section~\ref{sec:sim2real}: it attacks the discrepancy at its physical source rather than masking it statistically.
+
+\subparagraph{Domain Randomization.} Here the parameters of the simulator (noise level, resolution, contrast, instrumental artifacts) are broadly randomized during training so that the real domain appears as merely one more sample of a wide synthetic distribution, enabling zero-shot transfer without any target-domain data. Recent theoretical analysis clarifies when and why this succeeds by modeling the simulator as a family of parameterized environments \cite{chen2022understanding}.
+
+\subparagraph{Physics-Guided Image-to-Image Translation.} Generative translation models (e.g., CycleGAN variants) learn a mapping between the simulated and experimental image manifolds while constraints preserve physically meaningful content. In electron microscopy, a CycleGAN with a reciprocal-space discriminator was used to render simulated images nearly indistinguishable from experiment while retaining ground-truth labels for downstream learning \cite{khan2023leveraging}---a setting closely analogous to magnetic-domain microscopy.
+
+\subparagraph{Contrastive Self-Supervised Learning.} Instead of explicit distribution matching, contrastive objectives learn representations that are invariant to domain-specific nuisances by pulling together augmented or cross-domain views of the same content and pushing apart different ones, yielding domain-robust features without target labels \cite{long2022domain}.
+
+Figure~\ref{fig:da_physics_aware} contrasts these four physics-aware paradigms schematically.
+
+\begin{figure}[!t]
+\centering
+\resizebox{0.95\textwidth}{!}{
+\begin{tikzpicture}[
+  ttl/.style={font=\footnotesize\bfseries, align=center},
+  bx/.style={draw, thick, rounded corners=2pt, align=center, font=\scriptsize, inner sep=3pt, minimum height=0.7cm},
+  proc/.style={bx, fill=blue!12},
+  par/.style={bx, fill=green!12},
+  imb/.style={draw, thick, minimum size=0.72cm, inner sep=0pt, fill=gray!25},
+  note/.style={font=\scriptsize, align=center, text=black!70},
+  ar/.style={-{Latex[length=1.8mm]}, line width=0.7pt},
+  frame/.style={draw=gray!45, rounded corners=3pt, line width=0.6pt},
+  font=\scriptsize]
+
+% ===================== (a) Physics-Based Forward Modeling =====================
+\begin{scope}[shift={(0,0)}]
+  \draw[frame] (-2.5,-1.5) rectangle (2.7,1.6);
+  \node[ttl] at (0.1,1.25) {(a) Physics-Based Forward Modeling};
+  \node[par] (pa) at (-1.7,0.1) {$\boldsymbol{\theta}$};
+  \node[proc] (fa) at (0.0,0.1) {forward\\ model\\ {\scriptsize (PSF, noise)}};
+  \node[imb] (ia) at (1.9,0.1) {};
+  \draw[ar] (pa) -- (fa);
+  \draw[ar] (fa) -- (ia);
+  \node[note] at (0.1,-1.15) {synthetic rendered in the \emph{same}\\ observable space as experiment};
+\end{scope}
+
+% ===================== (b) Domain Randomization =====================
+\begin{scope}[shift={(6.6,0)}]
+  \draw[frame] (-2.6,-1.5) rectangle (2.7,1.6);
+  \node[ttl] at (0.05,1.25) {(b) Domain Randomization};
+  \node[proc] (sb) at (-1.8,0.2) {simulator};
+  % randomized image cloud
+  \foreach \dx/\dy/\g in {0/0/25, 0.16/0.16/38, 0.32/0.32/18, 0.24/-0.14/46, 0.05/-0.28/30}{
+    \node[imb, fill=gray!\g] at (0.9+\dx,0.2+\dy) {};
+  }
+  \node[circle, fill=red!70, inner sep=1.3pt, label={[font=\scriptsize,red!70!black]right:real}] at (1.25,0.05) {};
+  \draw[ar] (sb) -- (0.55,0.25);
+  \node[note] at (0.05,-1.15) {randomize noise/contrast/PSF so the\\ real sample is one of many variants};
+\end{scope}
+
+% ===================== (c) Physics-Guided Image-to-Image =====================
+\begin{scope}[shift={(0,-3.6)}]
+  \draw[frame] (-2.5,-1.5) rectangle (2.7,1.6);
+  \node[ttl] at (0.1,1.25) {(c) Physics-Guided I2I Translation};
+  \node[imb] (cs) at (-1.7,0.15) {};  \node[note, below=0.2mm of cs] {sim};
+  \node[imb] (cr) at (1.9,0.15) {};   \node[note, below=0.2mm of cr] {real};
+  \node[proc] (cg) at (0.1,0.15) {$G$};
+  \draw[ar] (cs) to[bend left=22] (cg);
+  \draw[ar] (cg) to[bend left=22] (cr);
+  \draw[ar, gray!60] (cr) to[bend left=22] (cg);
+  \draw[ar, gray!60] (cg) to[bend left=22] (cs);
+  \node[note] at (0.1,-1.15) {learned mapping with a physics /\\ cycle constraint preserving content};
+\end{scope}
+
+% ===================== (d) Contrastive Self-Supervised =====================
+\begin{scope}[shift={(6.6,-3.6)}]
+  \draw[frame] (-2.6,-1.5) rectangle (2.7,1.6);
+  \node[ttl] at (0.05,1.25) {(d) Contrastive Self-Supervised};
+  \draw[rounded corners=3pt, gray!45] (-1.9,-0.75) rectangle (2.2,0.85);
+  % positive pair (attract)
+  \node[circle, fill=green!55!black, inner sep=1.6pt] (p1) at (-1.1,0.35) {};
+  \node[circle, fill=green!55!black, inner sep=1.6pt] (p2) at (-0.4,0.1) {};
+  \draw[{Latex[length=1.4mm]}-{Latex[length=1.4mm]}, green!45!black] (p1) -- (p2);
+  % negative (repel)
+  \node[circle, fill=red!60, inner sep=1.6pt] (n1) at (0.7,0.55) {};
+  \node[circle, fill=red!60, inner sep=1.6pt] (n2) at (1.6,-0.35) {};
+  \draw[{Latex[length=1.4mm]}-{Latex[length=1.4mm]}, red!60, dashed] (n1) -- (n2);
+  \node[note] at (0.15,-1.15) {pull same-content cross-domain views\\ together, push different apart};
+\end{scope}
+
+\end{tikzpicture}}
+\caption{Physics-aware and self-supervised alternatives to statistical domain adaptation. \textbf{(a)}~Physics-based forward modeling renders synthetic images through the instrument's physical image-formation process, so they inhabit the same observable space as experiment. \textbf{(b)}~Domain randomization broadly varies simulator parameters so the real domain becomes one sample of a wide synthetic distribution, enabling label-free transfer. \textbf{(c)}~Physics-guided image-to-image translation learns a sim$\leftrightarrow$real mapping (e.g.\ CycleGAN) constrained to preserve physically meaningful content. \textbf{(d)}~Contrastive self-supervised learning shapes a domain-invariant representation by attracting cross-domain views of the same content and repelling different ones.}
+\label{fig:da_physics_aware}
+\end{figure}
+
+Crucially, none of these four physics-aware paradigms has yet been established for nanoscale magnetic-domain imaging: each has been demonstrated in an \emph{adjacent} field---robotics and reinforcement learning for domain randomization \cite{chen2022understanding}, natural-language processing for contrastive unsupervised adaptation \cite{long2022domain}, biomedical magnetic-resonance imaging for physics-based synthesis \cite{yang2023physics}, and electron microscopy for physics-guided translation \cite{khan2023leveraging}---but not for the estimation of Hamiltonian parameters from magnetic textures. The same caveat applies to the statistical alignment methods reviewed earlier, whose validation lies overwhelmingly in general computer vision rather than in magnetic imaging. This absence of a domain-specific, physically grounded sim-to-real methodology is precisely the gap this work targets.
+
+The choice among all these strategies depends on the specific characteristics of the sim-to-real gap in magnetic domain imaging: the availability of target domain data, the nature and magnitude of distribution shifts, computational constraints, and the interpretability requirements of the application \cite{Wilson2020Survey}. For magnetic nanodot systems, where experimental data is expensive and limited while simulation data is abundant but systematically biased, the most rigorous path is unlikely to be purely statistical alignment; rather, physics-aware strategies---particularly physics-based forward modeling of the observation operator, optionally combined with domain randomization and self-supervised invariances---offer a principled route to robust sim-to-real generalization that respects the physical origin of the gap \cite{Hilgers2025,yang2023physics}.
 
 \paragraph{Summary and research gaps.}
 Despite significant progress in domain adaptation methods, several challenges remain specifically relevant to magnetic domain imaging. First, most domain adaptation techniques assume smooth, continuous distribution shifts, whereas the simulation-experiment gap in magnetic imaging involves discrete instrumental modalities (MFM vs. SP-STM vs. Lorentz TEM) with fundamentally different physical measurement principles \cite{Guan2021Domain}. Second, current methods often require access to unlabeled target domain data during training, which may not always be available for expensive experimental techniques \cite{Chronopoulou2024Efficient}. Third, domain adaptation approaches typically focus on classification or regression tasks, with limited exploration of generative modeling for magnetic textures where both forward and inverse problems must be addressed simultaneously \cite{Park2024}. Finally, the interaction between domain adaptation and physics-informed constraints remains underexplored: how to preserve physical consistency (energy minimization, micromagnetic equilibrium) while adapting across domains is an open research question \cite{Sun2022Applications}.
 
 
-\subsection{Post-Hoc Attribution and Physics-Guided Interpretability Methods}
+\subsection{Post-Hoc Attribution and Physics-Guided Interpretability Methods}\label{sec:state_art_interp}
 
 A persistent challenge in data-driven modeling of magnetic systems is the lack of interpretability and physical traceability in learned models. This limitation is not unique to magnetism: across computational physics and materials science, neural surrogates often match or surpass classical models in accuracy yet remain opaque, making it difficult to validate learned relationships against established physical laws or to extract causal insight \cite{Oviedo2022}. In nanoscale magnetism this opacity is particularly problematic, as inferred material parameters (exchange, anisotropy, DMI, external field, temperature) must be numerically precise and physically meaningful to support device design, hypothesis testing, and experimental planning.
 
@@ -1010,26 +1281,42 @@ Probabilistic / disentangled models & Quantifies uncertainty and multimodality; 
 
 
 
+\subsection{Agentic AI and Interoperable Knowledge Substrates}\label{sec:state_art_agents}
+
+The fourth challenge identified in Section~\ref{sec:problem_statement}---the fragmentation and non-reusability of domain knowledge---has no established solution in nanoscale magnetism, but the enabling technologies have matured rapidly in adjacent fields. This subsection reviews the three lines of work most relevant to a unified, agent-orientable knowledge substrate: autonomous scientific agents, tool-interoperability protocols, and knowledge representation for reusability.
+
+\paragraph{Agentic AI and LLM agents for scientific discovery.}
+Large language models have evolved from passive text generators into \emph{agents} that plan, reason, invoke external tools, and act autonomously within a scientific workflow \cite{gridach2025agentic}. In chemistry, Coscientist couples a language model with web search, documentation retrieval, code execution, and laboratory automation to design and run experiments end-to-end \cite{boiko2023autonomous}, while ChemCrow augments a language model with eighteen expert-designed tools to plan organic syntheses and guide discovery \cite{bran2024augmenting}. In materials science, physics-aware multi-agent systems such as AtomAgents integrate knowledge retrieval, multimodal data, and physics-based simulation to address alloy-design tasks \cite{ghafarollahi2024atomagents}. A common thread is that the scientific value emerges not from any single model but from an \emph{orchestrated ensemble of specialized, tool-backed capabilities}---precisely the composition that magnetic-domain analysis currently lacks.
+
+\paragraph{Interoperability protocols for tool-augmented agents.}
+For agents to reuse analytical capabilities safely, those capabilities must be exposed through a standardized interface rather than bespoke glue code. The Model Context Protocol (MCP) has recently emerged as an open standard that exposes tools and data sources to language-model agents through a uniform, auditable client--server contract, reducing the fragmentation that previously required a custom connector per tool \cite{hou2025mcp}. Such protocols turn heterogeneous scripts into \emph{composable capabilities} that external orchestrators can discover and invoke, but they have so far been applied to general-purpose software, web services, and databases rather than to physics-specific simulation and inference pipelines.
+
+\paragraph{Knowledge representation and reusability in materials science.}
+In parallel, the materials community has recognized that fragmented data systems, non-standardized formats, and the absence of shared metadata and ontologies are central obstacles to interoperability and reproducibility \cite{brinson2023community}. Efforts toward shared metadata schemas and semantic taxonomies aim to make data and workflows findable, interoperable, and reusable across groups \cite{ghiringhelli2023shared}. These initiatives target the \emph{data} layer; they do not yet expose executable physical models---simulators, estimators, generators, interpreters---as queryable, composable capabilities.
+
+\paragraph{Research gap.}
+Taken together, autonomous agents, interoperability protocols, and FAIR knowledge representation are advancing quickly, but they cluster in chemistry, general materials informatics, and robotics. No agent-orientable, physically grounded substrate exists for nanoscale magnetic-domain analysis, where the tooling remains bespoke and expert-operated, and where the forward simulation, inverse estimation, generative, and interpretability modules are neither standardized nor connected to one another. Unifying these modules into a single, coherent framework that can be reused---including by autonomous agents---is therefore an open problem, and constitutes the integrative contribution pursued in this work.
+
 \section{Research Question}
 
-The challenges outlined in the previous sections—parameter degeneracy, the sim-to-real gap, and lack of interpretability—converge to define a critical gap in the state of the art for nanoscale magnetic domain characterization. Current approaches struggle to simultaneously address the non-uniqueness of the inverse mapping, the systematic distribution shifts between simulated training data and experimental observations, and the opacity of data-driven models. This confluence of limitations motivates the central research question of this work:
+The challenges outlined in the previous sections—parameter degeneracy, the sim-to-real gap, the lack of interpretability, and the fragmentation of the resulting methods into non-reusable, expert-operated tools—converge to define a critical gap in the state of the art for nanoscale magnetic domain characterization. Current approaches struggle to simultaneously address the non-uniqueness of the inverse mapping, the systematic distribution shifts between simulated training data and experimental observations, and the opacity of data-driven models, and even when individual solutions exist they remain isolated rather than combined into a coherent workflow. This confluence of limitations motivates the central research question of this work:
 
 \begin{center}
-\textit{How can physics-informed deep learning frameworks be designed to simultaneously mitigate parameter degeneracy, bridge the sim-to-real gap through effective domain adaptation, and ensure physical interpretability in the forward and inverse modeling of magnetic domain states?}
+\textit{How can a unified, physics-informed framework be designed to jointly mitigate parameter degeneracy, bridge the sim-to-real gap through domain adaptation, and ensure physical interpretability across the forward and inverse modeling of magnetic domain states, in a form reusable by autonomous agents?}
 \end{center}
 
-This question is inherently multifaceted, requiring the integration of regularization strategies that respect the underlying Hamiltonian structure, domain adaptation methodologies capable of generalizing from synthetic to experimental data while preserving physically plausible solutions, and interpretability mechanisms that expose the relationship between learned representations and observable physical quantities. Addressing this research question requires moving beyond purely data-driven approaches toward hybrid frameworks that embed physical constraints, leverage domain adaptation techniques, and maintain computational tractability and generalization capacity across experimental and simulated magnetic imaging modalities.
+This question is inherently multifaceted, requiring the integration of regularization strategies that respect the underlying Hamiltonian structure, domain adaptation methodologies capable of generalizing from synthetic to experimental data while preserving physically plausible solutions, interpretability mechanisms that expose the relationship between learned representations and observable physical quantities, and, finally, the unification of these methods into a single, coherent framework that can be reused rather than rebuilt for each new study. Addressing this research question requires moving beyond purely data-driven approaches toward hybrid frameworks that embed physical constraints, leverage domain adaptation techniques, maintain computational tractability and generalization capacity across experimental and simulated magnetic imaging modalities, and remain accessible enough that autonomous agents can reuse the complete workflow.
 
 
 \section{Objectives}
 
 \subsection{General Objective}
 
-Develop a physics-informed deep learning framework to simultaneously mitigate parameter degeneracy, bridge the sim-to-real gap through domain adaptation, and ensure physical interpretability in the forward and inverse modeling of magnetic domain states.
+Develop a physics-informed deep learning framework to simultaneously mitigate parameter degeneracy, bridge the sim-to-real gap through domain adaptation, and ensure physical interpretability in the forward and inverse modeling of magnetic domain states, and unify the resulting methods into a single, coherent framework that autonomous agents can reuse.
 
 \subsection{Specific Objectives}
 
-To achieve the general objective stated above, this work pursues three complementary specific objectives that tackle the core challenges of degeneracy, sim-to-real gap, and interpretability in the modeling of magnetic domain states:
+To achieve the general objective stated above, this work pursues four complementary specific objectives that tackle the core challenges of degeneracy, sim-to-real gap, interpretability, and the integration of the resulting methods in the modeling of magnetic domain states:
 
 \begin{enumerate}
     \item Develop a cycle-consistent physics-informed deep learning framework for bidirectional mapping between Hamiltonian parameters and magnetic domain configurations, employing physically informed regularization to mitigate the effects of magnetic state degeneracy.
@@ -1037,6 +1324,8 @@ To achieve the general objective stated above, this work pursues three complemen
     \item Develop a regularized deep learning framework based on variational methodologies to generate consistent magnetic states from specified conditions, incorporating domain-aware training strategies to ensure validity across both synthetic and experimental imaging modalities.
 
     \item Develop interpretability methodologies for deep learning models based on post-hoc attribution methods to identify spatially relevant features associated with the underlying conditions of magnetic domain states.
+
+    \item Integrate the simulation, estimation, generation, and interpretation methods into a single, reproducible framework exposed through a standardized interface, enabling the resulting magnetic-domain workflow to be queried and reused programmatically and, as a proof of concept, accessed by autonomous (LLM-based) agents, rather than rebuilt for each new study.
 \end{enumerate}
 
 \section{Databases}\label{sec:databases}
@@ -1122,19 +1411,21 @@ $\tilde{J}_1,\tilde{J}_2,\tilde{J}_3,\tilde{J}_4,\tilde{K}_{DM},\tilde{H}_{ex},\
 Substituting these factorized relationships back into 
 Equation~\ref{eq:GeneralizedHamiltonian} yields the following explicit formulation for the total extended Hamiltonian:
 
-\begin{align}\label{eq:Hamiltonian}
+\begin{equation}\label{eq:Hamiltonian}
+\begin{aligned}
 \mathcal{H}\left(\mathbf{S}|\hat{\mathbf{d}}_{ij},\hat{\mathbf{e}}_x\right) =
-&- \sum_{r=1}^{4}\tilde{J}_r 
-    \sum_{i=1}^{N}\sum_{j\in \mathcal{N}_r(i)} 
-    \langle \mathbf{s}_i, \mathbf{s}_j \rangle \nonumber + \tilde{K}_{DM} \sum_{i=1}^{N}\sum_{j\in \mathcal{N}_1(i)} 
+&- \sum_{r=1}^{4}\tilde{J}_r
+    \sum_{i=1}^{N}\sum_{j\in \mathcal{N}_r(i)}
+    \langle \mathbf{s}_i, \mathbf{s}_j \rangle + \tilde{K}_{DM} \sum_{i=1}^{N}\sum_{j\in \mathcal{N}_1(i)}
     \langle \hat{\mathbf{d}}_{ij},(\mathbf{s}_i \times \mathbf{s}_j)
-    \rangle \nonumber \\
-&- \tilde{H}_{ex} \sum_{i=1}^{N} 
-    \langle \hat{\mathbf{e}}_x, \mathbf{s}_i \rangle \nonumber + \frac{1}{S_o^4}\sum_{i=1}^{N} \tilde{K}_i^{eff}
-    \left(s_{i\hat{x}}^2 s_{i\hat{y}}^2 + 
-          s_{i\hat{x}}^2 s_{i\hat{z}}^2 + 
+    \rangle \\
+&- \tilde{H}_{ex} \sum_{i=1}^{N}
+    \langle \hat{\mathbf{e}}_x, \mathbf{s}_i \rangle + \frac{1}{S_o^4}\sum_{i=1}^{N} \tilde{K}_i^{eff}
+    \left(s_{i\hat{x}}^2 s_{i\hat{y}}^2 +
+          s_{i\hat{x}}^2 s_{i\hat{z}}^2 +
           s_{i\hat{y}}^2 s_{i\hat{z}}^2\right),
-\end{align}
+\end{aligned}
+\end{equation}
 with $\tilde{J}_1 = 1.0$~meV fixed as the energy reference unit. The cubic anisotropy form in the last term follows directly from expanding $\frac{1}{2}(1 - \|\mathbf{s}_i\mathbf{E}\|_4^4)$ under the $L_2$ normalization constraint $\|\mathbf{s}_i\|_2 = 1$, which 
 yields $s_{i\hat{x}}^2 s_{i\hat{y}}^2 + s_{i\hat{y}}^2 
 s_{i\hat{z}}^2 + s_{i\hat{z}}^2 s_{i\hat{x}}^2$, normalized by $S_o^4$ to maintain dimensional consistency across spin magnitudes.
@@ -1160,8 +1451,10 @@ Finally, the magnetocrystalline anisotropy encodes the intrinsic directional pre
 relativistic spin-orbit coupling, this term rigorously establishes the energetically favorable (easy) and unfavorable (hard) crystallographic axes for spin orientation within the nanodot. Both constants are measured in meV per atom and represent a relatively subtle symmetry-breaking energy compared to the dominant isotropic 
 exchange. The bulk anisotropy constant $\tilde{K}_{an1}$ governs interior lattice sites $i \in \mathcal{V}_{bulk}$, where each atom is fully coordinated by neighbors in all spatial directions, yielding a locally symmetric energetic environment. Its conventional boundaries range from roughly $0.001$~meV in soft bulk magnets to $1.0$~meV in 
 highly anisotropic hard nanomaterials~\cite{cullity2011introduction}. The surface anisotropy constant $\tilde{K}_{anS}$, by contrast, 
-governs boundary sites $i \in \mathcal{V}_{surf}$, where broken spatial inversion symmetry---arising from the absence of neighbors on the exterior side of the nanodot---produces an asymmetric local environment that intensifies the directional preference for spin orientation. Consequently, $|\tilde{K}_{anS}|$ is generally larger than $|\tilde{K}_{an1}|$, reflecting the enhanced symmetry-breaking at the nanodot boundary. This two-constant formulation is essential for accurately capturing the finite-size and surface-dominated effects that critically govern the stability of emergent topological textures 
+governs boundary sites $i \in \mathcal{V}_{surf}$, where broken spatial inversion symmetry---arising from the absence of neighbors on the exterior side of the nanodot---produces an asymmetric local environment that intensifies the directional preference for spin orientation. Consequently, $|\tilde{K}_{anS}|$ is generally larger than $|\tilde{K}_{an1}|$, reflecting the enhanced symmetry-breaking at the nanodot boundary. This two-constant formulation is essential for accurately capturing the finite-size and surface-dominated effects that critically govern the stability of emergent topological textures
 in confined nanoscale geometries~\cite{fert2024electrical,borisov2021heisenberg}.
+
+Although the parameter vector $\breve{\theta}$ governs the full three-dimensional spin field, the observable exploited in this work is restricted to its out-of-plane projection, the $s_z$ component. This choice is dictated by experimental measurability: the most widely available magnetic imaging modalities---magnetic force microscopy and the polar magneto-optical Kerr effect---are primarily sensitive to the out-of-plane magnetization~\cite{li2023skyrmions}, whereas resolving the in-plane components requires substantially more specialized techniques. Working on $s_z$ therefore keeps the framework consistent with the information realistically accessible from experiment. This restriction, however, imposes a theoretical limit on parameter identifiability: distinct parameter sets---most notably those related by the sign of the antisymmetric exchange, which reverses the in-plane chirality while leaving $s_z$ invariant---become indistinguishable in the observation space, so that a regressor exposed to both would collapse its predictions toward a degenerate average. The sampling bounds detailed in Section~\ref{sec:training_datasets} are therefore deliberately chosen to remain well-posed under the $s_z$-only observation.
 
 \subsubsection{Image-Based Dataset Generation from Monte Carlo Simulations}\label{sec:montecarlo_sim}
 
@@ -1187,7 +1480,16 @@ P(\mu^{(t)} \rightarrow \mu^{(t+1)}) = \begin{cases}
 
 Physically, the instantaneous temperature parameter $T^{(t)}$ actively scales the energetic barriers within the system's vast topological energy landscape during the annealing process~\cite{landau2021guide}. At elevated temperatures, the available thermal energy $k_B T^{(t)}$ frequently exceeds local energy penalties ($\Delta \mathcal{H}$), allowing the simulation to accept thermodynamically unfavorable spin alignments. This thermal noise provides the critical kinetic mechanism required to break out of metastable, localized energy minima, such as misaligned ferromagnetic domains~\cite{desplat2018thermal}. As $T^{(t)}$ is systematically scaled down during the annealing procedure, the probability of accepting higher-energy configurations undergoes exponential decay. This controlled thermal relaxation forces the continuous spin vector field to settle into the absolute global minimum, successfully stabilizing the complex chiral skyrmion textures driven by the underlying DMI.
 
-Moreover, to ensure that each simulation consistently originates from a fully randomized paramagnetic phase regardless of the specific parameter configuration, the initial annealing temperature (i.e., $T^{(t)}$ at $t=0$) is established as an \textit{exchange-normalized initial temperature}. Consistent with foundational statistical mechanics~\cite{eriksson2017atomistic}, this starting temperature is dynamically rescaled in direct proportion to the dominant symmetric exchange energy ($\tilde{J}$). This energetic normalization guarantees that the initial thermal fluctuations are strictly sufficient to overcome the highest localized energetic barriers ($\Delta \mathcal{H}$) for that specific Hamiltonian. This effectively erases initial state bias and prevents the continuous spin vector field from prematurely collapsing into metastable local minima before the controlled cooling protocol begins.
+Moreover, to ensure that each simulation consistently originates from a fully randomized paramagnetic phase regardless of the specific parameter configuration, the initial annealing temperature (i.e., $T^{(t)}$ at $t=0$) is established as an \textit{exchange-normalized initial temperature}. Consistent with foundational statistical mechanics~\cite{eriksson2017atomistic}, this starting temperature is dynamically rescaled in direct proportion to the dominant symmetric exchange energy ($\tilde{J}$). This energetic normalization guarantees that the initial thermal fluctuations are strictly sufficient to overcome the highest localized energetic barriers ($\Delta \mathcal{H}$) for that specific Hamiltonian. This effectively erases initial state bias and prevents the continuous spin vector field from prematurely collapsing into metastable local minima before the controlled cooling protocol begins. Figure~\ref{fig:convergence} illustrates this annealing process for a representative nanodot, tracking the total Hamiltonian energy as the system is cooled and visualizing the progressive transition from a disordered paramagnetic phase toward a thermodynamically relaxed domain configuration.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/convergence}
+    \caption{Thermodynamic convergence during simulated annealing: total Hamiltonian energy $\mathcal{H}$ [meV] versus the exchange-normalized annealing temperature $T^{(0)}$ [K]. Insets show the $s_z$ field of the central layer at selected thermal states.}
+    \label{fig:convergence}
+\end{figure}
+
+The stochastic sampling described above is realized as a fully vectorized, GPU-resident computation, which constitutes one of the core methodological contributions targeted by this work. Leveraging the matrix formulation of the Hamiltonian (Section~\ref{sec:hamiltonian}), the local energy variation $\Delta\mathcal{H}$ is not evaluated site by site---as in conventional atomistic simulators---but for the entire spin lattice at once, gathering neighbor contributions through tensor-shift operations combined as batched matrix and tensor products in a single pass. As illustrated in the bottom inset of Figure~\ref{fig:methodology_flowchart}, this parallelization operates on three levels, each acting only on independent or conditionally-independent degrees of freedom: \textbf{(a)}~\emph{spins}---the lattice is split into two interpenetrating sublattices through a checkerboard decomposition ($(x+y+z)\bmod 2$), so that, because the nearest-neighbor Hamiltonian makes the two sublattices conditionally independent, all sites of one sublattice are proposed and accepted simultaneously (with the other held fixed) before switching, exactly reproducing a sequential sweep; \textbf{(b)}~\emph{replicas}---the same parameter set $\boldsymbol{\theta}$ is propagated with different random seeds as independent Markov chains, batched as an additional dimension on a single GPU; and \textbf{(c)}~\emph{experiments}---different parameter sets $\boldsymbol{\theta}$ are distributed across multiple GPUs under a single-program multiple-data (\texttt{pmap}) scheme, and the complete annealing trajectory is just-in-time compiled and executed on-device to eliminate host--device transfers at every sweep. Crucially, the annealing temperature schedule and the Monte Carlo sweeps $\mu^{(t)}\!\to\!\mu^{(t+1)}$ remain strictly sequential, so this massively parallel formulation reduces the wall-clock cost of dataset generation by orders of magnitude relative to sequential atomistic codes \emph{without introducing any approximation to the underlying physics}.
 
 To generate a robust and diverse dataset, the magnetic parameters governing the Hamiltonian were systematically varied across the simulations. Key variables included the exchange interaction constant ($\tilde{J}$), the magnetocrystalline anisotropy ($\tilde{K}$), the external Zeeman field ($\tilde{H}_{ex}$), and the DMI strength ($\tilde{K}_{DM}$), alongside variations in the base initial temperature ($T^{(0)}$). Subsequently, the transformation of these raw, converged 3D spin states into normalized 2D image arrays followed a strict procedural pipeline:
 
@@ -1199,49 +1501,64 @@ To generate a robust and diverse dataset, the magnetic parameters governing the 
 \end{itemize}
 
 %dataset
+Figure~\ref{fig:spin_configuration} shows a representative converged ground state produced by this pipeline, contrasting its full three-dimensional spin structure with the two-dimensional $s_z$ projection that is ultimately retained as the model input---making explicit the information discarded by the single-axis observation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Figures/3D}
+    \caption{Converged ground-state spin configuration. \textbf{(a)}~$s_z$ projection: dots mark out-of-plane spins, arrows the in-plane orientation $(s_x, s_y)$. \textbf{(b)}~Full three-dimensional spin configuration; color encodes $s_z$.}
+    \label{fig:spin_configuration}
+\end{figure}
+
 Lastly, the simulation pipeline yields a comprehensive image-based dataset, formalized as $\mathcal{D} = \{\mathbf{X}_n, \boldsymbol{\theta}_n\}_{n=1}^{\breve{N}}$. Each image $\mathbf{X}_n \in [0,1]^{\breve{H} \times \breve{W}}$ encodes the two-dimensional spatial magnetization field (the normalized $s_z$ projection) and is paired with its parameter vector $\boldsymbol{\theta}_n \in \mathbb{R}^{8}$, which stores the eight free thermodynamic and Hamiltonian parameters that generated it, $\boldsymbol{\theta}_n = [T^{(0)}_n,\tilde{J}_{2n},\tilde{J}_{3n},\tilde{J}_{4n},\tilde{K}_{an1n},\tilde{K}_{anSn},\tilde{H}_{exn},\tilde{K}_{DMn}]$, with the first-shell exchange $\tilde{J}_{1} = 1.0$~meV held fixed as the energy reference scale. Figure~\ref{fig:methodology_flowchart} depicts the main flowchart of our image-based magnetic dataset generation approach.\\
 
 
 \begin{figure}[H]
     \centering
-    \resizebox{0.8\linewidth}{!}{
+    \resizebox{\linewidth}{!}{
     \input{Figures/diagram}}
- \caption{Main flowchart detailing the generation of the image-based magnetic dataset. The pipeline initializes with the foundational inputs (green), encompassing the Hamiltonian interaction parameters ($\boldsymbol{\theta}$), the discrete unit cell geometry, and the external directional vectors. These constraints govern the atomistic simulation (blue), which employs the Metropolis Monte Carlo algorithm coupled with simulated annealing to thermodynamically relax the system into a converged 3D topological state. Finally, the resulting continuous vector field is projected, rendered, and preprocessed (yellow) to formulate the labelled dataset $\mathcal{D}$, mapping 2D spatial magnetization images to their generating physical parameters.}
+ \caption{Flowchart of the image-based magnetic dataset generation. Foundational inputs (green) drive the atomistic Metropolis Monte Carlo simulation with simulated annealing (blue), which relaxes the system into a converged 3D state; the vector field is then projected and preprocessed (yellow) into the labelled dataset $\mathcal{D}$. The bottom inset sketches the three levels of GPU parallelization---\textbf{(a)}~spins (checkerboard sublattices), \textbf{(b)}~replicas, and \textbf{(c)}~experiments across GPUs---detailed in the text.}
     \label{fig:methodology_flowchart}
 \end{figure}
 
 \subsection{Dataset Structure}\label{sec:training_datasets}
 
-The synthetic dataset produced by the pipeline described above is publicly available on Kaggle\footnote{\url{https://www.kaggle.com/datasets/carloscanamejoy/dataset-spines-complete}} and contains a total of $218{,}256$ samples. Each sample is a grayscale magnetic domain image of size $39 \times 39 \times 1$ pixels, encoding the normalized out-of-plane magnetization field $s_z$, paired with the eight free Hamiltonian parameters $\boldsymbol{\theta} \in \mathbb{R}^8$ that generated it.
+The synthetic dataset produced by the pipeline described above is publicly available on Kaggle\footnote{\url{https://www.kaggle.com/datasets/carloscanamejoy/dataset-spines-united-v2}} and contains a total of $166{,}141$ samples. Each sample is a grayscale magnetic domain image of size $39 \times 39 \times 1$ pixels, encoding the normalized out-of-plane magnetization field $s_z$, paired with the eight free Hamiltonian parameters $\boldsymbol{\theta} \in \mathbb{R}^8$ that generated it.
 
-The eight free Hamiltonian parameters associated with each image are $\boldsymbol{\theta} = [T^{(0)}, \tilde{J}_2, \tilde{J}_3, \tilde{J}_4, \tilde{K}_{an1}, \tilde{K}_{anS}, \tilde{H}_{ex}, \tilde{K}_{DM}]$, where the first-shell exchange constant $\tilde{J}_1 = 1.0$~meV is fixed as the energy reference scale, which removes the global scale degeneracy of the parameter set. Each of the eight free parameters was independently and uniformly sampled within the physically motivated bounds summarized in Table~\ref{tab:param_ranges}.
+The eight free Hamiltonian parameters associated with each image are $\boldsymbol{\theta} = [T^{(0)}, \tilde{J}_2, \tilde{J}_3, \tilde{J}_4, \tilde{K}_{an1}, \tilde{K}_{anS}, \tilde{H}_{ex}, \tilde{K}_{DM}]$, where the first-shell exchange constant $\tilde{J}_1 = 1.0$~meV is fixed as the energy reference scale, which removes the global scale degeneracy of the parameter set. The eight free parameters were drawn with a quasi-random (low-discrepancy) sampling scheme within the physically motivated bounds summarized in Table~\ref{tab:param_ranges}, which fills the parameter space more evenly than independent uniform draws and avoids the clustering and gaps typical of pseudo-random sampling.
 
 \begin{table}[H]
 \centering
-\caption{Sampling ranges for the eight free Hamiltonian parameters $\boldsymbol{\theta}$. The first-shell exchange $\tilde{J}_1 = 1.0$~meV is fixed as the energy reference. Parameters are sampled independently and uniformly within the specified bounds. Physical units: temperature in Kelvin~[K], exchange and DMI constants in meV, anisotropy constants in meV/atom, external field in meV/atom.}
+\caption{Sampling ranges for the eight free Hamiltonian parameters $\boldsymbol{\theta}$. The first-shell exchange $\tilde{J}_1 = 1.0$~meV is fixed as the energy reference. Parameters are drawn with a quasi-random (low-discrepancy) scheme within the specified bounds. Physical units: temperature in Kelvin~[K], exchange and DMI constants in meV, anisotropy constants in meV/atom, external field in meV/atom.}
 \label{tab:param_ranges}
 \begin{tabular}{llcc}
 \hline
 \textbf{Parameter} & \textbf{Physical role} & \textbf{Min} & \textbf{Max} \\
 \hline
-$T^{(0)}$ [K]                & Annealing temperature  & $0.2$  & $20.0$ \\
-$\tilde{J}_2$ [meV]          & 2nd-shell exchange     & $-0.66$ & $0.66$  \\
+$T^{(0)}$ [K]                & Annealing temperature  & $0.0$  & $20.0$ \\
+$\tilde{J}_2$ [meV]          & 2nd-shell exchange     & $-0.33$ & $0.66$  \\
 $\tilde{J}_3$ [meV]          & 3rd-shell exchange     & $-0.29$ & $0.29$  \\
-$\tilde{J}_4$ [meV]          & 4th-shell exchange     & $-0.23$ & $0.23$  \\
-$\tilde{K}_{an1}$ [meV/atom] & Bulk anisotropy        & $0.0$  & $0.2$  \\
-$\tilde{K}_{anS}$ [meV/atom] & Surface anisotropy     & $0.0$  & $0.2$  \\
-$\tilde{H}_{ex}$ [meV/atom]  & External Zeeman field  & $0.0$  & $0.05$  \\
-$\tilde{K}_{DM}$ [meV]       & DMI strength           & $0.0$  & $1.2$  \\
+$\tilde{J}_4$ [meV]          & 4th-shell exchange     & $-0.23$ & $0.24$  \\
+$\tilde{K}_{an1}$ [meV/atom] & Bulk anisotropy        & $0.0$  & $4.57$  \\
+$\tilde{K}_{anS}$ [meV/atom] & Surface anisotropy     & $0.0$  & $0.20$  \\
+$\tilde{H}_{ex}$ [meV/atom]  & External Zeeman field  & $0.0$  & $1.20$  \\
+$\tilde{K}_{DM}$ [meV]       & DMI strength           & $0.0$  & $1.20$  \\
 \hline
 \end{tabular}
 \end{table}
 
 It is worth noting that, although the dataset records all eight free parameters for every sample, their physical imprint on the $s_z$ projection differs substantially. The higher-order exchange constants $\tilde{J}_3$ and $\tilde{J}_4$ are energetically dominated by the first- and second-shell interactions, while the anisotropy constants $\tilde{K}_{an1}$, $\tilde{K}_{anS}$ and the external field $\tilde{H}_{ex}$ couple primarily to the in-plane spin components $(s_x, s_y)$, which are not captured by the $s_z$ projection extracted from the central layer. They are nonetheless included in the per-sample labels to provide a complete and physically honest characterization of the simulated configurations.
 
+To broaden the structural diversity of the dataset beyond a single field geometry, the external field orientation is varied across the simulations: in addition to the in-plane configuration, an out-of-plane field is employed to stabilize additional topologies such as isolated skyrmions, while the magnetocrystalline anisotropy range is deliberately extended toward high values to access an Ising-like regime characterized by sharper, more discrete domain walls. This last point directly probes the transition between the continuous-symmetry (Heisenberg) and discrete ($\mathbb{Z}_2$ Ising) regimes: by driving the uniaxial anisotropy to large values, the continuous spins are progressively forced toward two preferred orientations, allowing the same framework to span from smooth chiral textures to abrupt Ising-like boundaries. The dataset also spans two complementary mechanisms for stabilizing modulated, non-collinear textures: a chiral regime driven by the DMI $\tilde{K}_{DM}$ and an exchange-frustration regime driven by the second-shell exchange $\tilde{J}_2$. To isolate the contribution of each mechanism, these two interactions are activated in a mutually exclusive fashion across the sampled configurations, so that $\tilde{J}_2$ and $\tilde{K}_{DM}$ are the only pair of parameters exhibiting an appreciable anti-correlation ($\rho \approx -0.53$), all remaining pairs being essentially uncorrelated ($|\rho| \lesssim 0.3$). This controlled heterogeneity enriches the space of magnetic phases the models must disentangle within a single unified dataset; Figure~\ref{fig:dataset_samples} shows a representative image for each of the five phase categories the dataset spans, from ordered helical stripes and dense skyrmion lattices to sharp Ising-like domain walls.
+
+It is important to note that the DMI strength $\tilde{K}_{DM}$ is sampled exclusively over non-negative values ($\tilde{K}_{DM} \in [0.0, 1.2]$~meV). This restriction is a physically motivated convention arising from the symmetry of the antisymmetric exchange term in Equation~\ref{eq:Hamiltonian}: under the transformation $\tilde{K}_{DM} \to -\tilde{K}_{DM}$, the equilibrium spin configuration reverses its in-plane chirality---the rotational sense of the chiral winding inverts---while the out-of-plane component $s_z$ at every lattice site remains strictly invariant. Since the regression models operate exclusively on the $s_z$ projection, configurations with $+\tilde{K}_{DM}$ and $-\tilde{K}_{DM}$ are exactly degenerate in the observation space, rendering the sign of the DMI fundamentally unidentifiable from $s_z$ images alone; including both signs would collapse the model's predictions toward $\hat{\tilde{K}}_{DM} \approx 0$. The chirality handedness is instead encoded through the fixed direction vector $\hat{\mathbf{d}}_{ij}$, consistent with standard conventions in atomistic modeling of interfacial DMI~\cite{fert2017magnetic, bogdanov1989thermodynamically, fillion2022gate}. Recovering the DMI sign would require chirality-sensitive observables, such as the full three-dimensional spin field or in-plane magnetization components; this lies outside the scope of the present work and is left as a direction for future investigation.
+
+Finally, the sampling bounds of Table~\ref{tab:param_ranges} are not intended to reproduce a single specific compound but to cover the region of Hamiltonian space where chiral and modulated textures exist. Since $\tilde{J}_1$ is fixed as the energy reference, the physically meaningful quantities are the dimensionless ratios $\tilde{J}_r/\tilde{J}_1$, $\tilde{K}_{DM}/\tilde{J}_1$, and $\tilde{K}/\tilde{J}_1$, which fall within the ranges reported by first-principles calculations and experiments for chiral magnets and ultrathin transition-metal films~\cite{heinze2011spontaneous, dupe2014tailoring}. For the DMI, the sampled ratio $\tilde{K}_{DM}/\tilde{J}_1$ up to $\approx 1.2$ exceeds the typical interfacial value ($\sim 0.3$--$0.7$), a standard choice in finite-lattice Monte Carlo so that the helical period ($\lambda \propto \tilde{J}_1/\tilde{K}_{DM}$) fits several times within the simulation cell; because the physics is scale-invariant, a large ratio on a small lattice is equivalent to a small ratio in a large system, reflecting finite-size rescaling rather than unphysical values~\cite{buhrandt2013skyrmion}. The anisotropy range spans from soft magnets to the strongly anisotropic interfacial regime~\cite{gambardella2003giant, johnson1996magnetic}, and the Zeeman range ($\tilde{H}_{ex}$ up to $1.2$~meV/atom) corresponds, through $E = g\mu_B B$ with $g\approx2$, to laboratory fields up to $\approx 10$~T.
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\linewidth]{Figures/imagenes_grid.pdf}
-    \caption{Representative samples from the synthetic dataset. Each image is a $39 \times 39$ pixel nanodot showing the normalized out-of-plane magnetization field $s_z$, illustrating the diversity of emergent magnetic textures (ferromagnetic, helical, labyrinthine, and skyrmionic) spanned by the sampled Hamiltonian parameter space.}
+    \includegraphics[width=\linewidth]{Figures/structures_representatives_horizontal-2}
+    \caption{Representative magnetization image $\mathbf{X}_n$ for each of the five magnetic phase categories identified by clustering the Xception latent space (the sample nearest the cluster centroid in the UMAP embedding); color encodes the out-of-plane component $s_z$ ($+1$ spin up, $-1$ spin down). The phases span ordered helical stripes, thermally disordered states, mixed-chirality bimerons, dense skyrmion lattices, and sharp Ising domain walls.}
     \label{fig:dataset_samples}
 \end{figure}
 

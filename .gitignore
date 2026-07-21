@@ -97,3 +97,9 @@ credentials.json
 *.swo
 *~
 .Trash-*
+
+# ========================
+# Repos de papers anidados (tienen su propio repo git/GitHub)
+# ========================
+/papers/SpinesIA_Inverso_submission/
+/papers/SpinesIA_Inverso_completo/

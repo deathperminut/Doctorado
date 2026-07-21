@@ -1,9 +1,9 @@
-    
+
     \begin{tikzpicture}[
         % --- TikZ Styles ---
         basebox/.style={
-            draw, thick, minimum width=3.5cm, minimum height=1.2cm, 
-            text width=3.2cm, align=center, font=\small, rounded corners=3pt,
+            draw, thick, minimum width=3.5cm, minimum height=1.2cm,
+            text width=3.2cm, align=center, font=\scriptsize, rounded corners=3pt,
             inner sep=3pt
         },
         inputbox/.style={basebox, fill=inputgreen},
@@ -14,7 +14,7 @@
 
     % --- 1. INPUTS ---
     \node[inputbox] (params) {
-        \textbf{Physical Parameters ($\boldsymbol{\theta}$)}        
+        \textbf{Physical\\ Parameters ($\boldsymbol{\theta}$)}
     };
 
     \node[inputbox, below=0.5cm of params] (lattice) {
@@ -37,7 +37,7 @@
         Metropolis Monte Carlo + Simulated Annealing Loop\\
         Governing $\mathcal{H}(\mathbf{S}, \dots | \boldsymbol{\theta})$ \\
         Annealing Temperature $T$\\
-        Transition $P(\mu^{(t)} \to \mu^{(t+1)})$ 
+        Transition $P(\mu^{(t)} \to \mu^{(t+1)})$
     };
 
     \node[processbox, fill=processblue!50, dashed, right=1cm of mcsim] (topology) {
@@ -51,7 +51,7 @@
     $S_z$-{Mapping} $\&$ 2D-Rendering
     };
 
-    \node[outputbox, right=1cm of pipeline, minimum width=4cm, text width=3.8cm] (dataset) {
+    \node[outputbox, right=1cm of pipeline, minimum width=4.2cm, text width=4cm] (dataset) {
         \textbf{Labelled Dataset $\mathcal{D}$} \\
         Pairs $\{\mathbf{X}_n, \boldsymbol{\theta}_n\}_{n=1}^{\breve{N}}$ \\
         Target Vector $\boldsymbol{\theta}_n \in \mathbb{R}^{\breve{P}}$\\
@@ -59,21 +59,79 @@
     };
 
 % --- CONNECTIONS ---
-    
+
     % 1. Inputs to Simulation (Grouped 'Bus' Routing)
     % Draw horizontal lines out from top and bottom nodes
     \draw[thick] (params.east) -- ++(0.5,0) coordinate (bus_top);
     \draw[thick] (vectors.east) -- ++(0.5,0) coordinate (bus_bot);
-    
+
     % Connect them with a vertical line
     \draw[thick] (bus_top) -- (bus_bot);
-    
+
     % Draw the main arrow from the center node (intersecting the bus) to the simulation
     \draw[arrow] (lattice.east) -- (mcsim.west);
-    
+
     % 2. Simulation to Pipeline to Output
     \draw[arrow] (mcsim.east) -- (topology.west);
     \draw[arrow] (topology.south) -- (pipeline.north);
     \draw[arrow] (pipeline.east) -- (dataset.west);
+
+    % =====================================================================
+    % --- 4. GPU PARALLELIZATION INSET (how/where the MC loop runs on GPU) ---
+    % =====================================================================
+    \begin{scope}[shift={($(mcsim.south)+(-0.6,-4.7)$)}, font=\scriptsize]
+    \begin{scope}[local bounding box=gpubox]
+
+    % (a) Spins within one lattice: checkerboard
+    \node[font=\scriptsize\bfseries] at (1.0,2.3) {(a) Spins (within a lattice)};
+    \begin{scope}
+      \clip (1.0,1.15) circle (0.85);
+      \foreach \i in {0,...,9}{
+        \foreach \j in {0,...,9}{
+          \pgfmathparse{mod(\i+\j,2)==0 ? "subAcol" : "subBcol"}
+          \edef\cellcol{\pgfmathresult}
+          \fill[\cellcol] (0.15+\i*0.17, 0.3+\j*0.17) rectangle ++(0.17,0.17);
+        }
+      }
+    \end{scope}
+    \draw[thick] (1.0,1.15) circle (0.85);
+    \node[align=center, font=\scriptsize] at (1.0,-0.35)
+      {Checkerboard sublattices A/B:\\ all A updated in parallel,\\ then all B (nearest-neighbor\\ $\mathcal{H}\Rightarrow$ cond.\ independent)};
+
+    % (b) Replicas of one experiment: same theta, different seeds
+    \node[font=\scriptsize\bfseries] at (4.35,2.3) {(b) Replicas (same $\boldsymbol{\theta}$)};
+    \foreach \k/\dx/\dy in {2/0.18/0.18, 1/0.09/0.09, 0/0/0}{
+      \fill[processblue] (4.35+\dx,1.15+\dy) circle (0.5);
+      \draw[thick] (4.35+\dx,1.15+\dy) circle (0.5);
+    }
+    \node[align=center, font=\scriptsize] at (4.4,-0.35)
+      {Same parameters $\boldsymbol{\theta}$,\\ different random seeds:\\ independent Markov chains\\ (batched on one GPU)};
+
+    % (c) Experiments: different theta, distributed across GPUs via pmap
+    \node[font=\scriptsize\bfseries] at (8.2,2.3) {(c) Experiments (different $\boldsymbol{\theta}$)};
+    \fill[inputgreen]  (7.15,1.75) circle (0.34); \draw[thick] (7.15,1.75) circle (0.34);
+    \fill[outputorange](7.15,1.05) circle (0.34); \draw[thick] (7.15,1.05) circle (0.34);
+    \fill[processblue!60](7.15,0.35) circle (0.34); \draw[thick] (7.15,0.35) circle (0.34);
+    \node[draw, fill=gray!12, rounded corners, minimum width=0.85cm, font=\scriptsize] (g0) at (8.9,1.75) {GPU 0};
+    \node[draw, fill=gray!12, rounded corners, minimum width=0.85cm, font=\scriptsize] (g1) at (8.9,1.05) {GPU 1};
+    \node[draw, fill=gray!12, rounded corners, minimum width=0.85cm, font=\scriptsize] (gk) at (8.9,0.35) {GPU $k$};
+    \draw[-{Latex}, thick] (7.5,1.75) -- (g0.west);
+    \draw[-{Latex}, thick] (7.5,1.05) -- (g1.west);
+    \draw[-{Latex}, thick] (7.5,0.35) -- (gk.west);
+    \node[align=center, font=\scriptsize] at (8.2,-0.35)
+      {Different parameter sets $\boldsymbol{\theta}$,\\ distributed across GPUs\\ (\texttt{pmap}, SPMD)};
+
+    % sequential note
+    \node[draw=red!60!black, fill=red!5, rounded corners, align=center, font=\scriptsize,
+          minimum width=9cm] at (4.6,-1.5)
+      {\textbf{Sequential} (never parallelized): annealing temperature $T$ $+$ Monte Carlo sweeps $\mu^{(t)}\!\to\!\mu^{(t+1)}$};
+
+    \end{scope}
+    \node[draw=gray, thick, rounded corners, fit=(gpubox), inner sep=6pt,
+          label={[anchor=north west, font=\scriptsize\bfseries, gray!60!black]north west:GPU parallelization}] (gpuframe) {};
+    \end{scope}
+
+    % dashed connector: simulation block -> GPU inset
+    \draw[gray!60, dashed, thick, -{Latex}] (mcsim.south) -- (gpuframe.north);
 
     \end{tikzpicture}
