@@ -1,0 +1,151 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{parskip}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+
+\definecolor{jazul}{RGB}{0,70,170}
+\definecolor{jgris}{RGB}{95,95,95}
+\definecolor{jverde}{RGB}{20,120,50}
+
+\titleformat{\section}{\large\bfseries\color{jazul}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+
+% Bloque comentario / respuesta / ubicación
+\newcommand{\comentario}[1]{\par\smallskip\noindent\textbf{\color{jgris}Comentario del jurado.}\ \textit{#1}\par}
+\newcommand{\respuesta}[1]{\par\smallskip\noindent\textbf{\color{jverde}Respuesta.}\ #1\par}
+\newcommand{\ubic}[1]{\par\smallskip\noindent\textbf{\color{jazul}Ubicación en el anteproyecto revisado (resaltado en azul).}\ #1\par\medskip\hrule\medskip}
+
+\title{\vspace{-1.2cm}\color{jazul}\bfseries Respuesta a las Observaciones de los Jurados\\[2pt]
+\large\normalfont Anteproyecto doctoral: \emph{A Physics-Informed Deep Learning Framework for Estimating and Generating Magnetic Domains from Hamiltonian Parameters}}
+\author{Juan Sebastián Méndez Rondón \\ \small Universidad Nacional de Colombia \quad\textbullet\quad \texttt{jumendezro@unal.edu.co}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent
+Se agradece a los jurados sus observaciones, que han permitido robustecer sustancialmente el anteproyecto. A continuación se responde a cada comentario y se indica la ubicación precisa (sección/figura) donde el cambio quedó incorporado. \textbf{Todo el contenido nuevo o modificado en respuesta a estas observaciones está resaltado en color azul dentro del documento revisado.} Las referencias a secciones y figuras corresponden a la numeración del anteproyecto actualizado.
+
+\bigskip\hrule\medskip
+
+\section{Luis Fernando Mulcue Nieto}
+
+\subsection{Clase de universalidad: Ising vs.\ Heisenberg}
+\comentario{Al usar solo Heisenberg, la red aprende una física de simetría continua; no se sabe si colapsará frente a un sistema discreto (Ising, $Z_2$) con fronteras de dominio abruptas. Debería demostrarse la transición Heisenberg$\to$Ising apagando o modificando componentes (anisotropía uniaxial extrema).}
+\respuesta{El régimen tipo Ising \emph{ya está cubierto} por el corpus: el rango de anisotropía se extiende deliberadamente a valores fuertemente uniaxiales, lo que lleva al sistema de forma continua del régimen Heisenberg (paredes quirales/helicoidales suaves) a un régimen colineal tipo Ising con fronteras abruptas up/down. No solo está en los datos: el análisis por fase del problema inverso aísla de forma no supervisada una \emph{fase Ising} (paredes nítidas a alta anisotropía) que resulta ser \emph{de las mejor recuperadas} ($R^2\approx0.94$--$0.99$, junto a la fase skyrmiónica), no un modo de fallo. Así, el marco transita entre clases de universalidad variando la anisotropía y no se degrada con texturas de simetría discreta. Se conserva además, como experimento de validación del objetivo de estimación, una ablación sistemática Heisenberg$\to$Ising (forzando límites uniaxiales extremos).}
+\ubic{Sección 10.2.1 (párrafo \emph{Universality class}, azul), Sección 7.1 (rangos de anisotropía), Sección 10.2.2 (fase Ising y $R^2$ por fase), Figura 41 (representantes de fase).}
+
+\section{David Augusto Cárdenas Peña}
+
+\subsection{Observaciones generales}
+
+\comentario{Gran parte del documento sufre de un enfoque de ``ensamble de herramientas''.}
+\respuesta{Se ajustó la presentación del anteproyecto para que la contribución no se lea como una integración tecnológica, sino que descanse sobre \emph{aportes de novedad concretos}, cada uno con su propio desarrollo dentro de la investigación:
+\begin{itemize}
+  \item[(i)] \textbf{Simulación tensorial/matricial acelerada por GPU.} Descomposición algebraica del Hamiltoniano extendido que reformula el Monte Carlo como operaciones matriciales residentes en GPU (sublattices en tablero, réplicas, \texttt{pmap} multi-GPU), reduciendo el costo en órdenes de magnitud \emph{sin} aproximar la física.
+  \item[(ii)] \textbf{Comparación de estimadores convolucionales frente a Vision Transformer entrenados desde cero.} Es novedad porque los trabajos recientes no se detienen en esta comparación sino que saltan directamente al uso de \emph{modelos preentrenados}; aquí se compara sistemáticamente (precisión, tamaño, métricas físicas) entrenando desde cero, mostrando que la precisión la limita la información física del $s_z$ y no la capacidad del modelo.
+  \item[(iii)] \textbf{Condicionamiento de un modelo de difusión con los parámetros subyacentes del Hamiltoniano.} Aporte nuevo y propio de esta investigación: los modelos recientes condicionan la generación únicamente por condiciones de \emph{ambiente} (p.\,ej.\ la temperatura), pero nunca por el problema completo; aquí el denoiser se condiciona por el \emph{vector completo} de ocho parámetros.
+  \item[(iv)] \textbf{Serie temporal de transiciones de estado.} Novedad: se modela la \emph{trayectoria} de estados inducida por cambios de condiciones ambiente (con medidas de información), no un solo fotograma.
+  \item[(v)] \textbf{RAMs para regresión con entrada de imágenes.} Novedad: ningún trabajo actual da explicabilidad a los resultados de estos modelos; se propone una \emph{métrica de atribución} específica para problemas de regresión con entrada de imágenes, validada cuantitativamente frente a SHAP/LIME/SF-SHAP.
+  \item[(vi)] \textbf{Paquete de \emph{tools} y \emph{skills} para integración con agentes inteligentes.} Novedad: las capacidades anteriores (simulación, estimación, generación, interpretación) se encapsulan como herramientas con contrato tipado y se exponen a través de una interfaz estándar para ser invocadas y encadenadas por agentes autónomos. Este aporte se hace explícito en el documento como la \emph{ampliación a un nuevo objetivo específico} (Objetivo~5).
+\end{itemize}
+Se aclara que UMAP y PHATE \emph{no} constituyen novedad teórica, sino novedad de \emph{aplicación} al campo del magnetismo nanoscópico (análisis del espacio latente y, con PHATE, de las trayectorias de transición). El peso de la contribución recae, por tanto, en estos seis aportes de novedad y no en una integración tecnológica.}
+\ubic{Ejes de novedad enumerados en la introducción de la metodología (Sección 9) y en la Figura 24. (i)~Sección 7.1.2; (ii)~Secciones 9.1.1 y 10.2.2 (Figura 36); (iii)~Sección 9.1.2 (matemática del condicionamiento) y 10.3 (resultados); (iv)~Sección 9.2; (v)~Secciones 9.4.1, 10.2.3 y 10.2.4; (vi)~Sección 9.5; UMAP/PHATE~Secciones 9.4.3 y 4.2--4.3.}
+
+\comentario{La adaptación de dominio se limita a ensamblar herramientas estadísticas (MMD, CORAL) desconectadas de la física; se recomienda reorientar hacia nuevos operadores/métricas/modelos.}
+\respuesta{Se aclara que este apartado está \emph{en proceso de depuración} más a fondo dentro de la propuesta. En su estado actual, la decisión de diseño es doble: (a)~se \emph{descarta} el uso de modelos intermedios que adapten algún espacio latente entre datos simulados y experimentales, precisamente para \emph{no complejizar} las funciones de costo actuales (evitando el término de alineamiento adicional y el submodelo asociado que el jurado observa); y (b)~por ahora se plantean \emph{técnicas de preprocesamiento previas} sobre los datos experimentales o simulados, que acerquen ambos dominios \emph{antes} del estimador ya entrenado, dejando intactos sus pesos y su costo. El estado del arte se amplió con alternativas físico-guiadas (\emph{physics-based forward modeling}, \emph{domain randomization}, \emph{physics-guided image-to-image translation}, \emph{contrastive self-supervised learning}) para respaldar una selección rigurosa; su ponderación definitiva se hará empíricamente contra los datasets experimentales de referencia. Atendiendo la recomendación de orientar el trabajo hacia \emph{nuevas métricas} en lugar de un alineamiento estadístico de caja negra, se están evaluando \emph{métricas físicas} para el trabajo con imágenes---en particular la función de correlación de espín y observables relacionados---que permitan comparar los dominios según la \emph{conservación de dichas propiedades físicas} entre imágenes; esta línea sigue en investigación. El documento deja explícito que este objetivo permanece bajo evaluación.}
+\ubic{Sección 4.2 (estado del arte ampliado), Sección 9.3 (preferencia por preprocesamiento; se descartan explícitamente los modelos de alineamiento de espacio latente; opciones bajo evaluación, en azul).}
+
+\comentario{Rigurosidad teórica: variables sin describir, sin espacio definido, o con notación compartida.}
+\respuesta{Se revisó y sincronizó la notación en todo el documento; cada variable de las formulaciones (Hamiltoniano, generación del dataset, modelos directo e inverso, RAMs, difusión) queda definida con su espacio y unidades, y coherente entre la sección de datos, la metodología y los resultados.}
+\ubic{Secciones 7 y 9 (notación unificada).}
+
+\comentario{Estilos de figura heterogéneos; la Figura 26 (Gemini) tiene marca de agua.}
+\respuesta{Se rehízo el diagrama con el desglose correcto de la nomenclatura y se homogenizó el estilo; se eliminó la figura con marca de agua.}
+\ubic{Sección 9 (diagramas de arquitectura y de metodología).}
+
+\subsection{Objetivo 1}
+
+\comentario{La consistencia de ciclo es una pérdida determinista punto a punto (norma euclídea). Si $G(p,z)$ produce una textura físicamente idéntica a la de otro $p'$ válido, ¿$F$ penalizaría al predecir $p'$? ¿Forzar consistencia en zonas de alta degeneración obliga a memorizar correlaciones artificiales? ¿Cómo se mitiga y evalúa el error en esas zonas con un costo determinista?}
+\respuesta{Tres aclaraciones. (i)~El ciclo dejó de ser una verificación estática y es un \emph{mecanismo de entrenamiento} en dos fases (warm-start de cada bloque y luego fine-tuning conjunto a través del lazo cerrado); su gradiente desincentiva que el estimador colapse las configuraciones degeneradas hacia la media condicional, en lugar de memorizar. (ii)~La mitigación por ciclo es \emph{parcial} y se declara así explícitamente: cuando la ambigüedad es intrínseca a la observación de un solo eje, ninguna restricción basada en imagen la resuelve; por ello se introduce el Objetivo~2 (serie temporal de transiciones $+$ medidas de información), que aporta la información discriminativa ausente en un solo fotograma. (iii)~Esas zonas de alta divergencia se \emph{evalúan} por observables físicos invariantes y por el auto-chequeo del ciclo, no por error punto a punto; el análisis por fase aísla cuantitativamente el régimen degenerado (fase ``others''/paramagnética).}
+\ubic{Sección 9.1.3 (ciclo como entrenamiento en dos fases; mitigación parcial), Sección 9.2 (complemento temporal), Sección 10.2.2 (párrafo \emph{Outlook: resolving the collapsed regimes}, azul).}
+
+\comentario{Se usa \emph{transfer learning} con modelos preentrenados en RGB (texturas simples$\to$complejas), pero las imágenes de la tarea ya presentan texturas bien definidas. ¿Por qué reextraer características ya explícitas? ¿Por qué no modelos livianos no preentrenados, dada la variedad más acotada de las imágenes de microscopía y la ill-possedness del problema inverso?}
+\respuesta{Se acogió por completo la observación. Cabe aclarar el origen del \emph{transfer learning}: inicialmente se empleó con la intención de \emph{reducir el tiempo de convergencia} de los modelos; sin embargo, al evaluar el número de épocas frente a las curvas de entrenamiento, se constató que la contribución de esos pesos preentrenados \emph{no fue relevante}, por lo que \emph{ya no se incluye} en el documento. En consecuencia, todos los modelos (CNN convencional, ResNet, DenseNet, Xception y ViT) se entrenan ahora \emph{desde cero}. Además, se añadió un análisis de \emph{precisión frente a número de pesos} que muestra que un CNN compacto ($\sim$1\,M parámetros) iguala a backbones dos órdenes de magnitud mayores: la precisión está acotada por la información física disponible en la proyección $s_z$, no por la capacidad del modelo. Esto justifica formalmente el uso de arquitecturas livianas y no preentrenadas, y conecta directamente con la biyectividad/ill-possedness del problema.}
+\ubic{Sección 10.2.2 (análisis precisión--tamaño, Figura 36), metodología del Objetivo~1, Conclusiones.}
+
+\comentario{La pérdida total combina $\geq5$ términos no lineales de distintas escalas (colapso/conflicto de gradiente, dominancia de un término). Además, la Optimización Bayesiana (OB) puede ser computacionalmente prohibitiva y no debe usarse como \emph{plug-and-play}.}
+\respuesta{Se \emph{eliminó} la función multi-término: se descartan los términos físico-informados (tipo PINN) y adversariales (tipo GAN). Queda un objetivo \emph{compacto} (pérdida generativa $+$ un único término de ciclo de escala comparable), lo que elimina el conflicto de gradientes. La OB se reformula en consecuencia: no busca balancear un vector de pesos de alta dimensión, sino sintonizar de forma acotada un conjunto \emph{pequeño} de hiperparámetros críticos sobre ese objetivo compacto, con lo que su costo es acotado y justificado. Complementariamente, y siguiendo la recomendación de anclar la reconstrucción en la física, se añade \emph{un} regularizador físico \emph{pequeño} ($\lambda_{\mathrm{phys}}\!\ll\!1$) sobre observables globales invariantes (magnetización, magnetización absoluta y vector de onda pico), reservando la función de correlación de espín para evaluación.}
+\ubic{Sección 9.1.3 (objetivo compacto, Ec.\ del ciclo y regularizador físico pequeño en azul), subsección de Optimización Bayesiana.}
+
+\comentario{En la Sección 10.3.2 se reconoce que el MSE evalúa mal por falta de invariancia geométrica y se propone como trabajo futuro. ¿Está dentro del \emph{scope}? ¿Se pueden introducir bloques de registro rígido en el costo de reconstrucción? (Incluir magnetización, magnetización absoluta y \emph{peak wavevector} en el costo con regularización pequeña; usar la \emph{spin correlation} para evaluar, con ventana deslizante para lo local.)}
+\respuesta{Está \emph{dentro del scope}. La evaluación de imágenes ya \emph{no} usa MSE de píxeles (injusto ante rotaciones/traslaciones) sino observables físicos invariantes. Siguiendo su recomendación puntual, se incorpora al costo del generador un término físico \emph{pequeño} con magnetización, magnetización absoluta y vector de onda pico (escalares diferenciables e invariantes), y se \emph{reserva} la función de correlación de espín para la evaluación, con una variante de \emph{ventana deslizante} que examina la consistencia \emph{local} de las texturas generadas. La validación cuantitativa de la generación mediante estos observables ya se demuestra empíricamente.}
+\ubic{Sección 9.1.3 (regularizador físico $\lambda_{\mathrm{phys}}$ y correlación reservada a evaluación, azul), Sección 10.3 (validación física: correlación $C(r)$, factor de estructura $S(k)$; comparación por estructura, Figuras 53--54).}
+
+\comentario{En la prueba de concepto (Figura 33), la predicción de $\tilde{K}_{DM}$ se dispersa y degrada a temperaturas intermedias/altas cerca de $T_C$; la metodología no propone estrategia para aislar o mitigar esa debilidad.}
+\respuesta{El régimen de alta temperatura/Curie se aísla explícitamente en el análisis por fase (la fase desordenada ``others'' concentra el error) y se aborda por dos vías declaradas: (i)~el acoplamiento por gradiente del ciclo, que evita el colapso a la media en esas regiones, y (ii)~la serie temporal de transiciones (Objetivo~2), que aporta la dinámica que un solo fotograma no puede dar. Estas rutas se detallan en el párrafo prospectivo añadido a los resultados.}
+\ubic{Sección 10.2.2 (párrafo \emph{Outlook: resolving the collapsed regimes}, azul), Sección 9.2.}
+
+\subsection{Adaptación de dominio}
+
+\comentario{El documento se enfoca casi exclusivamente en AD estadística no supervisada (MMD/CORAL). Existen alternativas (Physics-Based Forward Modeling, Domain Randomization, Physics-Guided I2I, Contrastive SSL). Fortalecer el estado del arte.}
+\respuesta{Se amplió el estado del arte de adaptación de dominio con esas cuatro alternativas físico-guiadas y se justifica la selección. Como se detalla en la respuesta a la observación general correspondiente, en el estado actual del apartado (todavía en depuración) se \emph{descartan} los modelos que alinean espacios latentes---para no complejizar las funciones de costo---y se privilegian técnicas de \emph{preprocesamiento} de los datos que acerquen los dominios antes del estimador. En lugar de métricas puramente estadísticas, se están evaluando \emph{métricas físicas} (función de correlación de espín y observables afines) que midan la \emph{conservación} de las propiedades físicas entre dominios, en línea con la recomendación de reorientar hacia nuevas métricas; la selección definitiva queda sujeta a evaluación empírica contra los datasets experimentales.}
+\ubic{Sección 4.2, Sección 9.3 (en azul).}
+
+\comentario{La Sección 7.1.2 propone un barrido sistemático, pero no lo profundiza. Un barrido uniforme daría una distribución perfectamente balanceada, mientras que en materiales reales los parámetros se concentran en regiones estrechas; esa diferencia puede afectar el entrenamiento.}
+\respuesta{Se aclara en varios frentes. \textbf{(1)~Origen de los rangos.} Los rangos de barrido no son arbitrarios: parten de los definidos y justificados en el primer artículo publicado del proyecto, tanto a nivel de \emph{estado del arte} (valores de intercambio, DMI, anisotropía y campo reportados para imanes quirales y películas ultradelgadas) como a nivel de \emph{aprendizaje automático} (cobertura del espacio de parámetros donde existen texturas moduladas y quirales). \textbf{(2)~El muestreo no es uniforme ni balanceado.} Las distribuciones empíricas muestran temperatura sesgada a la derecha, anisotropía y campo concentrados cerca de cero con colas pesadas hacia regímenes tipo Ising, y $\tilde{K}_{DM}$ cubriendo su rango; esta heterogeneidad es deliberada y cubre las regiones físicamente relevantes. \textbf{(3)~Manejo del efecto sobre el entrenamiento.} Siguiendo la orientación del director, se explicitará que \emph{se explorará la influencia de las distribuciones}: siempre que se disponga de muestras suficientes en \emph{cantidad y calidad}, el desbalance de la distribución es en buena medida \emph{transparente} para la red; no obstante, se incluirá un \emph{análisis específico} de este efecto (sesgo de muestreo frente a regiones estrechas de interés práctico) como parte del trabajo. \textbf{(4)~Sector de $\tilde{K}_{DM}$ y propósito del muestreo.} Dentro del sector muestreado se aclara que \emph{no} se aborda la quiralidad (se evitan valores negativos de $\tilde{K}_{DM}$, ver la nota de alcance sobre quiralidad); el muestreo se diseñó para evaluar \emph{distintas tipologías de estructura}, resolver el comportamiento en el caso \emph{Ising} y observar el efecto del campo magnético tanto en la componente $z$ como en la $x$.}
+\ubic{Sección 7.1 (tabla de rangos y su justificación a partir del primer artículo), Sección 7.1.2 (procedimiento de simulación; análisis de la influencia de la distribución, en azul), Sección 10.2.1 y Figura 35 (distribuciones empíricas), nota de alcance sobre quiralidad y universalidad Ising (Sección 10.2.1).}
+
+\comentario{Se detallan las métricas para datos sintéticos (Sección 10.2), pero no cómo se medirá cuantitativamente el éxito frente a una imagen MFM real, que no viene con los parámetros verdaderos. Una validación solo cualitativa no garantiza que la similitud visual implique precisión paramétrica (por la degeneración).}
+\respuesta{Se añadió un protocolo de validación \emph{cuantitativo y sin ground-truth} que cierra el lazo del Objetivo~1 sobre datos reales: dada una imagen experimental $\mathbf{X}_{\mathrm{exp}}$, se estima $\hat{\boldsymbol{\theta}}$, se regenera $\hat{\mathbf{X}}=g_\Phi(\hat{\boldsymbol{\theta}})$ y el acuerdo se cuantifica \emph{no} en el espacio de píxeles sino mediante los observables físicos invariantes ($M$, $|M|$, correlación $C(r)$, factor de estructura $S(k)$ y $k^{\ast}$), calculados sobre ambas imágenes. Esto da una discrepancia escalar que \emph{no} requiere los parámetros verdaderos y, junto con los intervalos de incertidumbre, reemplaza la inspección visual subjetiva por un criterio reproducible, protegiendo contra el modo de fallo señalado.}
+\ubic{Sección 9.3 (párrafo \emph{Quantitative validation on experimental images}, azul), Sección 10.3 (validación por observables).}
+
+\subsection{Interpretabilidad}
+
+\comentario{UMAP se selecciona de forma arbitraria; no hay análisis objetivo del algoritmo de reducción de dimensión frente a alternativas (p.\,ej.\ t-SNE).}
+\respuesta{Se justifica explícitamente la elección de UMAP frente a PCA (no despliega variedades curvas) y t-SNE (distorsiona la geometría global), con su fundamento y matemática, y se \emph{añade} PHATE como método complementario que preserva las \emph{trayectorias} continuas de la serie temporal. El estado del arte incorpora ambos a nivel general.}
+\ubic{Sección 9.4.3 (justificación de UMAP y PHATE), Sección 4.3 (estado del arte de análisis de variedad).}
+
+\comentario{Cada objetivo debe ser validable, pero falta una métrica cuantitativa agregada de fidelidad de las explicaciones; el éxito queda sujeto a inspección cualitativa/subjetiva.}
+\respuesta{Se añadió un \emph{benchmark cuantitativo} de fidelidad: un protocolo de \emph{deletion} (Most Relevant First) que integra el área bajo la curva (AUC) y compara RAMs contra SHAP, LIME y SF-SHAP, resuelto \emph{por fase magnética}, más una comparación de \emph{costo computacional}. Las RAMs resultan competitivas en fidelidad a un costo uno-a-dos órdenes de magnitud menor (un único \emph{backward pass}).}
+\ubic{Sección 10.2.4 (benchmark de interpretabilidad, Figuras 48--50).}
+
+\comentario{Dada la dependencia de arquitecturas complejas, ¿cuáles son los impedimentos para técnicas de explicabilidad intrínseca/ad-hoc? ¿Por qué no un enfoque PIDL (iii) que modifique el diseño interno de la red para hacer imposible violar la física, con explicabilidad intrínseca?}
+\respuesta{La elección \emph{post-hoc} es deliberada y se justifica por tres razones. Primero, el problema es de \emph{regresión multisalida} de alta dimensión, con parámetros débilmente identificables, que exige grados de libertad para analizar por parámetro, por capa y por fase sin fijar una descomposición física de diseño. Segundo, y de forma central para esta propuesta, \emph{toda la metodología está pensada para ser reutilizada dentro de flujos agénticos} (Objetivo~5): un agente encadena y \emph{intercambia} modelos heterogéneos, por lo que la capa de interpretabilidad debe ser \emph{model-agnóstica y flexible}, capaz de aplicarse a cualquier predictor ya entrenado sin rediseñarlo; una explicabilidad \emph{intrínseca}, soldada al diseño interno de una arquitectura concreta, no es reutilizable entre los modelos intercambiables que un flujo de agentes invoca, y obligaría a reentrenar ante cada cambio de modelo o de conjunto de parámetros. Tercero, el enfoque intrínseco (PIDL iii, arquitectura restringida) se reconoce como \emph{complementario} y valioso donde la consistencia \emph{garantizada} es prioritaria, pero su interpretabilidad es inseparable del entrenamiento y se vuelve rígida en un problema multisalida orientado a identificabilidad y reuso modular. Nótese además que el Objetivo~1 ya explota PIDL (i) (restricciones físicas en el costo y el ciclo) y el Objetivo~2 explota PIDL (ii) (generación de datos sintéticos físicos), de modo que la propuesta cubre dos de los tres enfoques PIDL y reserva el tercero como complemento futuro.}
+\ubic{Sección 4.3 (post-hoc vs.\ intrínseco), Sección 9.4 (justificación \emph{Why post-hoc}).}
+
+\section{Paulo César}
+
+\subsection{Estado del arte y formulación física}
+
+\comentario{La noción de degeneración puede ser más precisa en Física, y una lectura más profunda podría informar el diseño de la arquitectura soportada en física.}
+\respuesta{Se profundizó la noción de degeneración distinguiendo su origen \emph{energético} (simetría, frustración y compensación accidental entre interacciones que preserva el balance de energía) de su componente \emph{observacional} (la proyección de un solo eje $s_z$ que confunde configuraciones, incluida la de quiralidad opuesta). Esta lectura motiva directamente decisiones del marco (evaluación por observables, ciclo, complemento temporal).}
+\ubic{Secciones 3.1 y 3.2 (planteamiento del problema).}
+
+\comentario{Se presenta la dinámica de Landau--Lifshitz--Gilbert (LLG) y un costo basado en su residual, pero el problema se aborda desde el Hamiltoniano microscópico y sus estados estacionarios. ¿Las redes obedecen estados estacionarios o dinámicos (series de tiempo)? El costo Hamiltoniano no queda claro (¿residual o penalización?). ¿Hay intervalos para los parámetros?}
+\respuesta{Conviene precisar que el residual de LLG \emph{nunca} formó parte de la formulación de esta propuesta: apareció únicamente en el \emph{estado del arte}, como ejemplo de las redes informadas por la física (PINNs) a escala micromagnética. Se aclara explícitamente que \emph{no} se empleará esa filosofía de residual físico en el costo, evitando así un término adicional en la función de pérdida; en su lugar, la coherencia con la física subyacente se logra por otros tres medios propios de la propuesta: el \emph{ciclo completo} directo--inverso, el uso de la \emph{serie temporal} de transiciones y el \emph{condicionamiento} del generador por el vector completo del Hamiltoniano. Sobre la doble naturaleza consultada: el Objetivo~1 trabaja \emph{estados estacionarios} (imágenes térmicamente relajadas), mientras que el Objetivo~2 modela explícitamente la \emph{dinámica de transición} como serie temporal. El costo, por tanto, no es un residual físico sino un objetivo \emph{compacto} (reconstrucción $+$ ciclo, con un regularizador físico pequeño). Los intervalos de todos los parámetros del Hamiltoniano están tabulados.}
+\ubic{Sección 7.1 (tabla de rangos de parámetros), Sección 9.1 (costo compacto, sin LLG), Sección 9.2 (dinámica temporal).}
+
+\comentario{Se menciona la temperatura como parámetro del Hamiltoniano (Figura 3), pero la temperatura no entra en el Hamiltoniano (Ec.\ 8). Explorar cómo se relaciona con la simulación y su implicación en el diseño de la red.}
+\respuesta{Se aclara explícitamente que la temperatura de recocido $T^{(0)}$ \emph{no} es un acoplamiento del Hamiltoniano: no aparece como término de energía, sino que entra a través del factor de Boltzmann que gobierna el muestreo Monte Carlo. Al incluirse en el vector objetivo/condicionante $\boldsymbol{\theta}$, cumple el rol de \emph{control termodinámico} de la simulación, no de interacción microscópica; es identificable por la red porque fija el grado global de orden térmico impreso en la textura $s_z$ (de ahí que sea de las variables mejor recuperadas), pero su estatus físico difiere del de las constantes de intercambio, DMI, anisotropía y campo.}
+\ubic{Sección 7.1.2 (aclaración sobre $T^{(0)}$ y el factor de Boltzmann, azul).}
+
+\comentario{Estimar realmente la complejidad computacional de la red comparada con la simulación Monte Carlo.}
+\respuesta{La simulación se reformuló como cómputo tensorial/matricial residente en GPU (descomposición del Hamiltoniano, sublattices en tablero de ajedrez, réplicas y \texttt{pmap} multi-GPU), reduciendo el costo de generación del dataset en órdenes de magnitud frente a códigos atomísticos secuenciales, \emph{sin} aproximar la física. Una vez entrenada, la inferencia de la red estima los parámetros en un único paso hacia adelante (milisegundos por imagen), frente a la relajación iterativa por recocido de la simulación; los tiempos de entrenamiento e inferencia se reportan en el montaje experimental.}
+\ubic{Sección 7.1.2 (paralelización GPU), Sección 10.1 (recursos y tiempos).}
+
+\comentario{El lenguaje del diseño de redes es apropiado para el nivel pero fácil de perder para un no experto; se solicita revisión por un experto. Sobre el costo multi-término: ¿por qué tan estructurado?, ¿cada término aporta?, ¿se puede rastrear su efecto?}
+\respuesta{Atendiendo la solicitud de claridad, se realizó una \emph{depuración de toda la formulación matemática} del documento---incluida la descripción del Hamiltoniano y de la generación de datos, que estaba pendiente---definiendo cada variable con su espacio y unidades y unificando la notación entre secciones, de modo que la lectura sea más accesible. En cuanto al costo, se \emph{simplificó} a un objetivo compacto; cada término remanente (generativo, ciclo y el pequeño regularizador físico) tiene una función justificada y de escala comparable, evitando la estructura excesiva señalada. El \emph{rastreo} del efecto sobre la solución se realiza mediante las RAMs, que cuantifican por parámetro y por capa \emph{dónde} se infiere cada constante, exponiendo un desacople jerárquico físicamente interpretable. Se acoge además la sugerencia de una revisión por un experto en el área.}
+\ubic{Sección 9.1.3 (costo compacto), Sección 9.4 y 10.2.3 (RAMs por capa y parámetro).}
+
+\bigskip\hrule\medskip
+\noindent\small\textit{Nota: dos observaciones marcadas por el estudiante como pendientes de discusión con el director (validación del flujo de ciclo en zonas de alta divergencia y el experimento explícito de ablación Heisenberg$\to$Ising) se conservan como actividades de validación dentro del cronograma (Sección 11).}
+
+\end{document}
