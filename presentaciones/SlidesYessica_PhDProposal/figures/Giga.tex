@@ -1,0 +1,336 @@
+% Color definitions (RGB format)
+\definecolor{UpperGreen}{RGB}{145,209,200}     % #91d1c8
+\definecolor{LowerGreen}{RGB}{179,223,106}     % #b3df6a
+\definecolor{Red}{RGB}{251,129,113}            % #fb8171
+\definecolor{YellowR}{RGB}{255,254,178}        % #fffeb2
+\definecolor{GrayL}{RGB}{217,216,217}          % #d9d8d9
+\definecolor{Orange}{RGB}{252,181,98}          % #fcb562
+\definecolor{GreenL}{RGB}{205,235,197}         % #cdebc5
+\definecolor{YellowL}{RGB}{255,236,108}        % #ffec6c
+\definecolor{ElecBG}{RGB}{207,231,226}         % #CFE7E2
+
+% Parameters - Centralized for easy modification
+\def\radiusX{1.2}
+\def\radiusY{1.2}
+
+\def\earWidth{0.08}
+\def\earHeight{0.30}
+\def\earOffset{1.225}
+
+\def\noseBase{0.485}
+\def\noseHeight{0.380}
+\def\noseTip{0.05}
+\def\sep{0.215}
+
+% Electrode style
+\tikzset{
+  electrode/.style={
+    draw,
+    line width=0.5pt,
+    circle,
+    inner sep=1pt,
+    minimum size=6mm,
+    fill=ElecBG!50!white,
+    fill opacity=0.85,
+    font=\scriptsize,
+    text opacity=1
+  }
+}
+
+\begin{tikzpicture}[scale=3.25]
+    %%% Nose
+    \draw[line width=1pt]
+      ($(0,1)+(-\noseBase,-\noseTip)$) -- 
+      ($(0,1)+(0,\noseHeight)$) -- 
+      ($(0,1)+(\noseBase,-\noseTip)$) -- cycle;
+
+    %%% Ears
+    \draw[line width=1pt] ($(0,0.0)+(180:\earOffset)$) ellipse ({\earWidth} and {\earHeight});
+    \draw[line width=1pt] ($(0,0.0)+(0:\earOffset)$) ellipse ({\earWidth} and {\earHeight});
+
+    %%% Head outline
+    \filldraw[fill=white,draw=black,line width=1pt] (0,0) ellipse ({\radiusX} and {\radiusY});
+    
+    %%% Define electrode positions FIRST (invisible, just coordinates)
+    \coordinate (Cz) at (90:0.0); 
+    
+    % Vertical midline electrodes
+    \coordinate (FPz) at ($(Cz)+(0,1.125*5.0*\sep)$);
+    \coordinate (AFz) at ($(Cz)+(0,1.125*3.75*\sep)$);
+    \coordinate (Fz) at ($(Cz)+(0,1.125*2.50*\sep)$);
+    \coordinate (FCz) at ($(Cz)+(0,1.125*1.25*\sep)$);
+
+    \coordinate (CPz) at ($(Cz)+(0,1.125*-1.25*\sep)$);
+    \coordinate (Pz) at ($(Cz)+(0,1.125*-2.50*\sep)$);
+    \coordinate (POz) at ($(Cz)+(0,1.125*-3.75*\sep)$);
+    \coordinate (Oz) at ($(Cz)+(0,1.125*-5.0*\sep)$);
+    \coordinate (Iz) at ($(Cz)+(0,1.125*-6.25*\sep)$);
+    
+    % Vertical left midline
+    \coordinate (F1) at ($(Oz)+(-1.125*\sep,182*0.01)$);
+    \coordinate (F3) at ($(Oz)+(-2.25*\sep,184*0.01)$);
+    \coordinate (F5) at ($(Oz)+(-3.375*\sep,187*0.01)$);
+    \coordinate (F7) at ($(Oz)+(-4.5*\sep,200*0.01)$);
+    
+    \coordinate (AF3) at ($(Oz)+(-1.8*\sep,215*0.01)$);
+    \coordinate (AF7) at ($(Oz)+(-3.15*\sep,225*0.01)$);
+    
+    \coordinate (FP1) at ($(Oz)+(-1.75*\sep,240*0.01)$);
+
+    % Vertical right midline
+    \coordinate (F2) at ($(Oz)+(1.125*\sep,182*0.01)$);
+    \coordinate (F4) at ($(Oz)+(2.25*\sep,184*0.01)$);
+    \coordinate (F6) at ($(Oz)+(3.375*\sep,187*0.01)$);
+    \coordinate (F8) at ($(Oz)+(4.5*\sep,200*0.01)$);
+    
+    \coordinate (AF4) at ($(Oz)+(1.8*\sep,215*0.01)$);
+    \coordinate (AF8) at ($(Oz)+(3.25*\sep,225*0.01)$);
+    
+    \coordinate (FP2) at ($(Oz)+(1.75*\sep,240*0.01)$);
+    
+    % Horizontal right electrodes
+    \coordinate (C2) at ($(Cz)+(1.375*\sep,0)$);
+    \coordinate (C4) at ($(Cz)+(2.75*\sep,0)$);
+    \coordinate (C6) at ($(Cz)+(4.125*\sep,0)$);
+    \coordinate (T8) at ($(Cz)+(5.5*\sep,0)$);
+    
+    % Horizontal left electrodes
+    \coordinate (C1) at ($(Cz)+(-1.375*\sep,0)$);
+    \coordinate (C3) at ($(Cz)+(-2.75*\sep,0)$);
+    \coordinate (C5) at ($(Cz)+(-4.125*\sep,0)$);
+    \coordinate (T7) at ($(Cz)+(-5.5*\sep,0)$);
+    
+    % Lower right electrodes
+    \coordinate (CP2) at ($(Oz)+(1.35*\sep,91*0.01)$);
+    \coordinate (CP4) at ($(Oz)+(2.7*\sep,88*0.01)$);
+    \coordinate (CP6) at ($(Oz)+(4.05*\sep,85*0.01)$);
+    \coordinate (TP8) at ($(Oz)+(5.40*\sep,78*0.01)$);
+    
+    \coordinate (P2) at ($(Oz)+(1.05*\sep,61*0.01)$);
+    \coordinate (P4) at ($(Oz)+(2.1*\sep,59*0.01)$);
+    \coordinate (P6) at ($(Oz)+(3.15*\sep,55*0.01)$);
+    \coordinate (P8) at ($(Oz)+(4.2*\sep,47*0.01)$);
+    \coordinate (P10) at ($(Oz)+(5.25*\sep,37*0.01)$);
+    
+    \coordinate (PO4) at ($(Oz)+(1.8*\sep,29*0.01)$);
+    \coordinate (PO8) at ($(Oz)+(3.25*\sep,17.5*0.01)$);
+
+    \coordinate (O2) at ($(Oz)+(1.75*\sep,2*0.01)$);
+    
+    % Lower left electrodes
+    \coordinate (CP1) at ($(Oz)+(-1.35*\sep,91*0.01)$);
+    \coordinate (CP3) at ($(Oz)+(-2.7*\sep,88*0.01)$);
+    \coordinate (CP5) at ($(Oz)+(-4.05*\sep,85*0.01)$);
+    \coordinate (TP7) at ($(Oz)+(-5.40*\sep,78*0.01)$);
+    
+    \coordinate (P1) at ($(Oz)+(-1.05*\sep,61*0.01)$);
+    \coordinate (P3) at ($(Oz)+(-2.1*\sep,59*0.01)$);
+    \coordinate (P5) at ($(Oz)+(-3.15*\sep,55*0.01)$);
+    \coordinate (P7) at ($(Oz)+(-4.2*\sep,47*0.01)$);
+    \coordinate (P9) at ($(Oz)+(-5.25*\sep,37*0.01)$);
+
+    \coordinate (PO3) at ($(Oz)+(-1.8*\sep,29*0.01)$);
+    \coordinate (PO7) at ($(Oz)+(-3.25*\sep,17.5*0.01)$);
+
+    \coordinate (O1) at ($(Oz)+(-1.75*\sep,2*0.01)$);
+    
+    % Upper right electrodes
+    \coordinate (FC2) at ($(Oz)+(1.35*\sep,152*0.01)$);
+    \coordinate (FC4) at ($(Oz)+(2.70*\sep,154.5*0.01)$);
+    \coordinate (FC6) at ($(Oz)+(4.05*\sep,158.5*0.01)$);
+    \coordinate (FT8) at ($(Oz)+(5.40*\sep,164.5*0.01)$);
+    
+    % Upper left electrodes
+    \coordinate (FC1) at ($(Oz)+(-1.35*\sep,152*0.01)$);
+    \coordinate (FC3) at ($(Oz)+(-2.70*\sep,154*0.01)$);
+    \coordinate (FC5) at ($(Oz)+(-4.05*\sep,158*0.01)$);
+    \coordinate (FT7) at ($(Oz)+(-5.40*\sep,164.5*0.01)$);
+
+    %%% Right regions (Yellow - Orange - Red)
+    \begin{pgfonlayer}{main}
+        \begin{scope}
+            \clip (0,0) ellipse ({\radiusX} and {-\radiusY});
+            \fill[Red] ($(Fz)+(0,0)$) rectangle (\radiusX,-\radiusY);
+        \end{scope}
+    \end{pgfonlayer}
+
+    \begin{pgfonlayer}{main}
+        \begin{scope}
+            \clip (0,0) ellipse ({\radiusX} and {-\radiusY});
+            \fill[YellowR] ($(Fz)+(0,-0.125)$) rectangle (\radiusX,\radiusY);
+        \end{scope}
+    \end{pgfonlayer}
+
+    \begin{pgfonlayer}{main}
+        \begin{scope}
+            \clip (0,0) ellipse ({\radiusX} and {-\radiusY});
+            \fill[Orange] ($(Pz)+(0,0.125)$) rectangle (\radiusX,-\radiusY);
+        \end{scope}
+    \end{pgfonlayer}
+
+    %%% Left regions (Green - Yellow - Gray)
+    \begin{pgfonlayer}{main}
+        \begin{scope}
+            \clip (0,0) ellipse ({\radiusX} and {-\radiusY});
+            \fill[GreenL] ($(Fz)+(0,0)$) rectangle (-\radiusX,-\radiusY);
+        \end{scope}
+    \end{pgfonlayer}
+
+    \begin{pgfonlayer}{main}
+        \begin{scope}
+            \clip (0,0) ellipse ({\radiusX} and {-\radiusY});
+            \fill[YellowL] ($(Fz)+(0,-0.125)$) rectangle (-\radiusX,\radiusY);
+        \end{scope}
+    \end{pgfonlayer}
+
+    \begin{pgfonlayer}{main}
+        \begin{scope}
+            \clip (0,0) ellipse ({\radiusX} and {-\radiusY});
+            \fill[GrayL] ($(Pz)+(0,0.125)$) rectangle (-\radiusX,-\radiusY);
+        \end{scope}
+    \end{pgfonlayer}
+
+    %%% Upper Green region
+    \coordinate (Lmid) at ($(Cz)!0.415!(C1)$);
+    \coordinate (Rmid) at ($(Cz)!0.415!(C2)$);
+    \coordinate (TopMid) at ($(Cz)!0.415!(FCz)$);
+    
+    \path[name path=rim] (0,0) ellipse ({\radiusX} and {\radiusY});
+    \path[name path=vertL] ($(Lmid)+(0,5)$) -- ($(Lmid)+(0,-5)$);
+    \path[name path=vertR] ($(Rmid)+(0,5)$) -- ($(Rmid)+(0,-5)$);
+    
+    \path[name intersections={of=vertL and rim, by={TL,BL}}];
+    \path[name intersections={of=vertR and rim, by={TR,BR}}];
+    
+    \begin{pgfonlayer}{main}
+      \begin{scope}
+        \clip (0,0) ellipse ({\radiusX} and {\radiusY});
+        \fill[UpperGreen]
+          (TL) to[out=90,in=90,looseness=1.3] (TR) --
+          ($(TR)+(0,-1.5)$) --
+          ($(TL)+(0,-1.5)$) -- cycle;
+      \end{scope}
+    \end{pgfonlayer}
+           
+    %%% Lower Green region
+    \path[name intersections={of=vertL and rim, by={UL,DL}}];
+    \path[name intersections={of=vertR and rim, by={UR,DR}}];
+    
+    \coordinate (MidDown) at ($(FCz)!0.415!(Cz)$);
+    \coordinate (BL2) at ($(Lmid |- MidDown)$);
+    \coordinate (BR2) at ($(Rmid |- MidDown)$);
+    
+    \begin{pgfonlayer}{foreground}
+        \fill[LowerGreen] (BL2) -- (BR2) -- (DR) -- (DL) -- cycle;
+    \end{pgfonlayer}
+    
+    \begin{pgfonlayer}{main}
+        \begin{scope}
+            \clip (0,0) ellipse ({\radiusX} and {\radiusY});
+            \fill[LowerGreen]
+                ($(POz)+(-0.1,0)$) --
+                ($(POz)+(0.1,0)$) --
+                ($(0,-2)+(0.7,0)$) --
+                ($(0,-2)+(-0.7,0)$) -- cycle;
+        \end{scope}
+        
+    \end{pgfonlayer}
+
+    \begin{pgfonlayer}{foreground}
+            % Central electrode
+    \node[electrode] at (Cz) {Cz}; 
+    
+    % Vertical midline electrodes
+    \node[electrode] at (FPz) {FPz};
+    \node[electrode] at (AFz) {AFz};
+    \node[electrode] at (Fz) {Fz};
+    \node[electrode] at (FCz) {FCz};
+ 
+    % Vertical left midline
+    \node[electrode] at (F1) {F1};
+    \node[electrode] at (F3) {F3};
+    \node[electrode] at (F5) {F5};
+    \node[electrode] at (F7) {F7};
+    \node[electrode] at (AF3) {AF3};
+    \node[electrode] at (AF7) {AF7};
+    \node[electrode] at (FP1) {FP1};
+      
+    % Vertical right midline
+    \node[electrode] at (F2) {F2};
+    \node[electrode] at (F4) {F4};
+    \node[electrode] at (F6) {F6};
+    \node[electrode] at (F8) {F8};
+    \node[electrode] at (AF4) {AF4};
+    \node[electrode] at (AF8) {AF8};
+    \node[electrode] at (FP2) {FP2};
+    
+      % Horizontal right electrodes
+      \node[electrode] at (C2) {C2};
+      \node[electrode] at (C4) {C4};
+      \node[electrode] at (C6) {C6};
+      \node[electrode] at (T8) {T8};
+      
+    % Horizontal left electrodes
+    \node[electrode] at (C1) {C1};
+    \node[electrode] at (C3) {C3};
+    \node[electrode] at (C5) {C5};
+    \node[electrode] at (T7) {T7};
+    
+    % Lower right electrodes
+    \node[electrode] at (CP2) {CP2};
+    \node[electrode] at (CP4) {CP4};
+    \node[electrode] at (CP6) {CP6};
+    \node[electrode] at (TP8) {TP8};
+
+    \node[electrode] at (P2) {P2};
+    \node[electrode] at (P4) {P4};
+    \node[electrode] at (P6) {P6};
+    \node[electrode] at (P8) {P8};
+    \node[electrode] at (P10) {P10};
+
+    \node[electrode] at (PO4) {PO4};
+    \node[electrode] at (PO8) {PO8};
+
+    \node[electrode] at (O2) {O2};
+
+    % Lower left electrodes
+    \node[electrode] at (CP1) {CP1};
+    \node[electrode] at (CP3) {CP3};
+    \node[electrode] at (CP5) {CP5};
+    \node[electrode] at (TP7) {TP7};
+      
+    \node[electrode] at (P1) {P1};
+    \node[electrode] at (P3) {P3};
+    \node[electrode] at (P5) {P5};
+    \node[electrode] at (P7) {P7};
+    \node[electrode] at (P9) {P9};
+      
+    \node[electrode] at (PO3) {PO3};
+    \node[electrode] at (PO7) {PO7};
+
+    \node[electrode] at (O1) {O1};
+    
+    % Upper right electrodes
+    \node[electrode] at (FC2) {FC2};
+    \node[electrode] at (FC4) {FC4};
+    \node[electrode] at (FC6) {FC6};
+    \node[electrode] at (FT8) {FT8};
+    
+    % Upper left electrodes
+    \node[electrode] at (FC1) {FC1};
+    \node[electrode] at (FC3) {FC3};
+    \node[electrode] at (FC5) {FC5};
+    \node[electrode] at (FT7) {FT7};
+      
+    \node[electrode] at (CPz) {CPz};
+    \node[electrode] at (Pz) {Pz};
+    \node[electrode] at (POz) {POz};
+    \node[electrode] at (Oz) {Oz};
+    \node[electrode] at (Iz) {Iz};
+      
+    %%% Reset bounding box
+    \pgfresetboundingbox
+    \path (0,-1.305*\radiusY) (0,1.115*\radiusY) (-1.05*\radiusX,0) (1.05*\radiusX,0);
+    \end{pgfonlayer}
+    
+\end{tikzpicture}

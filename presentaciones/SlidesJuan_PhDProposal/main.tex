@@ -1,0 +1,382 @@
+\pdfobjcompresslevel=0
+\pdfminorversion=9
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage[utf8]{inputenc}
+\setbeamersize{text margin left=3mm,text margin right=3mm}
+
+\usetheme{Oxygen}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{textpos}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb,amsfonts,amsbsy,dsfont}
+\usepackage{mathrsfs}
+\usepackage{bm}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc,shapes.geometric,decorations.pathreplacing}
+
+% --- Convenience macros (group style) ---
+\providecommand{\mat}[1]{{\bm{#1}}}
+\providecommand{\ve}[1]{{\bm{#1}}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+
+\setbeamercovered{dynamic}
+\setbeamertemplate{navigation symbols}{}
+
+% --- takeaway box (bottom blue phrase, group style) ---
+\definecolor{takeblue}{RGB}{0,70,170}
+\newcommand{\takeaway}[1]{%
+  \vfill
+  \begin{center}\colorbox{takeblue!12}{\parbox{0.94\textwidth}{\centering\color{takeblue}\small\textbf{#1}}}\end{center}
+  \vspace{0.3mm}}
+% --- compact citations ---
+\let\oldcite\cite
+\renewcommand{\cite}[1]{{\tiny\color{gray}\oldcite{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title metadata
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title[Physics-Informed DL for Magnetic Domains from Hamiltonian Parameters \textbar{} J.S. Méndez Rondón]{A Physics-Informed Deep Learning Framework \\
+for Estimating and Generating Magnetic Domains \\
+from Hamiltonian Parameters}
+
+\author[J.S. Méndez Rondón]{}
+\institute{\small{Juan Sebastián Méndez Rondón}\\
+{\small\textbf{Advisor:} Prof. Andrés Marino Álvarez-Meza}\\
+{\small\textbf{Co-Advisor:} Prof. Jorge Iván Montes\\
+}
+
+
+\includegraphics[width=0.12\textwidth]{EscudoUN.png}\\
+\scriptsize{
+Universidad Nacional de Colombia \\ Signal Processing and Recognition Group - SPRG \\ Manizales, Colombia
+\vspace{-0.3cm}
+}}
+\date[]{\scriptsize{\today}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\begin{frame}{}
+\vspace{-0.7cm}
+    \titlepage
+\end{frame}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Outline
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+  \frametitle{Outline}
+  {\small \tableofcontents[]}
+}
+
+\AtBeginSection[]{
+  \begin{frame}
+  \frametitle{Outline}
+  \tableofcontents[currentsection]
+  \end{frame}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sections (content to be added)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section[Motivation]{Motivation}
+
+% ---------- Slide 1: Magnetism at the nanoscale ----------
+\begin{frame}{Magnetism at the nanoscale}
+\begin{columns}[c]
+\begin{column}{0.56\textwidth}
+\begin{itemize}\setlength\itemsep{0.6em}
+  \item Nanomagnets --- \textbf{nanoparticles} and \textbf{nanodots} --- are a strategic platform in modern materials science~\cite{Wang2022}.
+  \item At this scale, the collective interaction of atomic \textbf{spins} gives rise to \textbf{emergent phenomena} absent in bulk matter~\cite{Li2021SelfAssembly}.
+  \item These spin arrangements set the magnetic response that powers next-generation devices~\cite{fert2017magnetic,Sun2022Applications}.
+\end{itemize}
+\end{column}
+\begin{column}{0.44\textwidth}
+\centering
+\includegraphics[width=0.92\linewidth]{Figures/spin_lattice.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ---------- Slide 2: From bulk to nanoscale ----------
+\begin{frame}{From bulk to the nanoscale: order becomes rich and tunable}
+\begin{itemize}\setlength\itemsep{0.5em}
+  \item Any magnetic material organizes its spins into \textbf{ordered states}~\cite{coey2010magnetism,cullity2011introduction}.
+  \item At the nanoscale, \textbf{geometric confinement}, \textbf{surface effects} and \textbf{thermal fluctuations} reshape that order relative to the bulk~\cite{Nistico2020Magnetic,Andreu2020Anisotropic}.
+  \item The result is a magnetic landscape that is far \textbf{richer and more tunable} --- the seed of a whole variety of spin textures~\cite{Bogdanov2020Skyrmions}.
+\end{itemize}
+\vspace{-0.2em}
+\begin{center}
+\includegraphics[width=0.44\linewidth]{Figures/bulk_to_nano.pdf}
+\end{center}
+\takeaway{Confinement turns simple magnetic order into a rich, tunable landscape of spin textures.}
+\end{frame}
+
+% ---------- Slide 3: A zoo of magnetic textures ----------
+\begin{frame}{A zoo of magnetic textures}
+\begin{columns}[c]
+\begin{column}{0.30\textwidth}
+From the competition between \textbf{microscopic interactions} and \textbf{external conditions} (temperature, field) emerge distinct spatial textures~\cite{Fert2023,Bogdanov2020Skyrmions}.
+\end{column}
+\begin{column}{0.68\textwidth}
+\centering
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{cc}
+\includegraphics[width=0.24\linewidth]{Figures/tex_vortex.pdf} &
+\includegraphics[width=0.24\linewidth]{Figures/tex_skyrmion.pdf} \\[-0.4em]
+{\scriptsize Vortex} & {\scriptsize Skyrmion} \\[0.1em]
+\includegraphics[width=0.24\linewidth]{Figures/tex_helical.pdf} &
+\includegraphics[width=0.24\linewidth]{Figures/tex_labyrinth.pdf} \\[-0.4em]
+{\scriptsize Helical} & {\scriptsize Labyrinthine} \\
+\end{tabular}
+\end{column}
+\end{columns}
+\vspace{0.2em}
+{\centering\color{takeblue}\small\textbf{Competing interactions sculpt a variety of spin textures, each with distinctive properties.}\par}
+\end{frame}
+
+% ---------- Slide 4: Vortices & skyrmions ----------
+\begin{frame}{Vortices and skyrmions}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\centering
+\includegraphics[width=0.42\linewidth]{Figures/tex_vortex.pdf}\\[0.3em]
+\raggedright\footnotesize
+\textbf{Vortex.} In-plane curling magnetization with a nanoscale out-of-plane \emph{core} --- topologically stable; used in magnetic memory and spin-torque nano-oscillators~\cite{Sun2022Applications,fert2017magnetic}.
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\includegraphics[width=0.42\linewidth]{Figures/tex_skyrmion.pdf}\\[0.3em]
+\raggedright\footnotesize
+\textbf{Skyrmion.} Topologically protected, particle-like whirl with ultralow current-driven mobility --- the building block of \emph{racetrack} memory~\cite{Fert2023,Bogdanov2020Skyrmions}.
+\end{column}
+\end{columns}
+\takeaway{Vortices and skyrmions behave as stable, mobile, particle-like magnetic bits.}
+\end{frame}
+
+% ---------- Slide 5: Helical & labyrinthine ----------
+\begin{frame}{Helical and labyrinthine textures}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\centering
+\includegraphics[width=0.42\linewidth]{Figures/tex_helical.pdf}\\[0.3em]
+\raggedright\footnotesize
+\textbf{Helical.} Periodic chiral modulation of the magnetization --- stripe patterns that guide \emph{spin-wave} propagation~\cite{Fert2023,Verma2020Picosecond}.
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\includegraphics[width=0.42\linewidth]{Figures/tex_labyrinth.pdf}\\[0.3em]
+\raggedright\footnotesize
+\textbf{Labyrinthine.} Branched domain-wall networks at intermediate anisotropy --- metastable, reconfigurable domain arrangements~\cite{Fert2023}.
+\end{column}
+\end{columns}
+\takeaway{Helical and labyrinthine textures provide reconfigurable, wave-guiding domain patterns.}
+\end{frame}
+
+% ---------- Slide 6: Applications (I) spintronics ----------
+\begin{frame}{Why they matter (I): spintronics, memory and computing}
+\begin{itemize}\setlength\itemsep{0.15em}
+  \item Protected textures act as stable, current-driven \textbf{bits}~\cite{fert2017magnetic,Reichhardt2022Skyrmions}.
+  \item They power \textbf{MRAM}, \textbf{racetrack} memory, \textbf{logic} and \textbf{neuromorphic} computing~\cite{Eurek2024,Shao2021SOT}.
+  \item High density, ultralow power, non-volatility, radiation hardness~\cite{Sun2022Applications,Zhu2024Survey}.
+\end{itemize}
+\vspace{0.1em}
+\begin{center}
+\includegraphics[width=0.70\linewidth]{Figures/spintronics_racetrack.pdf}
+\end{center}
+\takeaway{Spin textures are candidates to replace charge-based electronics in dense, low-power devices.}
+\end{frame}
+
+% ---------- Slide 7: Applications (II) biomedicine & energy ----------
+\begin{frame}{Why they matter (II): biomedicine and energy}
+\textbf{Biomedicine}~\cite{MLDesign2023} --- magnetic nanoparticles as therapeutic and diagnostic agents:
+\begin{center}
+\includegraphics[width=0.80\linewidth]{Figures/biomedicine.pdf}
+\end{center}
+\vspace{-0.2em}
+\textbf{Energy}~\cite{He2025,Nehan2024} --- magnetocaloric refrigeration (sustainable cooling), thermoelectric conversion and reversible magnetic storage.
+\takeaway{Across biomedicine and energy, the functional response is set by the internal magnetic domain structure.}
+\end{frame}
+
+% ---------- Slide 8: Research context ----------
+\begin{frame}{Research context}
+\begin{columns}[c]
+\begin{column}{0.68\textwidth}
+\begin{itemize}\setlength\itemsep{0.5em}
+  \item Developed within the \textbf{Signal Processing and Recognition Group (SPRG)}, with a track record in image processing, time-series and EEG analysis.
+  \item The group is now expanding toward \textbf{Artificial Intelligence for computational physics}.
+  \item Supported by the project \emph{``Machine Learning Applied to the Efficient Prediction of Magnetic Properties of Nanoparticles''} (Universidad Nacional de Colombia, Manizales).
+\end{itemize}
+\end{column}
+\begin{column}{0.32\textwidth}
+\centering
+\includegraphics[width=0.55\linewidth]{EscudoUN.png}
+\end{column}
+\end{columns}
+\takeaway{A signal/image-AI group moving into nanoscale magnetism, bridging data-driven learning and physics.}
+\end{frame}
+
+\section[Problem Statement]{Problem Statement}
+
+% ---------- PS-1: two approaches (overview) ----------
+\begin{frame}{Two complementary approaches to magnetic nanostructures}
+\vfill
+\begin{columns}[T]
+\begin{column}{0.48\textwidth}
+\begin{block}{Experimental}
+\footnotesize
+\begin{itemize}\setlength\itemsep{0.4em}
+  \item Sample preparation (thin films, nanodots)~\cite{Fert2022ThinFilms}
+  \item Magnetic imaging: MFM, Lorentz-TEM, Kerr~\cite{Sass2020MagneticImaging}
+  \item External stimuli: field, temperature, strain~\cite{Verma2020Picosecond}
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.48\textwidth}
+\begin{block}{Theoretical \& simulation}
+\footnotesize
+\begin{itemize}\setlength\itemsep{0.4em}
+  \item Atomistic spin models~\cite{evans2014atomistic,eriksson2017atomistic}
+  \item Statistical sampling of configurations~\cite{landau2021guide}
+  \item Continuum micromagnetics~\cite{Sudsom2021Micromagnetic}
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\vfill
+\takeaway{Two complementary routes to understand magnetic domains --- we look at each in turn.}
+\end{frame}
+
+% ---------- PS-1b: experimental route ----------
+\begin{frame}{Experimental route: imaging magnetic domains}
+\begin{center}\includegraphics[width=0.96\linewidth]{Figures/exp_methods.pdf}\end{center}
+{\scriptsize\centering MFM, Lorentz-TEM, Kerr/MOKE and vector methods (vector-MOKE / 4D-STEM)~\cite{Sass2020MagneticImaging,Plitzko2024Lorentz}.\par}
+\takeaway{Noise, finite resolution, cost and a single $s_z$ view $\Rightarrow$ \textbf{partial observability}~\cite{Li2023Magnetic}.}
+\end{frame}
+
+% ---------- PS-1c: spin models ----------
+\begin{frame}{Theoretical route: spin models}
+\begin{center}\includegraphics[width=0.58\linewidth]{Figures/spin_models.pdf}\end{center}
+{\footnotesize\centering Two atomistic \emph{energy} models: \textbf{Heisenberg} (continuous spins) vs \textbf{Ising} (two discrete states)~\cite{evans2014atomistic,eriksson2017atomistic}.\par}
+\takeaway{The model defines the energy; it does not by itself produce a configuration --- that requires sampling~\cite{landau2021guide}.}
+\end{frame}
+
+% ---------- PS-1d: from model to configuration (Monte Carlo) ----------
+\begin{frame}{Theoretical route: from model to configuration}
+\begin{center}\includegraphics[width=0.96\linewidth]{Figures/montecarlo.pdf}\end{center}
+{\scriptsize\centering Metropolis Monte Carlo with simulated annealing samples thermally-equilibrated configurations~\cite{landau2021guide,AgudeloGiraldo2018}.\par}
+\takeaway{Physically faithful, but \textbf{computationally costly} for the dense parameter exploration that data-driven methods require~\cite{Misiurev2024Modeling}.}
+\end{frame}
+
+% ---------- PS-2: direct & inverse ----------
+\begin{frame}{The direct and inverse magnetic domain problems}
+\begin{itemize}\setlength\itemsep{0.15em}
+  \item \textbf{Direct problem:} parameters $\to$ magnetic domain configuration (generation)~\cite{Kovacs2023PhysicsInformed}.
+  \item \textbf{Inverse problem:} observed configuration $\to$ underlying parameters (estimation) --- intrinsically \textbf{ill-posed}~\cite{Feng2024}.
+\end{itemize}
+\begin{center}\includegraphics[width=0.80\linewidth]{Figures/ps_forward_inverse.pdf}\end{center}
+\takeaway{Bridging generation and estimation into one coherent cycle is the backbone of this proposal~\cite{Feng2024}.}
+\end{frame}
+
+% ---------- PS-3: degeneracy ----------
+% ---- Challenge 1: degeneracy (what + why) ----
+\begin{frame}{Challenge 1: degeneracy $\to$ an ill-conditioned inverse}
+\begin{columns}[c]
+\begin{column}{0.46\textwidth}
+\centering
+\includegraphics[width=0.94\linewidth]{Figures/ps_param_grid.pdf}\\[0.2em]
+{\scriptsize distinct parameters $\to$ indistinguishable states~\cite{Feng2024}}
+\end{column}
+\begin{column}{0.54\textwidth}
+\centering
+\includegraphics[height=0.66\textheight]{Figures/ps_why_v.pdf}\\[0.1em]
+{\scriptsize \emph{why:} symmetry, frustration, accidental compensation~\cite{Solovyev2021Exchange,Swindells2020Proximity}}
+\end{column}
+\end{columns}
+\takeaway{Broad parameter regions map to the same observation because symmetry, frustration or accidental compensation equalize the energy~\cite{Besnard2025Magnetic}.}
+\end{frame}
+
+% ---- Challenge 2: sim-to-real gap (domains + effects) ----
+\begin{frame}{Challenge 2: the sim-to-real gap}
+\begin{columns}[c]
+\begin{column}{0.40\textwidth}
+\centering
+\includegraphics[height=0.58\textheight]{Figures/ps_domains_v.pdf}\\[0.1em]
+{\scriptsize source (sim) vs target (experiment)~\cite{Wagenmaker2024SimToReal}}
+\end{column}
+\begin{column}{0.60\textwidth}
+\centering
+\includegraphics[width=\linewidth]{Figures/ps_method_effects.pdf}\\[0.3em]
+{\scriptsize each technique imprints its own distortions on the same state~\cite{Misiurev2024Modeling}}
+\end{column}
+\end{columns}
+\takeaway{A model trained on the clean simulation domain must cross a technique-dependent gap to work on real acquisitions~\cite{Wagenmaker2024SimToReal}.}
+\end{frame}
+
+% ---------- PS-5: interpretability ----------
+\begin{frame}{Challenge 3: lack of physics-based interpretability}
+\begin{center}\includegraphics[width=0.92\linewidth]{Figures/ps_blackbox2.pdf}\end{center}
+{\footnotesize\centering A model --- \emph{not necessarily} a deep network --- may estimate states and domains accurately, yet we cannot tell whether it \textbf{respects the underlying physics} or exploited \textbf{other / spurious patterns}~\cite{Park2024,Liao2023}.\par}
+\takeaway{Accuracy $\neq$ physical faithfulness: interpretability is needed to check \emph{what} the model actually learned~\cite{Karniadakis2021PINNs}.}
+\end{frame}
+
+% ---------- PS-6: fragmentation ----------
+\begin{frame}{Challenge 4: fragmentation and non-reusability}
+\begin{center}\includegraphics[width=0.90\linewidth]{Figures/ps_fragmentation.pdf}\end{center}
+\footnotesize\centering Even when solved, the pieces become \textbf{isolated artifacts} in separate codebases --- hard to reproduce, chain, or reuse, e.g.\ by autonomous agents~\cite{brinson2023community}.
+\takeaway{The domain knowledge does not exist as a coherent, reusable substrate.}
+\end{frame}
+
+% ---------- PS-7: research question ----------
+\begin{frame}{Research question}
+\vfill
+\begin{center}
+\colorbox{takeblue!10}{\parbox{0.92\textwidth}{\centering\itshape\large
+How can a \textbf{unified, physics-informed framework} be designed to jointly mitigate \textbf{parameter degeneracy}, bridge the \textbf{sim-to-real gap} through domain adaptation, and ensure \textbf{physical interpretability} across the forward and inverse modeling of magnetic domain states, in a form \textbf{reusable by autonomous agents}?}}
+\end{center}
+\vfill
+\end{frame}
+
+\section[Literature Overview]{Literature Overview}
+% TODO: content
+
+\section[Aims]{Aims}
+% TODO: content
+
+\section[Datasets]{Datasets}
+% TODO: content
+
+\section[Proposal and Results]{Proposal and Results}
+% TODO: content
+
+\section[Conclusions]{Conclusions}
+% TODO: content
+
+\section[Future Work]{Future Work}
+% TODO: content
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[allowframebreaks]{References}
+\tiny
+\bibliographystyle{ieeetr}
+\bibliography{references}
+\end{frame}
+
+\end{document}

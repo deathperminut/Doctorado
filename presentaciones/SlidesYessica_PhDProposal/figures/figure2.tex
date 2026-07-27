@@ -1,0 +1,30 @@
+	\begin{tikzpicture}[
+	font=\tiny,
+	every node/.style={transform shape},
+	every path/.style={line width=1 pt},
+	roundnode/.style={circle, draw=black, thick, minimum size=7mm},
+	]
+	%Nodes
+	\node[roundnode] (c1) {C1};
+	\node[above=0.1mm of c1] {EEG + noise};
+	\node[roundnode] (c2) [below right=of c1]{C2};
+	\node[below=0.1mm of c2] {noise};
+	\node[roundnode] (c3) [below left=of c2] {C3};
+	\node[below=0.1mm of c3] {noise};
+	\node[roundnode] (c4) [below right=of c2] {C4};
+	\node[below=0.1mm of c4] {noise};
+	\node[roundnode] (c5) [left=15mm of c2] {C5};
+	\node[below=0.1mm of c5] {noise};
+	
+	
+	%Lines
+	\draw[->] (c1.south) -- (c3.north) node[midway, sloped, above] {$\delta = 4$};
+	\draw[->] (c3.north east) -- (c2.south west) node[midway, sloped, above] {$\delta = 4$};
+	\draw[->] (c3.east) -- (c4.west) node[midway, sloped, above] {$\delta = 8$} node[midway, below] {G2};;
+		
+	\draw[->, dotted] (c1.south east) -- (c2.north west);
+	\draw[->, dotted, shorten >=1pt, shorten <=1pt]	(c1.east) to[out=0, in=90, looseness=1.2] (c4.north);
+	\draw[->, dotted] (c2.south east) -- (c4.north west);
+
+	
+\end{tikzpicture}

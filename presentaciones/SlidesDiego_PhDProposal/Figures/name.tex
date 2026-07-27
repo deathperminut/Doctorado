@@ -1,0 +1,76 @@
+\documentclass[aspectratio=169]{beamer}
+
+% --- PAQUETES ---
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+
+% --- PAQUETE CLAVE PARA EL DISEÑO ---
+\usepackage[most]{tcolorbox} 
+
+% --- DEFINICIÓN DEL BLOQUE PERSONALIZADO (VERSIÓN CORREGIDA) ---
+% Definimos los colores
+\definecolor{BoxTitleBlue}{RGB}{28, 55, 122} % Azul oscuro para el título
+\definecolor{BoxBodyGray}{RGB}{235, 236, 240} % Gris claro para el fondo
+
+% Creamos la caja con el borde grueso ('borderline')
+\newtcolorbox{custombox}[1]{
+  colback       = BoxBodyGray,        % Color de fondo del cuerpo
+  colbacktitle  = BoxTitleBlue,       % Color de fondo del título
+  coltitle      = white,              % Color del texto del título
+  fonttitle     = \bfseries,          % Título en negrita
+  rounded corners,                    % Esquinas redondeadas (importante)
+  
+  % --- LA LÍNEA CLAVE PARA CREAR LA "MANCHA" ---
+  % Dibuja una línea de borde de 3pt de grosor, de color negro.
+  borderline west = {3pt}{0pt}{black},
+  borderline east = {3pt}{0pt}{black},
+  borderline north = {3pt}{0pt}{black},
+  borderline south = {3pt}{0pt}{black},
+  
+  boxrule       = 0pt,                % Eliminamos el borde interior
+  title         = {#1},               % El título se pasa como argumento
+  center title,                       % Centrar el título
+}
+
+% Comando para las negritas en las matemáticas
+\providecommand{\ve}[1]{{\bm{#1}}}
+
+
+% --- DOCUMENTO ---
+\begin{document}
+
+\begin{frame}{Classic Models: Formulations}
+    
+    \begin{columns}[T] % Columnas
+        
+        % Columna Izquierda
+        \begin{column}{0.5\textwidth}
+            \begin{custombox}{Correlation Alignment (CORAL)}
+                \begin{equation*}
+                    \ve{X}_s' = (\ve{X}_s - \hat{\ve{\mu}}_s \ve{1}^\top) \ve{\Sigma}_s^{-\frac{1}{2}} \ve{\Sigma}_t^{\frac{1}{2}} + \hat{\ve{\mu}}_t \ve{1}^\top
+                \end{equation*}
+            \end{custombox}
+        \end{column}
+        
+        % Columna Derecha
+        \begin{column}{0.5\textwidth}
+            \begin{custombox}{Joint Distribution Adaptation (JDA)}
+                \begin{equation*}
+                    \min_{\ve{A}} \; \text{Tr}\left(\ve{A}^\top \ve{K} \left( \ve{M}_0 + \sum_{c=1}^C \ve{M}_c \right) \ve{K} \ve{A} \right)
+                \end{equation*}
+            \end{custombox}
+        \end{column}
+        
+    \end{columns}
+    
+    % --- Definiciones ---
+    \vspace{0.3cm} 
+    \small 
+    $\ve{X}_s \in \mathbb{R}^{n_s \times d}$, $\ve{X}_t \in \mathbb{R}^{n_t \times d}$, $\hat{\ve{\mu}}_s, \hat{\ve{\mu}}_t \in \mathbb{R}^d$, $\ve{\Sigma}_s, \ve{\Sigma}_t \in \mathbb{R}^{d \times d}$ \\
+    $\ve{A} \in \mathbb{R}^{(n_s+n_t) \times m}$, $\ve{K} \in \mathbb{R}^{(n_s+n_t)\times(n_s+n_t)}$, $C \in \mathbb{N}$
+
+\end{frame}
+
+\end{document}

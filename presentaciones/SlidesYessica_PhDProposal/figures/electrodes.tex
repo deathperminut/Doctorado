@@ -1,0 +1,270 @@
+\definecolor{UpperGreen}{HTML}{8DD3C8}
+\definecolor{LowerYellow}{HTML}{FEFFB3}
+\definecolor{BlueRightSide}{HTML}{80B0D3}
+\definecolor{PurpleLeftSide}{HTML}{BD80BD}
+\definecolor{Purple}{HTML}{BFBADA} 
+\definecolor{GrayC}{HTML}{D8D8D9} 
+\definecolor{Orange}{HTML}{FDB463}
+\definecolor{GreenC}{HTML}{CDEBC4}
+\definecolor{GreenD}{HTML}{B2DF6A}
+\definecolor{YellowC}{HTML}{FEEC6F}
+\definecolor{ElecBG}{HTML}{CFE7E2}
+
+%%% Parameters - Centralized for easy modification
+\def\radiusX{1.0}
+\def\radiusY{1.0}
+\def\earWidth{0.08}
+\def\earHeight{0.35}
+\def\earOffset{1.1}
+\def\noseBase{0.30}
+\def\noseHeight{0.15}
+\def\noseTip{0.05}
+\def\sep{0.275}
+
+%%% Electrode style
+\tikzset{
+  electrode/.style={
+    draw,
+    line width=0.5pt,
+    circle,
+    inner sep=1pt,
+    minimum size=6mm,
+    fill=ElecBG!50!white,
+    fill opacity=0.85,
+    font=\scriptsize,
+    text opacity=1
+  }
+}
+
+
+
+\begin{tikzpicture}[scale=3]
+
+    %%% Nose
+    \draw[line width=1pt]
+      ($(0,1)+(-\noseBase,-\noseTip)$) -- 
+      ($(0,1)+(0,\noseHeight)$) -- 
+      ($(0,1)+(\noseBase,-\noseTip)$) -- cycle;
+
+    %%% Ears
+    \draw[line width=1pt] ($(0.085,0.05)+(180:\earOffset)$) ellipse ({\earWidth} and {\earHeight});
+    \draw[line width=1pt] ($(-0.085,0.05)+(0:\earOffset)$) ellipse ({\earWidth} and {\earHeight});
+    
+    %%% Head outline
+    \filldraw[fill=white,draw=black,line width=1pt] (0,0) ellipse ({\radiusX} and {\radiusY});
+    
+    %%% Define electrode positions FIRST (invisible, just coordinates)
+    \coordinate (Cz) at (90:0.1); 
+    
+    % Vertical midline electrodes
+    \coordinate (FCz) at ($(Cz)+(0,1*\sep)$);
+    \coordinate (Fz) at ($(Cz)+(0,2*\sep)$);
+    \coordinate (CPz) at ($(Cz)+(0,-1*\sep)$);
+    \coordinate (Pz) at ($(Cz)+(0,-2*\sep)$);
+    \coordinate (POz) at ($(Cz)+(0,-3*\sep)$);
+    
+    % Horizontal right electrodes
+    \coordinate (C2) at ($(Cz)+(1*\sep,0)$);
+    \coordinate (C4) at ($(Cz)+(2*\sep,0)$);
+    \coordinate (C6) at ($(Cz)+(3*\sep,0)$);
+    
+    % Horizontal left electrodes
+    \coordinate (C1) at ($(Cz)+(-1*\sep,0)$);
+    \coordinate (C3) at ($(Cz)+(-2*\sep,0)$);
+    \coordinate (C5) at ($(Cz)+(-3*\sep,0)$);
+    
+    % Lower right electrodes
+    \coordinate (CP2) at ($(CPz)+(1*\sep,0)$);
+    \coordinate (CP4) at ($(CPz)+(2*\sep,0)$);
+    \coordinate (P2) at ($(Pz)+(1*\sep,0)$);
+    
+    % Lower left electrodes
+    \coordinate (CP1) at ($(CPz)+(-1*\sep,0)$);
+    \coordinate (CP3) at ($(CPz)+(-2*\sep,0)$);
+    \coordinate (P1) at ($(Pz)+(-1*\sep,0)$);
+    
+    % Upper right electrodes
+    \coordinate (FC2) at ($(FCz)+(1*\sep,0)$);
+    \coordinate (FC4) at ($(FCz)+(2*\sep,0)$);
+    
+    % Upper left electrodes
+    \coordinate (FC1) at ($(FCz)+(-1*\sep,0)$);
+    \coordinate (FC3) at ($(FCz)+(-2*\sep,0)$);
+    
+    %%% Background color regions (base layer - will be partially covered)
+    \begin{pgfonlayer}{foreground}
+      \clip (0,0) ellipse ({\radiusX} and {\radiusY});
+      \fill[Purple] (Cz) rectangle (\radiusX,\radiusY);
+    \end{pgfonlayer}
+
+    \begin{pgfonlayer}{foreground}
+      \clip (0,0) ellipse ({-\radiusX} and {\radiusY});
+      \fill[GrayC] (Cz) rectangle (-\radiusX,\radiusY);
+    \end{pgfonlayer}
+    
+    \begin{pgfonlayer}{foreground}
+      \clip (0,0) ellipse ({-\radiusX} and {-\radiusY});
+      \fill[GreenC] (Cz) rectangle (-\radiusX,-\radiusY);
+    \end{pgfonlayer}
+    
+    \begin{pgfonlayer}{foreground}
+      \clip (0,0) ellipse ({\radiusX} and {-\radiusY});
+      \fill[Orange] (Cz) rectangle (\radiusX,-\radiusY);
+    \end{pgfonlayer}
+    
+    %%% Lower posterior regions (GreenD and YellowC)
+    \begin{pgfonlayer}{foreground}
+      \clip (0,0) ellipse ({\radiusX} and {\radiusY});
+      \coordinate (A) at ($(CPz)!0.5!(Pz)$);
+      \coordinate (B) at ($($(CP2)!0.5!(CP4)$)+(-0.05,-0.5*\sep)$);
+      \coordinate (C) at (\radiusX,-\radiusY);
+      \coordinate (D) at (0.00,-\radiusY);
+      \fill[GreenD] (A) -- (B) -- (C) -- (D) -- cycle;
+    \end{pgfonlayer}
+    
+    \begin{pgfonlayer}{foreground}
+      \clip (0,0) ellipse ({\radiusX} and {\radiusY});
+      \coordinate (A) at ($(CPz)!0.5!(Pz)$);
+      \coordinate (B) at ($($(CP3)!0.5!(CP1)$)+(0.05,-0.5*\sep)$);
+      \coordinate (C) at (-\radiusX,-\radiusY);
+      \coordinate (D) at (0.00,-\radiusY);
+      \fill[YellowC] (A) -- (B) -- (C) -- (D) -- cycle;
+    \end{pgfonlayer}
+      
+    %%% Upper Green region (frontal)
+    \coordinate (Lmid) at ($(Cz)!0.5!(C1)$);
+    \coordinate (Rmid) at ($(Cz)!0.5!(C2)$);
+    
+    \path[name path=rim] (0,0) ellipse ({\radiusX} and {\radiusY});
+    \path[name path=vertL] ($(Lmid)+(0,5)$) -- ($(Lmid)+(0,-5)$);
+    \path[name path=vertR] ($(Rmid)+(0,5)$) -- ($(Rmid)+(0,-5)$);
+    
+    \path[name intersections={of=vertL and rim, by={TL,BLtemp}}];
+    \path[name intersections={of=vertR and rim, by={TR,BRtemp}}];
+    
+    \coordinate (Bot) at ($(Cz)!0.5!(CPz)$);
+    \coordinate (BL) at ($(Lmid |- Bot)$);
+    \coordinate (BR) at ($(Rmid |- Bot)$);
+    
+    \begin{pgfonlayer}{foreground}
+        \fill[UpperGreen] (TL) -- (TR) -- (BR) -- (BL) -- cycle;
+    \end{pgfonlayer}
+    
+    \begin{pgfonlayer}{foreground}
+      \clip (0,0) ellipse ({\radiusX} and {\radiusY});
+      \fill[UpperGreen]
+        ($(FCz)+(-0.1,0)$) --
+        ($(FCz)+(0.1,0)$) --
+        ($(0,1)+(0.5,0)$) --
+        ($(0,1)+(-0.5,0)$) -- cycle;
+    \end{pgfonlayer}
+           
+    %%% Lower Yellow region (posterior)
+    \path[name intersections={of=vertL and rim, by={UL,DL}}];
+    \path[name intersections={of=vertR and rim, by={UR,DR}}];
+    
+    \coordinate (MidDown) at ($(Cz)!0.5!(CPz)$);
+    \coordinate (BL2) at ($(Lmid |- MidDown)$);
+    \coordinate (BR2) at ($(Rmid |- MidDown)$);
+    
+    \begin{pgfonlayer}{foreground}
+        \fill[LowerYellow] (BL2) -- (BR2) -- (DR) -- (DL) -- cycle;
+    \end{pgfonlayer}
+    
+    \begin{pgfonlayer}{foreground}
+      \clip (0,0) ellipse ({\radiusX} and {\radiusY});
+      \fill[LowerYellow]
+        ($(Pz)+(-0.1,0)$) --
+        ($(Pz)+(0.1,0)$) --
+        ($(0,-1)+(0.5,0)$) --
+        ($(0,-1)+(-0.5,0)$) -- cycle;
+    \end{pgfonlayer}
+    
+    %%% Right Blue region (lateral)
+    \coordinate (Yup) at ($(Cz)!0.5!(FCz)$);
+    \coordinate (Ydn) at ($(Cz)!0.5!(CPz)$);
+    \coordinate (LmidR) at ($(Cz)!0.5!(C2)$);
+    \coordinate (RmidR) at ($(Cz)+(1.05,0)$);
+    \coordinate (ULR) at ($(LmidR |- Yup)$);
+    \coordinate (BRR) at ($(RmidR |- Ydn)$);
+    
+    \begin{pgfonlayer}{foreground}
+        \fill[BlueRightSide] (ULR) rectangle (BRR);
+    \end{pgfonlayer}
+    
+    \begin{pgfonlayer}{foreground}
+      \clip (0,0) ellipse ({\radiusX} and {\radiusY});
+      \fill[BlueRightSide]
+        ($(C4)+(0,-0.1)$) --
+        ($(C4)+(0,0.1)$) --
+        ($(\radiusX,0.45)$) --
+        ($(\radiusX,-0.25)$) -- cycle;
+    \end{pgfonlayer}
+    
+    %%% Left Purple region (lateral)
+    \coordinate (LmidL) at ($(Cz)-(1.05,0)$);
+    \coordinate (RmidL) at ($(Cz)!0.5!(C1)$);
+    \coordinate (ULL) at ($(LmidL |- Yup)$);
+    \coordinate (URL) at ($(RmidL |- Yup)$);
+    \coordinate (BRL) at ($(RmidL |- Ydn)$);
+    \coordinate (BLL) at ($(LmidL |- Ydn)$);
+    
+    \begin{pgfonlayer}{foreground}
+      \fill[PurpleLeftSide] (ULL) rectangle (BRL);
+    \end{pgfonlayer}
+    
+    \begin{pgfonlayer}{foreground}
+      \clip (0,0) ellipse ({\radiusX} and {\radiusY});
+      \fill[PurpleLeftSide]
+        ($(C3)+(0,-0.1)$) --
+        ($(C3)+(0,0.1)$) --
+        ($(-\radiusX,0.45)$) --
+        ($(-\radiusX,-0.25)$) -- cycle;
+    \end{pgfonlayer}
+    
+    %%% Electrodes (drawn as nodes on top)
+    \begin{pgfonlayer}{foreground}
+      % Central electrode
+      \node[electrode] at (Cz) {Cz}; 
+    
+      % Vertical midline electrodes
+      \node[electrode] at (FCz) {FCz};
+      \node[electrode] at (Fz) {Fz};
+      \node[electrode] at (CPz) {CPz};
+      \node[electrode] at (Pz) {Pz};
+      \node[electrode] at (POz) {POz};
+    
+      % Horizontal right electrodes
+      \node[electrode] at (C2) {C2};
+      \node[electrode] at (C4) {C4};
+      \node[electrode] at (C6) {C6};
+      
+      % Horizontal left electrodes
+      \node[electrode] at (C1) {C1};
+      \node[electrode] at (C3) {C3};
+      \node[electrode] at (C5) {C5};
+    
+      % Lower right electrodes
+      \node[electrode] at (CP2) {CP2};
+      \node[electrode] at (CP4) {CP4};
+      \node[electrode] at (P2) {P2};
+    
+      % Lower left electrodes
+      \node[electrode] at (CP1) {CP1};
+      \node[electrode] at (CP3) {CP3};
+      \node[electrode] at (P1) {P1};
+    
+      % Upper right electrodes
+      \node[electrode] at (FC2) {FC2};
+      \node[electrode] at (FC4) {FC4};
+    
+      % Upper left electrodes
+      \node[electrode] at (FC1) {FC1};
+      \node[electrode] at (FC3) {FC3};
+    \end{pgfonlayer}
+    
+    %%% Reset bounding box
+    \pgfresetboundingbox
+    \path (0,-\radiusY) (0,1.15) (-1.175,0) (1.175,0);
+    
+\end{tikzpicture}
